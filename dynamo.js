@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
-require('dotenv').config();
-
+import AWS from 'aws-sdk';
+import {config} from 'dotenv'
+//import ('dotenv').config();
+config();
+/* Conexion a la base de datos */
 AWS.config.update({
     region: process.env.AWS_DEFAULT_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY_Id,
@@ -8,7 +10,7 @@ AWS.config.update({
 });
 
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = "harrypotter-api"
+const TABLE_NAME = "Persona"
 
 const getCharacters = async() => {
     const params = {
@@ -18,7 +20,7 @@ const getCharacters = async() => {
     console.log(characters);
     return characters;
 }
-
+/*
 const addorUpdateCharacter = async(character) => {
     const params = {
         TableName: TABLE_NAME,
@@ -26,9 +28,9 @@ const addorUpdateCharacter = async(character) => {
     }
     await dynamoClient.put(params).promise();
 };
-
+*/
 getCharacters();
-
+/*
 const hp = {
     "id": "0",
     "name":"Harry Potter",
@@ -55,3 +57,4 @@ const hp = {
     "image":"https://hp-api.herokuapp.com/images/harry.jpg"
 };
 addorUpdateCharacter(hp);
+*/

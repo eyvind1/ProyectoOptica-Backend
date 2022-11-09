@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "dynamo.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon dynamo.js"
+    "start": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
     "aws-sdk": "^2.1250.0",
     "axios": "^1.1.3",
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "nodemon": "^2.0.20"
   }
 }
