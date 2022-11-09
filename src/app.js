@@ -1,5 +1,6 @@
 import express from 'express';
 import clientsRoutes from './routes/clients.routes.js';
+import usersRoutes from   './routes/users.router.js';
 
 const app = express();
 
@@ -24,5 +25,7 @@ app.use(function (req, res, next) {
 
 
 app.use(clientsRoutes);
+app.use(usersRoutes);
+
 
 export default app;
