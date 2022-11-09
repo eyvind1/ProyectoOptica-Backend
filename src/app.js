@@ -1,9 +1,10 @@
 import express from 'express';
 import clientsRoutes from './routes/clients.routes.js';
 import usersRoutes from   './routes/users.router.js';
+import cors from 'cors'
 
 const app = express();
-
+app.use(cors());
 //Paso esta funcion para que express entienda cuando se le envia un Json
 app.use(express.json());
 
