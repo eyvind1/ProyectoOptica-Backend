@@ -1,0 +1,26 @@
+{
+  "name": "proyectooptica-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dynamo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon dynamo.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyvind1/ProyectoOptica-Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eyvind1/ProyectoOptica-Backend/issues"
+  },
+  "homepage": "https://github.com/eyvind1/ProyectoOptica-Backend#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1250.0",
+    "axios": "^1.1.3",
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20"
+  }
+}
