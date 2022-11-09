@@ -23,3 +23,17 @@ export const getAllClients = async (req, res) => {
         
     }
 };
+export const getAllClientsById = async (req, res) => {
+    try {
+        const id_param = req.params.id;
+        console.log('desde la funcion cliente by id: ', id_param);
+        res.send(id_param)
+
+        
+    } catch (error) {
+        return res.status(500).json({
+            message:'Algo anda mal'
+        })
+        
+    }
+};
