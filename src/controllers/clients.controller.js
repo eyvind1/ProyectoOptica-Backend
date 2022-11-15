@@ -95,7 +95,7 @@ export const createNewClient = async (req, res) => {
         const id_persona = v4();
         const id_cliente = v4();
 
-        const medidas = [
+        /*const medidas = [
             {
                 "oi_clindrico": -2.5,
                 "od_eje": 15,
@@ -107,8 +107,8 @@ export const createNewClient = async (req, res) => {
                 "dip": 66,
                 "od_esferico": -1
             }
-        ];
-        const {nombres,apellidos,dni,fecha_creacion,fecha_modificacion,telefono} = (req.body);
+        ];*/
+        const {nombres,apellidos,medidas,dni,fecha_creacion,fecha_modificacion,telefono} = (req.body);
         const newPersona = {
             id_persona,
             apellidos,
