@@ -5,7 +5,7 @@ import {v4} from 'uuid';
 export const createNewUser = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_PERSONA  = "Persona";
-    const TABLE_NAME_USUARIOS = "Usuarios";
+    const TABLE_NAME_USUARIO  = "Usuarios";
 
     //estado bool
     try {
@@ -31,25 +31,27 @@ export const createNewUser = async (req, res) => {
         };
         
         console.log(nombres,apellidos,dni,rol,estado,fecha_creacion,fecha_modificacion,telefono);
-        //res.send('ok');
         //Si no le pongo .promise, solo seria un callback
-        await dynamodb.put({
+        
+        await dynamoClient.put({
             TableName: TABLE_NAME_PERSONA,
-            Item:{
-                newPersona
-             }
-        }).promise()
-        await dynamodb.put({
-            TableName: TABLE_NAME_USUARIOS,
-            Item:{
-                newUser
-             }
+            Item: newPersona
         }).promise()
 
-        return {
+        const createdUser = await dynamoClient.put({
+            TableName: TABLE_NAME_USUARIO,
+            Item: newUser
+        }).promise()
+        
+
+
+        res.json(createdUser);       
+        
+        
+        /*return {
             statusCode:200,
-            body:JSON.stringify(newUser);
-        }
+            //body:JSON.stringify(newPersona)
+        }*/
         
     } catch (error) {
         return res.status(500).json({ 
