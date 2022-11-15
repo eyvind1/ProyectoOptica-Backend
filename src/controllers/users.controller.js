@@ -10,14 +10,14 @@ export const createNewUser = async (req, res) => {
     const TABLE_NAME = "Usuarios";
 
     try {
-        const {nombres,apellidos,dni,rol,estado,fecha_creacion,fecha_modificacion,telefono} = JSON.parse(req.body);
+        const {nombres,apellidos,dni,rol,estado,fecha_creacion,fecha_modificacion,telefono} = (req.body);
         const newUser = {
             id,
-            title,
-            fecha_creacion
+            nombres,
+            //fecha_creacion
         };
         
-        console.log(nombres,apellidos,dni,rol,estado,fecha_creacion,fecha_modificacion,telefono,dni);
+        console.log(nombres,apellidos,dni,rol,estado,fecha_creacion,fecha_modificacion,telefono);
         res.send('ok');
         //Si no le pongo .promise, solo seria un callback
         /*await dynamodb.put({
