@@ -23,6 +23,30 @@ export const getAllClients = async (req, res) => {
     }
 };
 
+export const editClientById = async (req, res) => {
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    const TABLE_NAME = "Persona";
+
+    try {
+        console.log('entro')
+        const params = {
+            TableName: TABLE_NAME
+        };
+        const characters = await dynamoClient.scan(params).promise();
+        console.log(characters);
+        res.json(characters)
+
+        return characters;  
+        
+    } catch (error) {
+        return res.status(500).json({
+            message:'Algo anda mal'
+        })
+        
+    }
+};
+
+//Fecha_creacion, fecha_modificacion 
 export const getAllClientsById = async (req, res) => {
     try {
         // Create the DynamoDB service object
