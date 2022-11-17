@@ -1,28 +1,50 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
+import { accessKeyId } from '../config.js';
 
+/* Esta funcion retorna infomacion del cliente unido a la info de la persona */
 
 export const getAllClients = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME = "Clientes";
+    const TABLE_NAME_CLIENTE  = "Clientes";
+    const TABLE_NAME_PERSONA  = "Persona";
+    const id_persona = "45a21d56-15f3-4777-a153-971bf58f3962";
+    const id_cliente = "546c3371-e0d3-4419-8743-f397d656afbb"
+    let result={};
 
     try {
-        console.log('entro')
+        let concatResult = []   
+        /*Primero obtengo el json con todos los clientes */ 
         const params = {
-            TableName: TABLE_NAME
+            TableName: TABLE_NAME_CLIENTE
         };
         const characters = await dynamoClient.scan(params).promise();
-        console.log(characters);
-        res.json(characters)
-
-        return characters;  
-        
-    } catch (error) {
-        return res.status(500).json({
-            message:'Algo anda mal'
+        characters.Items.map(async(cliente)=>
+        {
+            const id_persona = cliente.id_persona
+            //console.log('cliente: ', cliente.id_persona);
+            //Consulto por la personax
+            result = await dynamoClient.get({
+                TableName:'Persona',
+                Key:{
+                    id_persona
+                }
+                
+            }).promise()
+            result = {...cliente,...result.Item};
+            //console.log('result ', result)
+            concatResult.push(result);
+            console.log(concatResult);
+            res.json(concatResult);
         })
+        //console.log(concatResult);
         
-    }
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
 };
 
 export const editClientById = async (req, res) => {
@@ -48,7 +70,8 @@ export const editClientById = async (req, res) => {
     }
 };
 
-//Fecha_creacion, fecha_modificacion 
+/* Esta funcion retorna infomacion del cliente unido a la info de la persona */
+
 export const getAllClientsById = async (req, res) => {
     try {
         // Create the DynamoDB service object
@@ -95,19 +118,6 @@ export const createNewClient = async (req, res) => {
         const id_persona = v4();
         const id_cliente = v4();
 
-        /*const medidas = [
-            {
-                "oi_clindrico": -2.5,
-                "od_eje": 15,
-                "oi_esferico": -1,
-                " add": 3.5,
-                "od_cilindrico": -2.5,
-                "oi_eje": 15,
-                "encargado": "DR RIDER",
-                "dip": 66,
-                "od_esferico": -1
-            }
-        ];*/
         const {nombres,apellidos,medidas,dni,fecha_creacion,fecha_modificacion,telefono} = (req.body);
         const newPersona = {
             id_persona,
