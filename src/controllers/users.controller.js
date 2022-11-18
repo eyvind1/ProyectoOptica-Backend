@@ -54,26 +54,47 @@ export const createNewUser = async (req, res) => {
     }
 };
 
-export const getAllUser = async (req, res) => {
+
+
+/* Estea funcion */ 
+export const getAllUsers = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME = "Usuarios";
-
+    const TABLE_NAME_USUARIO  = "Usuarios";
+    const TABLE_NAME_PERSONA  = "Persona";
+    let result={};
     try {
-        const {nombres,apellidos,dni} = req.body;
+        /*Primero obtengo el json con todos los usuarios */ 
         const params = {
-            TableName: TABLE_NAME
+            TableName: TABLE_NAME_USUARIO
         };
-        const characters = await dynamoClient.scan(params).promise();
-        console.log(characters);
-        res.send('ok')
-
-        return characters;  
-        
-    } catch (error) {
-        return res.status(500).json({
-            message:'Algo anda mal'
+        const usuarios = await dynamoClient.scan(params).promise();
+        let arr=[];
+        let cont = 0;
+        /* Segundo itero sobre cada usuario y obtengo la persona */
+        usuarios.Items.map(async function(usuario,i)
+        {
+            const id_persona = usuario.id_persona
+            result = await dynamoClient.get({
+                TableName:TABLE_NAME_PERSONA,
+                Key:{
+                    id_persona
+                }
+            }).promise()
+            result = {...usuario,...result.Item};
+            arr.push(result);
+            //Count es un atributo propio y devuelto por dinamo
+            if(cont==usuarios.Count-1){   
+                res.json(arr);
+            }
+            cont +=1;
         })
-    }
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
+
 };
 
 

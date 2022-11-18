@@ -7,8 +7,6 @@ export const getAllClients = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_CLIENTE  = "Clientes";
     const TABLE_NAME_PERSONA  = "Persona";
-    const id_persona = "45a21d56-15f3-4777-a153-971bf58f3962";
-    const id_cliente = "546c3371-e0d3-4419-8743-f397d656afbb"
     let result={};
     try {
         /*Primero obtengo el json con todos los clientes */ 
@@ -16,24 +14,24 @@ export const getAllClients = async (req, res) => {
             TableName: TABLE_NAME_CLIENTE
         };
         const characters = await dynamoClient.scan(params).promise();
-        //let nose = characters.item.stringigy
-        //console.log('length: ', characters.Count);
-        let arr=[]
+        let arr=[];
+        let cont = 0;
+        /* Segundo itero sobre cada cliente y obtengo la persona */
         characters.Items.map(async function(cliente,i)
         {
             const id_persona = cliente.id_persona
             result = await dynamoClient.get({
-                TableName:'Persona',
+                TableName:TABLE_NAME_PERSONA,
                 Key:{
                     id_persona
                 }
             }).promise()
             result = {...cliente,...result.Item};
-            arr.push(result)
-            //console.log(result);
-            if(i==characters.Count-1){   
+            arr.push(result);
+            if(cont==characters.Count-1){   
                 res.json(arr);
             }
+            cont +=1;
         })
             
     } 
@@ -124,7 +122,7 @@ export const createNewClient = async (req, res) => {
             nombres,
             telefono
         }
-        const lentes = 'otro lente pe ';
+        const lentes = 'lente por defecto ';
 
         const newCliente = {
             id_cliente,
@@ -132,7 +130,6 @@ export const createNewClient = async (req, res) => {
             lentes,
             medidas
         }; 
-        
         await dynamoClient.put({
             TableName: TABLE_NAME_PERSONA,
             Item: newPersona
