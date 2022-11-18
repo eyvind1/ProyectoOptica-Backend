@@ -3,7 +3,6 @@ import {v4} from 'uuid';
 import { accessKeyId } from '../config.js';
 
 /* Esta funcion retorna infomacion del cliente unido a la info de la persona */
-
 export const getAllClients = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_CLIENTE  = "Clientes";
@@ -11,34 +10,32 @@ export const getAllClients = async (req, res) => {
     const id_persona = "45a21d56-15f3-4777-a153-971bf58f3962";
     const id_cliente = "546c3371-e0d3-4419-8743-f397d656afbb"
     let result={};
-
     try {
-        let concatResult = []   
         /*Primero obtengo el json con todos los clientes */ 
         const params = {
             TableName: TABLE_NAME_CLIENTE
         };
         const characters = await dynamoClient.scan(params).promise();
-        characters.Items.map(async(cliente)=>
+        //let nose = characters.item.stringigy
+        //console.log('length: ', characters.Count);
+        let arr=[]
+        characters.Items.map(async function(cliente,i)
         {
             const id_persona = cliente.id_persona
-            //console.log('cliente: ', cliente.id_persona);
-            //Consulto por la personax
             result = await dynamoClient.get({
                 TableName:'Persona',
                 Key:{
                     id_persona
                 }
-                
             }).promise()
             result = {...cliente,...result.Item};
-            //console.log('result ', result)
-            concatResult.push(result);
-            console.log(concatResult);
-            res.json(concatResult);
+            arr.push(result)
+            //console.log(result);
+            if(i==characters.Count-1){   
+                res.json(arr);
+            }
         })
-        //console.log(concatResult);
-        
+            
     } 
      catch(error) {
         return res.status(500).json({
@@ -52,7 +49,6 @@ export const editClientById = async (req, res) => {
     const TABLE_NAME = "Persona";
 
     try {
-        console.log('entro')
         const params = {
             TableName: TABLE_NAME
         };
