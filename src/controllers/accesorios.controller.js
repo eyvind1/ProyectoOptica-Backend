@@ -19,9 +19,10 @@ export const getAllAccesorios = async (req, res) => {
       }
 };
 
-
+/* Esta funcion falta terminar, queda en stand by  */
 export const createNewAccesorio = async (req, res) => {
     try {
+        //Concatenar con la letra de la tabla
         const id_montura = v4();
         const {cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {

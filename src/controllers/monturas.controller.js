@@ -19,7 +19,6 @@ export const getAllMonturas = async (req, res) => {
       }
 };
 
-
 export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_MONTURA  = "Monturas";

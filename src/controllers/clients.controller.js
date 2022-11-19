@@ -33,7 +33,6 @@ export const getAllClients = async (req, res) => {
             }
             cont +=1;
         })
-            
     } 
      catch(error) {
         return res.status(500).json({
