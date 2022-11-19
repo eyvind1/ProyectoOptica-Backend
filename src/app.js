@@ -1,14 +1,17 @@
+/* Librerias propias de Node */
 import express from 'express';
-/**/
+import cors from 'cors'
+/* Fin Librerias propias de Node */
+
+/* Importando las rutas creadas */
 import clientsRoutes from './routes/clients.routes.js';
 import usersRoutes from   './routes/users.router.js';
 import monturasRoutes from './routes/monturas.routes.js';
 import accesoriosRoutes from './routes/accesorios.routes.js';
 import lunasRoutes from './routes/lunas.routes.js';
-import sedesRoutes from './routes/sedes.routes.js'
-
-
-import cors from 'cors'
+import sedesRoutes from './routes/sedes.routes.js';
+import ventasRoutes from './routes/ventas.routes.js';
+/* Fin Importando rutas creadas */
 
 const app = express();
 app.use(cors());
@@ -31,12 +34,14 @@ app.use(function (req, res, next) {
     next();
 });
 
-
+/*  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 app.use(clientsRoutes);
 app.use(usersRoutes);
 app.use(monturasRoutes);
 app.use(lunasRoutes);
 app.use(accesoriosRoutes);
 app.use(sedesRoutes);
+app.use(ventasRoutes);
+/* Fin  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 
 export default app;
