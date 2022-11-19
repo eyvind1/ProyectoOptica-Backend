@@ -1,6 +1,11 @@
 import express from 'express';
 import clientsRoutes from './routes/clients.routes.js';
 import usersRoutes from   './routes/users.router.js';
+import monturasRoutes from './routes/monturas.routes.js';
+import accesoriosRoutes from './routes/accesorios.routes.js';
+import lunasRoutes from './routes/lunas.routes.js';
+
+
 import cors from 'cors'
 
 const app = express();
@@ -27,6 +32,8 @@ app.use(function (req, res, next) {
 
 app.use(clientsRoutes);
 app.use(usersRoutes);
-
+app.use(monturasRoutes);
+app.use(lunasRoutes);
+app.use(accesoriosRoutes);
 
 export default app;

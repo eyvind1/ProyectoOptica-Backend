@@ -130,11 +130,12 @@ export const createNewClient = async (req, res) => {
             lentes,
             medidas
         }; 
+        //Primero ingresa los datos del cliente en la tabla persona
         await dynamoClient.put({
             TableName: TABLE_NAME_PERSONA,
             Item: newPersona
         }).promise()
-        
+        //Segundo inserta en la tabla cliente
         const createdClient = await dynamoClient.put({
             TableName: TABLE_NAME_CLIENTE,
             Item: newCliente
