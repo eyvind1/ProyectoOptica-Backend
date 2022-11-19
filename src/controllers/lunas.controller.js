@@ -10,7 +10,7 @@ export const getAllLunas = async (req, res) => {
             TableName: TABLE_NAME_LUNA
         };
         const lunas = await dynamoClient.scan(params).promise();
-        res.json(lunas);
+        res.json(lunas.Items);
     } 
      catch(error) {
         return res.status(500).json({
