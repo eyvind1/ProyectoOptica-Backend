@@ -10,7 +10,7 @@ export const getAllAccesorios = async (req, res) => {
             TableName: TABLE_NAME_ACCESORIO
         };
         const accesorios = await dynamoClient.scan(params).promise();
-        res.json(accesorios);
+        res.json(accesorios.Items);
     } 
      catch(error) {
         return res.status(500).json({
