@@ -40,7 +40,7 @@ export const createNewAccesorio = async (req, res) => {
             precio_accesorio_v,
         }
         const newAccesorio = await dynamoClient.put({
-            TableName: TABLE_NAME_MONTURA,
+            TableName: TABLE_NAME_ACCESORIO,
             Item: datosAccesorio
         }).promise()
         res.json(newAccesorio);       
