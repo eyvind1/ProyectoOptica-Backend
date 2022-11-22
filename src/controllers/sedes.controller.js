@@ -36,7 +36,7 @@ export const createNewSede = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
         const id_sede = v4() + codeForTables.tablaSedes;
-        const {estado,fecha_creacion_sede,nombre_sede} = (req.body);
+        const {habilitado,direccion,fecha_creacion_sede,nombre_sede} = (req.body);
         const datosSede = {
             id_sede,
             habilitado,
