@@ -23,9 +23,11 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_luna = v4();
-        const {cantidad,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
+        const {id_sede,habilitado,cantidad,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         const datosMontura = {
             id_luna,
+            id_sede,
+            habilitado,
             fecha_creacion_luna,
             fecha_modificacion_luna,
             marca,

@@ -11,7 +11,15 @@ export const getAllClients = async (req, res) => {
     try {
         /*Primero obtengo el json con todos los clientes */ 
         const params = {
-            TableName: TABLE_NAME_CLIENTE
+            TableName: TABLE_NAME_CLIENTE,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
+
         };
         const characters = await dynamoClient.scan(params).promise();
         let arr=[];

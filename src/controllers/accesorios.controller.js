@@ -1,6 +1,9 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 
+import {codeForTables} from '../utils/codigosTablas.js';
+
+
 const TABLE_NAME_ACCESORIO = "Accesorios";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
@@ -23,19 +26,17 @@ export const getAllAccesorios = async (req, res) => {
 export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
-        const id_montura = v4();
-        const {cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        const id_montura = v4() + codeForTables.tablaAccesorios;
+        const {habilitado,id_sede,cantidad,fecha_creacion_monturas,fecha_modificacion_monturas,precio_montura_c,precio_montura_v} = (req.body);
         const datosMontura = {
             id_montura,
             cantidad,
-            codigo,
+            id_sede,
+            habilitado,
             fecha_creacion_monturas,
             fecha_modificacion_monturas,
-            marca,
-            material,
             precio_montura_c,
             precio_montura_v,
-            talla
         }
         const newMontura = await dynamoClient.put({
             TableName: TABLE_NAME_MONTURA,
