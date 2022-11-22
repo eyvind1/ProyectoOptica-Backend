@@ -111,7 +111,7 @@ export const createNewClient = async (req, res) => {
         const id_persona = v4();
         const id_cliente = v4();
 
-        const {nombres,apellidos,medidas,dni,fecha_creacion,fecha_modificacion,telefono} = (req.body);
+        const {nombres,apellidos,medidas,dni,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
         const newPersona = {
             id_persona,
             apellidos,
@@ -127,6 +127,7 @@ export const createNewClient = async (req, res) => {
             id_cliente,
             id_persona,
             lentes,
+            habilitado,
             medidas
         }; 
         //Primero ingresa los datos del cliente en la tabla persona
