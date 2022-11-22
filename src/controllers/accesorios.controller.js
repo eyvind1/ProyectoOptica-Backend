@@ -27,16 +27,17 @@ export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
         const id_accesorio = v4() + codeForTables.tablaAccesorios;
-        const {habilitado,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
+        const {habilitado,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         const datosAccesorio = {
             id_accesorio,
             cantidad,
             id_sede,
             habilitado,
+            nombre_accesorio,
             fecha_creacion_accesorio,
             fecha_modificacion_accesorio,
-            precio_montura_c,
-            precio_montura_v,
+            precio_accesorio_c,
+            precio_accesorio_v,
         }
         const newAccesorio = await dynamoClient.put({
             TableName: TABLE_NAME_MONTURA,
