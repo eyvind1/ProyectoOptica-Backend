@@ -1,6 +1,8 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 
+import {codeForTables} from '../utils/codigosTablas.js';
+
 export const getAllMonturas = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_MONTURAS  = "Monturas";
@@ -23,7 +25,7 @@ export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_MONTURA  = "Monturas";
     try {
-        const id_montura = v4();
+        const id_montura = v4() + codeForTables.tablaMonturas;
         const {id_sede,habilitado,cantidad,codigo,codigo_interno,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {
             id_montura,

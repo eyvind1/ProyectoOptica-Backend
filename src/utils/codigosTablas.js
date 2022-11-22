@@ -7,7 +7,8 @@ export const codeForTables={
     tablaClients  : 'Cli003',
     tablaSedes    : 'Sed004',
     tablaPersonas : 'Per005',
-    tablaAccesorios : 'Acc006'
+    tablaAccesorios : 'Acc006',
+    tablaLunas      : 'Lun007'
 }
 
 /* Fin  Estos codigos se concatenan al primary key o ID de cada tabla */
