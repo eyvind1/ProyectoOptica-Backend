@@ -64,7 +64,14 @@ export const getAllUsers = async (req, res) => {
     try {
         /*Primero obtengo el json con todos los usuarios */ 
         const params = {
-            TableName: TABLE_NAME_USUARIO
+            TableName: TABLE_NAME_USUARIO,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
         };
         const usuarios = await dynamoClient.scan(params).promise();
         let arr=[];

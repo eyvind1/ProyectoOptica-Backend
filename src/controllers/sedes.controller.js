@@ -10,7 +10,7 @@ import {codeForTables} from '../utils/codigosTablas.js';
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_SEDE  = "Sedes";
 
-/* Esta funcion lista todas las sedes que se encuentran con "estado = true" */
+/* Esta funcion lista todas las sedes que se encuentran con "estado = Habikitado" */
 export const getAllSedes = async (req, res) => {
     try{
         const params = {
