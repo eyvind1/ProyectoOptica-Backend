@@ -25,10 +25,11 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_luna = v4() + codeForTables.tablaLunas;
-        const {id_sede,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
+        const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         const datosLuna = {
             id_luna,
             id_sede,
+            tipo,
             habilitado,
             fecha_creacion_luna,
             fecha_modificacion_luna,

@@ -26,9 +26,10 @@ export const createNewMontura = async (req, res) => {
     const TABLE_NAME_MONTURA  = "Monturas";
     try {
         const id_montura = v4() + codeForTables.tablaMonturas;
-        const {id_sede,habilitado,cantidad,codigo,codigo_interno,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        const {id_sede,tipo,habilitado,cantidad,codigo,codigo_interno,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {
             id_montura,
+            tipo,
             cantidad,
             habilitado,
             codigo,
