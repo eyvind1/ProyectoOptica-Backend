@@ -14,10 +14,10 @@ export const createNewUser = async (req, res) => {
         const id_persona = v4() + codeForTables.tablaPersonas;
         const id_usuario = v4() + codeForTables.tablaUsers;
         //Obtengo los campos que se envia por POST desde el Front
-        const {nombres,apellidos,dni,rol,habilitado,fecha_creacion,fecha_modificacion,telefono,id_sede} = (req.body);
+        const {nombres,apellidos,dni,rol,habilitado,fecha_creacion,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
         
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni
-        const usuario = apellidos.str(0,3) + nombres.str(0,2);
+        const usuario = apellidos.str(0,3) + nombres.str(0,2)+dni.substr(0,2);
         const newPersona = {
             id_persona,
             apellidos,
