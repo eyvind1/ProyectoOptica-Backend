@@ -35,21 +35,22 @@ export const createNewVenta = async (req, res) => {
     }
 };
 
-/* Esta funcion lista todas las ventas */
+/* Esta funcion busca todas las ventas de una sede en especifica */
 export const getAllVentasBySede = async (req, res) => {
     try{
+        let id_sede = req.params.idsede;
         const params = {
             TableName: TABLE_NAME_VENTAS,
-            FilterExpression : "#habilitado = :valueHabilitado",
+            FilterExpression : "#idsede = :valueSede",
             ExpressionAttributeValues: {
-                ":valueHabilitado": true
+                ":valueSede": id_sede
             },
             ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
+                "#idsede": "id_sede"
             }
         };
-        const sedes = await dynamoClient.scan(params).promise();
-        res.json(sedes.Items);
+        const ventasBySede = await dynamoClient.scan(params).promise();
+        res.json(ventasBySede.Items);
     } 
      catch(error) {
         return res.status(500).json({
@@ -83,18 +84,19 @@ export const getAllVentas = async (req, res) => {
 /* Esta funcion lista todas las ventas por vendedor */
 export const getAllVentasBySeller = async (req, res) => {
     try{
+        let id_vendedor = req.params.idvendedor;
         const params = {
             TableName: TABLE_NAME_VENTAS,
-            FilterExpression : "#habilitado = :valueHabilitado",
+            FilterExpression : "#idVendedor = :valueIdVendedor",
             ExpressionAttributeValues: {
-                ":valueHabilitado": true
+                ":valueIdVendedor": id_vendedor
             },
             ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
+                "#idVendedor": "id_vendedor"
             }
         };
-        const sedes = await dynamoClient.scan(params).promise();
-        res.json(sedes.Items);
+        const ventasBySeller = await dynamoClient.scan(params).promise();
+        res.json(ventasBySeller.Items);
     } 
      catch(error) {
         return res.status(500).json({

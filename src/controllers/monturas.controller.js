@@ -21,6 +21,7 @@ export const getAllMonturas = async (req, res) => {
       }
 };
 
+//no habilitado, no precio_montura_c, las 2 fechas
 export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_MONTURA  = "Monturas";
