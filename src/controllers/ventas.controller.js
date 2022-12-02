@@ -9,10 +9,11 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
-        const {id_sede,list_monturas,list_lunas,list_accesorios,id_vendedor,
+        const {id_sede,nombre_cliente,list_monturas,list_lunas,list_accesorios,id_vendedor,
                 fecha_creacion_venta,tipo_venta,observaciones,id_cliente} = (req.body);
         const datosVenta = {
             id_ventas,
+            nombre_cliente,
             list_monturas,
             list_lunas,
             observaciones,
