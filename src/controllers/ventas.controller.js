@@ -64,13 +64,7 @@ export const getAllVentas = async (req, res) => {
     try{
         const params = {
             TableName: TABLE_NAME_VENTAS,
-            FilterExpression : "#habilitado = :valueHabilitado",
-            ExpressionAttributeValues: {
-                ":valueHabilitado": true
-            },
-            ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
-            }
+            
         };
         const sedes = await dynamoClient.scan(params).promise();
         res.json(sedes.Items);
