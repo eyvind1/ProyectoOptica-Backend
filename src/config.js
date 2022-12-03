@@ -6,9 +6,13 @@ config();
 
 //Credenciales importantes de DynamoDB
 
-export const region= process.env.AWS_DEFAULT_REGION;
-export const accessKeyId= process.env.AWS_ACCESS_KEY_Id;
-export const secretAccessKey= process.env.AWS_SECRET_ACCESS_KEY;
+//export const region= process.env.AWS_DEFAULT_REGION;
+export const region = 'us-east-1';
+//export const accessKeyId= process.env.AWS_ACCESS_KEY_Id;
+export const accessKeyId='AKIAUIFSAM52S2UGMV66'
+
+//export const secretAccessKey= process.env.AWS_SECRET_ACCESS_KEY;
+export const secretAccessKey='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'
 // Defino el puerto local o sino el 4000 para que corra localmente 
 export const PORT      = process.env.PORT ||  '5000';
 
