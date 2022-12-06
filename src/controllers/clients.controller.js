@@ -3,6 +3,7 @@ import {v4} from 'uuid';
 import { accessKeyId } from '../config.js';
 
 /* Esta funcion retorna infomacion del cliente unido a la info de la persona */
+/* No quieres medidas, nombre + apellido , dni, ids, */
 export const getAllClients = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_CLIENTE  = "Clientes";
@@ -17,8 +18,8 @@ export const getAllClients = async (req, res) => {
                 ":valueHabilitado":true
             },
             ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
-            }
+                "#habilitado": "habilitado",
+            },
 
         };
         const characters = await dynamoClient.scan(params).promise();
@@ -32,10 +33,13 @@ export const getAllClients = async (req, res) => {
                 TableName:TABLE_NAME_PERSONA,
                 Key:{
                     id_persona
-                }
+                },
+                AttributesToGet:['apellidos','nombres','dni']
+
             }).promise()
             result = {...cliente,...result.Item};
             arr.push(result);
+            console.log('resutl: ',result)
             if(cont==characters.Count-1){   
                 res.json(arr);
             }
