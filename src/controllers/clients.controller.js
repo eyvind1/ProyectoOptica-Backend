@@ -2,6 +2,56 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 import { accessKeyId } from '../config.js';
 
+
+export const getAllClientsMinified = async (req, res) => {
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    const TABLE_NAME_CLIENTE  = "Clientes";
+    const TABLE_NAME_PERSONA  = "Persona";
+    let result={};
+    try {
+        /*Primero obtengo el json con todos los clientes */ 
+        const params = {
+            TableName: TABLE_NAME_CLIENTE,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            "ProjectionExpression": "id_cliente,id_persona",
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado",
+            },
+
+        };
+        const characters = await dynamoClient.scan(params).promise();
+        let arr=[];
+        let cont = 0;
+        /* Segundo itero sobre cada cliente y obtengo la persona */
+        characters.Items.map(async function(cliente,i)
+        {
+            const id_persona = cliente.id_persona
+            result = await dynamoClient.get({
+                TableName:TABLE_NAME_PERSONA,
+                Key:{
+                    id_persona
+                },
+                AttributesToGet:['apellidos','nombres','dni']
+
+            }).promise()
+            result = {...cliente,...result.Item};
+            arr.push(result);
+            console.log('resutl: ',result)
+            if(cont==characters.Count-1){   
+                res.json(arr);
+            }
+            cont +=1;
+        })
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
 /* Esta funcion retorna infomacion del cliente unido a la info de la persona */
 /* No quieres medidas, nombre + apellido , dni, ids, */
 export const getAllClients = async (req, res) => {
