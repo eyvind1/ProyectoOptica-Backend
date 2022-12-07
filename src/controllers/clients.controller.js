@@ -70,7 +70,6 @@ export const getAllClients = async (req, res) => {
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
             },
-
         };
         const characters = await dynamoClient.scan(params).promise();
         let arr=[];
@@ -84,12 +83,9 @@ export const getAllClients = async (req, res) => {
                 Key:{
                     id_persona
                 },
-                AttributesToGet:['apellidos','nombres','dni']
-
             }).promise()
             result = {...cliente,...result.Item};
             arr.push(result);
-            console.log('resutl: ',result)
             if(cont==characters.Count-1){   
                 res.json(arr);
             }
