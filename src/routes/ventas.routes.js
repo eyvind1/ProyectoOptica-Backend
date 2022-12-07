@@ -12,5 +12,6 @@ router.post('/createNewVenta',createNewVenta);
 router.get('/getAllVentasBySede/:idsede',getAllVentasBySede);
 router.get('/getAllVentasBySeller/:idvendedor',getAllVentasBySeller);
 router.get('/getAllVentas',getAllVentas);
-router.get('/getAllVentasByDate/:fechaIni/:fechaFin',getAllVentasByDate);
+//router.get('/getAllVentasByDate/:fechaIni/:fechaFin',getAllVentasByDate);
+router.get('/getAllVentasByDate',getAllVentasByDate);
 export default router;
