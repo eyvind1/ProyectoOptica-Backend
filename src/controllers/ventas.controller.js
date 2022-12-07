@@ -136,8 +136,10 @@ export const getAllVentasByDate = async (req, res) => {
             TableName: TABLE_NAME_VENTAS,
             FilterExpression : "#fecha_venta  between :val1 and :val2",
             ExpressionAttributeValues: {
-                ":val1" : '2022-12-06 00:00',
-                ":val2" : '2022-12-06 20:09'
+                //":val1" : '2022-12-06 00:00',
+                //":val2" : '2022-12-06 20:09'
+                ":val1" : fechaIni,
+                ":val2" : fechaFin
             },
             ExpressionAttributeNames:{
                 "#fecha_venta": "fecha_creacion_venta"
