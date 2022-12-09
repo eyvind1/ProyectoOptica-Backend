@@ -128,7 +128,7 @@ export const editClientById = async (req, res) => {
                                    telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
                                    email=:email`,
             ExpressionAttributeValues: {
-                ":apellidos:": apellidos,
+                ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
                 ":dni"       : dni,
@@ -145,7 +145,6 @@ export const editClientById = async (req, res) => {
         return res.status(500).json({
             message:'Algo anda mal'
         })
-        
     }
 };
 
