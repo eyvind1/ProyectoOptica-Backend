@@ -141,6 +141,7 @@ export const editClientById = async (req, res) => {
         return persona;  
         
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             message:'Algo anda mal'
         })
