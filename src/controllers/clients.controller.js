@@ -106,7 +106,7 @@ export const editClientById = async (req, res) => {
     console.log(medidas,' ', id_cliente)
     try {
         const params = {
-            TableName: TABLE_NAME_PERSONA,
+            TableName: TABLE_NAME_CLIENTE,
             Key: {
                 "id_cliente":id_cliente,
             },
