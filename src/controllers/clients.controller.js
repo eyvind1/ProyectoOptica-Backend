@@ -104,7 +104,7 @@ export const editClientById = async (req, res) => {
     const id_persona = req.params.idPersona;
     const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    console.log(medidas,' ', id_cliente)
+    console.log(req.body)
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsCliente = {
@@ -191,7 +191,7 @@ export const createNewClient = async (req, res) => {
         const id_persona = v4();
         const id_cliente = v4();
 
-        const {nombres,apellidos,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
+        const {nombres,apellidos,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
         const newPersona = {
             id_persona,
             apellidos,
@@ -210,6 +210,7 @@ export const createNewClient = async (req, res) => {
             id_persona,
             lentes,
             habilitado,
+            antecedentes,
             medidas
         }; 
         //Primero ingresa los datos del cliente en la tabla persona
