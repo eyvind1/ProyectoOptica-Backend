@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 //Obtengo las funciones del controlador
-import {getAllClients,getAllClientsById,createNewClient,getAllClientsMinified} from '../controllers/clients.controller.js';
+import {getAllClients,editClientById,getAllClientsById,createNewClient,getAllClientsMinified} from '../controllers/clients.controller.js';
 
 const router = Router();
 
