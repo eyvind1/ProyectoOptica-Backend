@@ -3,10 +3,10 @@ import {v4} from 'uuid';
 import { accessKeyId } from '../config.js';
 
 const TABLE_NAME_CLIENTE  = "Clientes";
+const TABLE_NAME_PERSONA  = "Persona";
 
 export const getAllClientsMinified = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME_PERSONA  = "Persona";
     let result={};
     try {
         /*Primero obtengo el json con todos los clientes */ 
@@ -101,7 +101,8 @@ export const getAllClients = async (req, res) => {
 
 export const editClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
-    const {medidas} = req.body;
+    const id_persona = req.params.idPersona;
+    const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(medidas,' ', id_cliente)
     try {
@@ -112,9 +113,24 @@ export const editClientById = async (req, res) => {
             },
             UpdateExpression: "SET medidas = :medidas, lentes = :lentes",
             ExpressionAttributeValues: {
-                ":medidas": medidas,
-                ":lentes": 'Un lente editado'
-
+                ":medidas": medidas
+            }
+        };
+        const paramsPersona = {
+            TableName: TABLE_NAME_PERSONA,
+            Key: {
+                "id_persona":id_persona,
+            },
+            UpdateExpression: `SET apellidos = :apellidos, nombres = :nombres,
+                                   telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
+                                   email=:email`,
+            ExpressionAttributeValues: {
+                ":apellidos:": apellidos,
+                ":nombres"   : nombres,
+                ":telefono"  : telefono,
+                ":dni"       : dni,
+                ":fecha_nacimiento"  : fecha_nacimiento,
+                ":email"       : email
             }
         };
         const characters = await dynamoClient.update(params).promise();
@@ -137,7 +153,6 @@ export const getAllClientsById = async (req, res) => {
     try {
         // Create the DynamoDB service object
         var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-
         var params = {
         TableName: 'Persona',
         Item: {
@@ -145,7 +160,6 @@ export const getAllClientsById = async (req, res) => {
             'apellidos' : {S: 'Richard Roe'}
             }
         };
-
         // Call DynamoDB to add the item to the table
         ddb.putItem(params, function(err, data) {
         if (err) {
@@ -171,9 +185,6 @@ RECALCAR QUE EL CAMPO MEDIDA ES UNA LISTA DE OBJETOS
 
 export const createNewClient = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME_PERSONA  = "Persona";
-    const TABLE_NAME_CLIENTE  = "Clientes";
-
     //estado bool
     try {
         const id_persona = v4();
