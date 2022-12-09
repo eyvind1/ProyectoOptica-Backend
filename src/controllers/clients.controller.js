@@ -112,7 +112,7 @@ export const editClientById = async (req, res) => {
             Key: {
                 "id_cliente":id_cliente,
             },
-            UpdateExpression: "SET medidas = :medidas, lentes = :lentes",
+            UpdateExpression: "SET medidas = :medidas",
             ExpressionAttributeValues: {
                 ":medidas": medidas
             }
