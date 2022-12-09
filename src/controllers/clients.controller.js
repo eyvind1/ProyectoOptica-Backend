@@ -110,9 +110,11 @@ export const editClientById = async (req, res) => {
             Key: {
                 "id_cliente":id_cliente,
             },
-            UpdateExpression: "SET medidas = :medidas",
+            UpdateExpression: "SET medidas = :medidas, lentes = :lentes",
             ExpressionAttributeValues: {
-                ":medidas": medidas
+                ":medidas": medidas,
+                ":lentes": 'Un lente editado'
+
             }
         };
         const characters = await dynamoClient.update(params).promise();
