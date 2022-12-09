@@ -106,7 +106,8 @@ export const editClientById = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(medidas,' ', id_cliente)
     try {
-        const params = {
+        //Primero actualizo datos de la tabla cliente
+        const paramsCliente = {
             TableName: TABLE_NAME_CLIENTE,
             Key: {
                 "id_cliente":id_cliente,
@@ -116,6 +117,8 @@ export const editClientById = async (req, res) => {
                 ":medidas": medidas
             }
         };
+        const cliente = await dynamoClient.update(paramsCliente).promise();
+        //Segundo actualizo datos de la tabla persona
         const paramsPersona = {
             TableName: TABLE_NAME_PERSONA,
             Key: {
@@ -133,11 +136,9 @@ export const editClientById = async (req, res) => {
                 ":email"       : email
             }
         };
-        const characters = await dynamoClient.update(params).promise();
-        console.log(characters);
-        res.json(characters)
-
-        return characters;  
+        const persona = await dynamoClient.update(paramsPersona).promise();
+        res.json(persona)
+        return persona;  
         
     } catch (error) {
         return res.status(500).json({
