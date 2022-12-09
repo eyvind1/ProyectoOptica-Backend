@@ -11,5 +11,6 @@ router.get('/getAllClients',getAllClients);
 router.get('/getAllClientsById/:id',getAllClientsById);
 router.post('/createNewClient',createNewClient);
 router.get('/getAllClientsMinified',getAllClientsMinified);
+router.put('/editClientById/:idCliente/:idPersona',editClientById);
 
 export default router;

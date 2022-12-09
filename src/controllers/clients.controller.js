@@ -2,10 +2,10 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 import { accessKeyId } from '../config.js';
 
+const TABLE_NAME_CLIENTE  = "Clientes";
 
 export const getAllClientsMinified = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME_CLIENTE  = "Clientes";
     const TABLE_NAME_PERSONA  = "Persona";
     let result={};
     try {
@@ -100,14 +100,22 @@ export const getAllClients = async (req, res) => {
 };
 
 export const editClientById = async (req, res) => {
+    const id_cliente = req.params.idCliente;
+    const {medidas} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME = "Persona";
-
+    console.log(medidas,' ', id_cliente)
     try {
         const params = {
-            TableName: TABLE_NAME
+            TableName: TABLE_NAME_PERSONA,
+            Key: {
+                "id_cliente":id_cliente,
+            },
+            UpdateExpression: "SET medidas = :medidas",
+            ExpressionAttributeValues: {
+                ":medidas": medidas
+            }
         };
-        const characters = await dynamoClient.scan(params).promise();
+        const characters = await dynamoClient.update(params).promise();
         console.log(characters);
         res.json(characters)
 
@@ -169,14 +177,16 @@ export const createNewClient = async (req, res) => {
         const id_persona = v4();
         const id_cliente = v4();
 
-        const {nombres,apellidos,medidas,dni,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
+        const {nombres,apellidos,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
         const newPersona = {
             id_persona,
             apellidos,
             dni,
+            fecha_nacimiento,
             fecha_creacion,
             fecha_modificacion,
             nombres,
+            email,
             telefono
         }
         const lentes = 'lente por defecto ';
