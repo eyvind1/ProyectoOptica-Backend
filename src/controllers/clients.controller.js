@@ -132,7 +132,7 @@ export const editClientById = async (req, res) => {
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
                 ":dni"       : dni,
-                ":fecha_nacimiento"  : fecha_nacimiento,
+                ":fecha_nacimiento" : fecha_nacimiento,
                 ":email"       : email
             }
         };
