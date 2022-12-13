@@ -112,7 +112,7 @@ export const darBajaClienteById = async (req, res) => {
             Key: {
                 "id_cliente":id_cliente,
             },
-            UpdateExpression: "SET medidas = :medidas",
+            UpdateExpression: "SET habilitado = :habilitado",
             ExpressionAttributeValues: {
                 ":habilitado": Boolean(habilitado)
             }
