@@ -102,7 +102,6 @@ export const getAllClients = async (req, res) => {
 /* Dar de Baja al Cliente */ 
 export const darBajaClienteById = async (req, res) => {
     const id_cliente = req.params.idCliente;
-    const {habilitado} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
     try {
@@ -114,7 +113,7 @@ export const darBajaClienteById = async (req, res) => {
             },
             UpdateExpression: "SET habilitado = :habilitado",
             ExpressionAttributeValues: {
-                ":habilitado": Boolean(habilitado)
+                ":habilitado": false
             }
         };
         const usuario = await dynamoClient.update(paramsUsuario).promise();        

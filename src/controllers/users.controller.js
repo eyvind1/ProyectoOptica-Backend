@@ -59,10 +59,9 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
-/* Dar de Baja al Usuario */ 
+/* Dar de Baja al Cliente */ 
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
-    const {habilitado} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
     try {
@@ -74,11 +73,11 @@ export const darBajaUsuarioById = async (req, res) => {
             },
             UpdateExpression: "SET habilitado = :habilitado",
             ExpressionAttributeValues: {
-                ":habilitado": Boolean(habilitado)
+                ":habilitado": false
             }
         };
-        const usuario = await dynamoClient.update(paramsUsuario).promise();        
-        res.json(usuario);
+        const usuario = await dynamoClient.update(paramsUsuario).promise();      
+        return usuario;
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -86,7 +85,6 @@ export const darBajaUsuarioById = async (req, res) => {
         })
     }
 };
-
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const id_persona = req.params.idPersona;
