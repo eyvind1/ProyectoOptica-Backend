@@ -59,7 +59,7 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
-/* Dar de Baja al Cliente */ 
+/* Dar de Baja al Usuario */ 
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const {habilitado} = req.body;
@@ -72,7 +72,7 @@ export const darBajaUsuarioById = async (req, res) => {
             Key: {
                 "id_usuario":id_usuario,
             },
-            UpdateExpression: "SET medidas = :medidas",
+            UpdateExpression: "SET habilitado = :habilitado",
             ExpressionAttributeValues: {
                 ":habilitado": Boolean(habilitado)
             }

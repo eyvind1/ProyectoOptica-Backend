@@ -99,6 +99,33 @@ export const getAllClients = async (req, res) => {
       }
 };
 
+/* Dar de Baja al Cliente */ 
+export const darBajaClienteById = async (req, res) => {
+    const id_cliente = req.params.idCliente;
+    const {habilitado} = req.body;
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    console.log(req.body)
+    try {
+        //Primero actualizo datos de la tabla cliente
+        const paramsUsuario = {
+            TableName: TABLE_NAME_CLIENTE,
+            Key: {
+                "id_cliente":id_cliente,
+            },
+            UpdateExpression: "SET medidas = :medidas",
+            ExpressionAttributeValues: {
+                ":habilitado": Boolean(habilitado)
+            }
+        };
+        const usuario = await dynamoClient.update(paramsUsuario).promise();        
+        res.json(usuario);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:'Algo anda mal'
+        })
+    }
+};
 export const editClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
     const id_persona = req.params.idPersona;
