@@ -11,7 +11,7 @@ const router = Router();
 //Defino nombres de las rutas, 
 router.post('/createNewUser',createNewUser);
 router.get('/getAllUsers',getAllUsers);
-router.put('/editUserById/:idUsuario',editUserById);
+router.put('/editUserById/:idUsuario/:idPersona',editUserById);
 router.put('/darBajaUsuarioById/:idUsuario',darBajaUsuarioById);
 
 export default router;

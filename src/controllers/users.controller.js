@@ -36,7 +36,6 @@ export const createNewUser = async (req, res) => {
             usuario,
             observaciones,
             habilitado,
-            fecha_creacion,
             id_persona,
             contrasenia,
             id_sede,
@@ -63,7 +62,6 @@ export const createNewUser = async (req, res) => {
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    console.log(req.body)
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {
