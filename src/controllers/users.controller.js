@@ -86,7 +86,7 @@ export const darBajaUsuarioById = async (req, res) => {
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const id_persona = req.params.idPersona;
-    const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento} = req.body;
+    const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
     try {
@@ -94,11 +94,13 @@ export const editUserById = async (req, res) => {
         const paramsUsuario = {
             TableName: TABLE_NAME_USUARIO,
             Key: {
-                "id_cliente":id_cliente,
+                "id_usuario":id_usuario,
             },
-            UpdateExpression: "SET medidas = :medidas",
+            UpdateExpression: "SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones",
             ExpressionAttributeValues: {
-                ":medidas": medidas
+                ":rol": rol,
+                ":id_sede": id_sede,
+                ":observaciones": observaciones
             }
         };
         const usuario = await dynamoClient.update(paramsUsuario).promise();
@@ -110,14 +112,16 @@ export const editUserById = async (req, res) => {
             },
             UpdateExpression: `SET apellidos = :apellidos, nombres = :nombres,
                                    telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
-                                   email=:email`,
+                                   fecha_modificacion=:fecha_modificacion, email=:email,contrasenia=:contrasenia`,
             ExpressionAttributeValues: {
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
                 ":dni"       : dni,
                 ":fecha_nacimiento" : fecha_nacimiento,
-                ":email"       : email
+                ":fecha_modificacion" : fecha_modificacion,
+                ":email"       : email,
+                ":contrasenia" : contrasenia
             }
         };
         const persona = await dynamoClient.update(paramsPersona).promise();
