@@ -58,6 +58,36 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
+
+/* 1.- Esta funcion permite validar si el usuario que se envia desde el front existe en la BD */
+export const validateUser = async (req, res) => {
+    const id_usuario = req.params.idUsuario;
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    try {
+        //Primero actualizo datos de la tabla cliente
+        const paramsUsuario = {
+            TableName: TABLE_NAME_USUARIO,
+            KeyConditionExpression:
+              'id_usuario= :id_usuario',
+            ExpressionAttributeValues: {
+                ":id_usuario": id_usuario
+            }
+        };
+        const usuario  = await dynamoClient.query(paramsUsuario).promise();      
+        res.json(usuario);
+        console.log(usuario.Items)
+        if((usuario.Items).length>0){
+            console.log('Si hat el usuario')
+        }
+        return usuario;
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:'Algo anda mal'
+        })
+    }
+}
+
 /* Dar de Baja al Cliente */ 
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
@@ -86,6 +116,7 @@ export const darBajaUsuarioById = async (req, res) => {
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const id_persona = req.params.idPersona;
+    //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
     const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
