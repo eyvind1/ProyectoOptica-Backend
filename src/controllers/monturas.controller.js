@@ -91,11 +91,10 @@ const validateMontura  = async (idMontura) => {
     3.-  Funcion Verificada al 100%
 */ 
 export const unsubscribeMonturasById = async (req, res) => {
-    const id_usuario = req.params.idMontura;
-    const existeUsuario = await validateMontura(id_montura)
-    console.log(existeUsuario);
+    const id_montura = req.params.idMontura;
+    const existeMontura = await validateMontura(id_montura)
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    if(existeUsuario.length > 0) {
+    if(existeMontura.length > 0) {
         try {
             //Primero actualizo datos de la tabla cliente
             const paramsMontura = {
