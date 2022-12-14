@@ -59,12 +59,15 @@ export const createNewUser = async (req, res) => {
     }
 };
 
-/* 1.- Esta funcion permite validar si el usuario que se envia desde el front existe en la BD */
-export const validateUser = async (req, res) => {
-    const id_usuario = req.params.idUsuario;
+/* 
+    1.- Esta funcion permite validar si el usuario que se envia desde el front existe en la BD 
+    2.- Funcion validada al 100%    
+*/
+
+const validateUser = async (idUsuario) => {
+    const id_usuario = idUsuario;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
-        //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {
             TableName: TABLE_NAME_USUARIO,
             KeyConditionExpression:
@@ -74,42 +77,51 @@ export const validateUser = async (req, res) => {
             }
         };
         const usuario  = await dynamoClient.query(paramsUsuario).promise();      
-        res.json(usuario);
-        console.log(usuario.Items)
-        if((usuario.Items).length>0){
-            console.log('Si hat el usuario')
-        }
-        return usuario;
+        return usuario.Items;
     } catch (error) {
         console.log(error)
-        return res.status(500).json({
-            message:'Algo anda mal'
-        })
+        return error;
     }
 }
 
-/* Dar de Baja al Cliente */ 
+/*
+    1.-  Funcion para Dar de Baja a un usuario en especifico  
+    2.-  Antes de dar de baja al usuario valido que exista
+    3.-  Funcion Verificada al 100%
+*/ 
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
+    const existeUsuario = await validateUser(id_usuario)
+    console.log(existeUsuario);
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    try {
-        //Primero actualizo datos de la tabla cliente
-        const paramsUsuario = {
-            TableName: TABLE_NAME_USUARIO,
-            Key: {
-                "id_usuario":id_usuario,
-            },
-            UpdateExpression: "SET habilitado = :habilitado",
-            ExpressionAttributeValues: {
-                ":habilitado": false
-            }
-        };
-        const usuario = await dynamoClient.update(paramsUsuario).promise();      
-        return usuario;
-    } catch (error) {
-        console.log(error)
+    if(existeUsuario.length > 0) {
+        try {
+            //Primero actualizo datos de la tabla cliente
+            console.log('entro al try')
+            const paramsUsuario = {
+                TableName: TABLE_NAME_USUARIO,
+                Key: {
+                    "id_usuario":id_usuario,
+                },
+                UpdateExpression: "SET habilitado = :habilitado",
+                ExpressionAttributeValues: {
+                    ":habilitado": false
+                }
+            };
+            const usuario = await dynamoClient.update(paramsUsuario).promise();      
+            res.json(usuario);
+            return usuario;
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'Algo anda mal'
+            })
+        }
+    }
+    else{
+        console.log('no existe')
         return res.status(500).json({
-            message:'Algo anda mal'
+            message:'El usuario no existe'
         })
     }
 };
