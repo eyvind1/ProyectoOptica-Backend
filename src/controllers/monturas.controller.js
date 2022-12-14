@@ -13,7 +13,14 @@ export const getAllMonturas = async (req, res) => {
     try {
         /* Obtengo todas las monturas */ 
         const params = {
-            TableName: TABLE_NAME_MONTURAS
+            TableName: TABLE_NAME_MONTURAS,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
         };
         const monturas = await dynamoClient.scan(params).promise();
         res.json(monturas.Items);
@@ -84,7 +91,6 @@ const validateMontura  = async (idMontura) => {
         return error;
     }
 }
-
 /*
     1.-  Funcion para Dar de Baja a una montura en especifico  
     2.-  Antes de dar de baja al usuario valido que exista
