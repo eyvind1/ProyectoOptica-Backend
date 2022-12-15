@@ -26,6 +26,7 @@ export const getAllMonturas = async (req, res) => {
         res.json(monturas.Items);
     } 
      catch(error) {
+        console.log(error)
         return res.status(500).json({
             message:error
         })
@@ -61,6 +62,7 @@ export const createNewMontura = async (req, res) => {
         }).promise()
         res.json(newMontura);       
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ 
             message:error
         })
