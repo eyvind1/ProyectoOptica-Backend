@@ -10,5 +10,6 @@ const router = Router();
 router.get('/getAllLunas',getAllLunas);
 router.post('/createNewLuna',createNewLuna);
 router.put('/editLunaById/:idLuna',editLunaById );
+router.put('/unsubscribeLunasById/:idLuna', unsubscribeLunasById);
 
 export default router;

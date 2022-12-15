@@ -9,7 +9,14 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 export const getAllLunas = async (req, res) => {
     try {
         const params = {
-            TableName: TABLE_NAME_LUNA
+            TableName: TABLE_NAME_LUNA,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
         };
         const lunas = await dynamoClient.scan(params).promise();
         res.json(lunas.Items);
@@ -74,6 +81,46 @@ const validateLuna  = async (idLuna) => {
         return error;
     }
 }
+
+/*
+    1.-  Funcion para Dar de Baja a una montura en especifico  
+    2.-  Antes de dar de baja al usuario valido que exista
+    3.-  Funcion Verificada al 100%
+*/ 
+export const unsubscribeLunasById = async (req, res) => {
+    const id_luna = req.params.idLuna;
+    const existeLuna = await validateLuna(id_luna);
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    if(existeLuna.length > 0) {
+        try {
+            //Primero actualizo datos de la tabla cliente
+            const paramsLuna = {
+                TableName: TABLE_NAME_LUNA,
+                Key: {
+                    "id_luna":id_luna,
+                },
+                UpdateExpression: "SET habilitado = :habilitado",
+                ExpressionAttributeValues: {
+                    ":habilitado": false
+                }
+            };
+            const luna = await dynamoClient.update(paramsLuna).promise();      
+            res.json(luna);
+            return luna;
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'Algo anda mal'
+            })
+        }
+    }
+    else{
+        console.log('no existe la luna')
+        return res.status(500).json({
+            message:'La luna no existe'
+        })
+    }
+};
 /*
     1.-  Funcion para editar una luna en especifico  
     2.-  Antes de editar la luna, valido que exista
