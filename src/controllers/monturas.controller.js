@@ -33,7 +33,10 @@ export const getAllMonturas = async (req, res) => {
       }
 };
 
-//no habilitado, no precio_montura_c, las 2 fechas
+/*
+    1.- Funcion para crear una nueva montura 
+    2.- Funcion completa al 100% 
+ */
 export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
@@ -139,9 +142,9 @@ export const unsubscribeMonturasById = async (req, res) => {
 */ 
 export const editMonturaById = async (req, res) => {
     const id_montura = req.params.idMontura;
-    const { habilitado,cantidad,codigo,fecha_modificacion_monturas,
+    const {cantidad,codigo,fecha_modificacion_monturas,
             marca, material, precio_montura_c,precio_montura_v, talla} = req.body;
-    console.log(req.body)
+    console.log(req.body);
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeMontura = validateMontura(id_montura);
     // Primero valido si la montura a editar existe en la BD 

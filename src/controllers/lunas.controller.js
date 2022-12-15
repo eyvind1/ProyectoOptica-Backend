@@ -50,3 +50,77 @@ export const createNewLuna = async (req, res) => {
     }
 };
 
+/* 
+    1.- Esta funcion permite validar si la luna que se envia desde el front existe en la BD 
+    2.- Funcion validada al 100%    
+*/
+
+const validateLuna  = async (idLuna) => {
+    const id_luna   = idLuna;
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    try {
+        const paramsLuna = {
+            TableName: TABLE_NAME_LUNA,
+            KeyConditionExpression:
+              'id_luna = :id_luna',
+            ExpressionAttributeValues: {
+                ":id_luna": id_luna
+            }
+        };
+        const luna  = await dynamoClient.query(paramsLuna).promise();      
+        return luna.Items;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+/*
+    1.-  Funcion para editar una luna en especifico  
+    2.-  Antes de editar la luna, valido que exista
+    3.-  Funcion Verificada al 100%
+*/ 
+export const editLunaById = async (req, res) => {
+    const id_luna = req.params.idLuna;
+    const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
+    console.log(req.body)
+    // Valido si existe en la BD el idmontura enviado desde el front
+    const existeMontura = validateLuna(id_luna);
+    // Primero valido si la montura a editar existe en la BD 
+    if(existeMontura.length > 0) {
+        try {
+            const paramsMontura = {
+                TableName: TABLE_NAME_MONTURAS,
+                Key: {
+                    "id_montura":id_montura,
+                },
+                UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
+                                        marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
+                                        talla=:talla`,
+                ExpressionAttributeValues: {
+                    ":cantidad" : cantidad,
+                    ":codigo"   : codigo,
+                    ":fecha_modificacion_monturas": fecha_modificacion_monturas,
+                    ":marca"    : marca,
+                    ":material" : material,
+                    ":precio_montura_c"   : precio_montura_c,
+                    ":precio_montura_v"   : precio_montura_v,
+                    ":talla"   : talla
+                }
+            };
+            const montura = await dynamoClient.update(paramsMontura).promise();
+            res.json(montura)
+            return montura;  
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'No se puede actualizar la montura'
+            })
+        }
+    }
+    else{
+        console.log('no existe la montura')
+        return res.status(500).json({
+            message:'La montura no existe'
+        })
+    }
+};
