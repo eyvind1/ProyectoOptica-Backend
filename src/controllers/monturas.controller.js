@@ -145,9 +145,6 @@ export const editMonturaById = async (req, res) => {
     const id_montura = req.params.idMontura;
     const {cantidad,codigo,fecha_modificacion_monturas,
             marca, material, precio_montura_c,precio_montura_v, talla} = req.body;
-    //console.log(req.body);
-    console.log('bool existe; ',existeMontura);
-
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeMontura = await validateMontura(id_montura);
     // Primero valido si la montura a editar existe en la BD 
