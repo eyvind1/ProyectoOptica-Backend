@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 
-import {getAllLunas, editLunaById,createNewLuna}  from '../controllers/lunas.controller.js';
+import {getAllLunas, unsubscribeLunasById,editLunaById,createNewLuna}  from '../controllers/lunas.controller.js';
 
 
 const router = Router();
