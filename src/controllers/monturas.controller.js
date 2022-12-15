@@ -57,7 +57,7 @@ export const createNewMontura = async (req, res) => {
         }
         //Si no le pongo .promise, solo seria un callback        
         const newMontura = await dynamoClient.put({
-            TableName: TABLE_NAME_MONTURA,
+            TableName: TABLE_NAME_MONTURAS,
             Item: datosMontura
         }).promise()
         res.json(newMontura);       
