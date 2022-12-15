@@ -99,7 +99,7 @@ const validateMontura  = async (idMontura) => {
 }
 /*
     1.-  Funcion para Dar de Baja a una montura en especifico  
-    2.-  Antes de dar de baja al usuario valido que exista
+    2.-  Antes de dar de baja a una montura valido que exista
     3.-  Funcion Verificada al 100%
 */ 
 export const unsubscribeMonturasById = async (req, res) => {

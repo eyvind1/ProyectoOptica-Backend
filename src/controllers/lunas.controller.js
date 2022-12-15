@@ -83,8 +83,8 @@ const validateLuna  = async (idLuna) => {
 }
 
 /*
-    1.-  Funcion para Dar de Baja a una montura en especifico  
-    2.-  Antes de dar de baja al usuario valido que exista
+    1.-  Funcion para Dar de Baja a una luna en especifico  
+    2.-  Antes de dar de baja a una luna valido que exista
     3.-  Funcion Verificada al 100%
 */ 
 export const unsubscribeLunasById = async (req, res) => {
@@ -128,46 +128,41 @@ export const unsubscribeLunasById = async (req, res) => {
 */ 
 export const editLunaById = async (req, res) => {
     const id_luna = req.params.idLuna;
-    const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
-    console.log(req.body)
+    const {cantidad,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
-    const existeMontura = validateLuna(id_luna);
+    const existeLuna = validateLuna(id_luna);
     // Primero valido si la montura a editar existe en la BD 
-    if(existeMontura.length > 0) {
+    if(existeLuna.length > 0) {
         try {
-            const paramsMontura = {
-                TableName: TABLE_NAME_MONTURAS,
+            const paramsLuna = {
+                TableName: TABLE_NAME_LUNA,
                 Key: {
-                    "id_montura":id_montura,
+                    "id_luna":id_luna,
                 },
-                UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
-                                        marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
-                                        talla=:talla`,
+                UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_luna = :fecha_modificacion_luna,
+                                        material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
                 ExpressionAttributeValues: {
                     ":cantidad" : cantidad,
-                    ":codigo"   : codigo,
-                    ":fecha_modificacion_monturas": fecha_modificacion_monturas,
-                    ":marca"    : marca,
+                    ":fecha_modificacion_luna": fecha_modificacion_luna,
                     ":material" : material,
-                    ":precio_montura_c"   : precio_montura_c,
-                    ":precio_montura_v"   : precio_montura_v,
-                    ":talla"   : talla
+                    ":precio_luna_c"   : precio_luna_c,
+                    ":precio_luna_v"   : precio_luna_v
                 }
             };
-            const montura = await dynamoClient.update(paramsMontura).promise();
-            res.json(montura)
-            return montura;  
+            const luna = await dynamoClient.update(paramsLuna).promise();
+            res.json(luna)
+            return luna;  
         } catch (error) {
             console.log(error)
             return res.status(500).json({
-                message:'No se puede actualizar la montura'
+                message:'No se puede actualizar la luna'
             })
         }
     }
     else{
-        console.log('no existe la montura')
+        console.log('no existe la Luna')
         return res.status(500).json({
-            message:'La montura no existe'
+            message:'La luna no existe'
         })
     }
 };
