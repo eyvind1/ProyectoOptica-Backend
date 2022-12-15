@@ -130,7 +130,7 @@ export const editLunaById = async (req, res) => {
     const id_luna = req.params.idLuna;
     const {cantidad,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
-    const existeLuna = validateLuna(id_luna);
+    const existeLuna = await validateLuna(id_luna);
     // Primero valido si la montura a editar existe en la BD 
     if(existeLuna.length > 0) {
         try {
