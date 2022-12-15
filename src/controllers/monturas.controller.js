@@ -79,6 +79,7 @@ export const createNewMontura = async (req, res) => {
 
 const validateMontura  = async (idMontura) => {
     const id_montura   = idMontura;
+    console.log('id montura: ', id_montura)
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsMontura = {
@@ -103,7 +104,8 @@ const validateMontura  = async (idMontura) => {
 */ 
 export const unsubscribeMonturasById = async (req, res) => {
     const id_montura = req.params.idMontura;
-    const existeMontura = await validateMontura(id_montura)
+    const existeMontura = await validateMontura(id_montura);
+    console.log(existeMontura);
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     if(existeMontura.length > 0) {
         try {
