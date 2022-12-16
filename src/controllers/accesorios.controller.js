@@ -73,7 +73,7 @@ const validateAccesorio  = async (idAccesorio) => {
             ExpressionAttributeValues: {
                 ":id_accesorio": id_accesorio,
             }
-        };
+        };              
         const accesorio  = await dynamoClient.query(paramsAccesorio).promise();      
         return accesorio.Items;
     } catch (error) {
@@ -115,6 +115,53 @@ export const unsubscribeAccesoriosById = async (req, res) => {
     }
     else{
         console.log('no existe el accesorio')
+        return res.status(500).json({
+            message:'El accesorio no existe'
+        })
+    }
+};
+
+
+
+/*
+    1.-  Funcion para editar un accesorio en especifico  
+    2.-  Antes de editar el accesorio, valido que exista
+    3.-  Funcion Verificada al 100%
+*/ 
+export const editAccesorioById = async (req, res) => {
+    const id_accesorio = req.params.idAccesorio;
+    const {nombre_accesorio,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = req.body;
+    const existeAccesorio = await validateAccesorio(id_accesorio);
+    if(existeAccesorio.length > 0) {
+        try {
+            const paramsAccesorio = {
+                TableName: TABLE_NAME_ACCESORIO,
+                Key: {
+                    "id_accesorio":id_accesorio,
+                },
+                UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_accesorio = :fecha_modificacion_accesorio,
+                                        nombre_accesorio=:nombre_accesorio,
+                                        precio_accesorio_c=:precio_accesorio_c,precio_accesorio_v=:precio_accesorio_v`,
+                ExpressionAttributeValues: {
+                    ":cantidad" : cantidad,
+                    ":nombre_accesorio" : nombre_accesorio,
+                    ":fecha_modificacion_accesorio": fecha_modificacion_accesorio,
+                    ":precio_accesorio_c"   : precio_accesorio_c,
+                    ":precio_accesorio_v"   : precio_accesorio_v
+                }
+            };
+            const accesorio = await dynamoClient.update(paramsAccesorio).promise();
+            res.json(accesorio)
+            return accesorio;  
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'No se puede actualizar el accesorio'
+            })
+        }
+    }
+    else{
+        console.log('No existe el accesorio')
         return res.status(500).json({
             message:'El accesorio no existe'
         })
