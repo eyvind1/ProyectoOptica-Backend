@@ -63,7 +63,7 @@ export const createNewAccesorio = async (req, res) => {
     2.- Funcion validada al 100%    
 */
 const validateAccesorio  = async (idAccesorio) => {
-    const id_accesorio   = id_accesorio;
+    const id_accesorio   = idAccesorio;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsAccesorio = {
