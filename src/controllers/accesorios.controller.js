@@ -10,7 +10,14 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 export const getAllAccesorios = async (req, res) => {
     try {
         const params = {
-            TableName: TABLE_NAME_ACCESORIO
+            TableName: TABLE_NAME_ACCESORIO,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
         };
         const accesorios = await dynamoClient.scan(params).promise();
         res.json(accesorios.Items);
@@ -47,6 +54,69 @@ export const createNewAccesorio = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ 
             message:error
+        })
+    }
+};
+
+/* 
+    1.- Esta funcion permite validar si un accesorio que se envia desde el front existe en la BD 
+    2.- Funcion validada al 100%    
+*/
+const validateAccesorio  = async (idLuna) => {
+    const id_accesorio   = id_accesorio;
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    try {
+        const paramsAccesorio = {
+            TableName: TABLE_NAME_ACCESORIO,
+            KeyConditionExpression:
+              'id_accesorio = :id_accesorio',
+            ExpressionAttributeValues: {
+                ":id_accesorio": id_accesorio,
+            }
+        };
+        const accesorio  = await dynamoClient.query(paramsAccesorio).promise();      
+        return accesorio.Items;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
+/*
+    1.-  Funcion para Dar de Baja a un accesorio en especifico  
+    2.-  Antes de dar de baja a un accesorio valido que exista
+    3.-  Funcion Verificada al 100%
+*/ 
+export const unsubscribeAccesoriosById = async (req, res) => {
+    const id_accesorio = req.params.idAccesorio;
+    const existeAccesorio = await validateAccesorio(id_accesorio);
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    if(existeAccesorio.length > 0) {
+        try {
+            const paramsAccesorio = {
+                TableName: TABLE_NAME_ACCESORIO,
+                Key: {
+                    "id_accesorio":id_accesorio,
+                },
+                UpdateExpression: "SET habilitado = :habilitado",
+                ExpressionAttributeValues: {
+                    ":habilitado": false
+                }
+            };
+            const accesorio = await dynamoClient.update(paramsAccesorio).promise();      
+            res.json(accesorio);
+            return accesorio;
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'Algo anda mal'
+            })
+        }
+    }
+    else{
+        console.log('no existe el accesorio')
+        return res.status(500).json({
+            message:'El accesorio no existe'
         })
     }
 };
