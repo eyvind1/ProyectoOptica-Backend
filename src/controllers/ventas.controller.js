@@ -176,7 +176,7 @@ const validateVenta  = async (idVenta) => {
         const paramsVenta = {
             TableName: TABLE_NAME_VENTAS,
             KeyConditionExpression:
-              'id_venta = :id_venta',
+              'id_ventas = :id_venta',
             ExpressionAttributeValues: {
                 ":id_venta": id_venta,
             }
@@ -203,7 +203,7 @@ export const unsubscribeVentasById = async (req, res) => {
             const paramsVenta = {
                 TableName: TABLE_NAME_VENTAS,
                 Key: {
-                    "id_venta":id_venta,
+                    "id_ventas":id_venta,
                 },
                 UpdateExpression: "SET habilitado = :habilitado",
                 ExpressionAttributeValues: {
