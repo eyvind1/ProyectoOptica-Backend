@@ -128,7 +128,7 @@ export const darBajaClienteById = async (req, res) => {
 export const editClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
     const id_persona = req.params.idPersona;
-    const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento} = req.body;
+    const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento,antecedentes} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
     try {
@@ -138,9 +138,10 @@ export const editClientById = async (req, res) => {
             Key: {
                 "id_cliente":id_cliente,
             },
-            UpdateExpression: "SET medidas = :medidas",
+            UpdateExpression: "SET medidas = :medidas, antecedentes = :antecedentes ",
             ExpressionAttributeValues: {
-                ":medidas": medidas
+                ":medidas": medidas,
+                ":antecedentes": antecedentes
             }
         };
         const cliente = await dynamoClient.update(paramsCliente).promise();
