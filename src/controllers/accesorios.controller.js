@@ -62,7 +62,7 @@ export const createNewAccesorio = async (req, res) => {
     1.- Esta funcion permite validar si un accesorio que se envia desde el front existe en la BD 
     2.- Funcion validada al 100%    
 */
-const validateAccesorio  = async (idLuna) => {
+const validateAccesorio  = async (idAccesorio) => {
     const id_accesorio   = id_accesorio;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
