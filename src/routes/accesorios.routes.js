@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 
-import {getAllAccesorios, createNewAccesorio}  from '../controllers/accesorios.controller.js';
+import {getAllAccesorios,unsubscribeAccesoriosById, createNewAccesorio}  from '../controllers/accesorios.controller.js';
 
 
 const router = Router();
