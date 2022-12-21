@@ -64,13 +64,23 @@ export const updateListOfProducts=async(req,res)=>{
                         ":talla"   : row.talla
                     }
                 };
-                const product = await dynamoClient.update(params).promise();      
-                if(arr.length-1 === i){
-                    res.json(product);
+                //Intento actualizar
+                try {
+                    const product = await dynamoClient.update(params).promise();  
+                    console.log(product);    
+                    if(arr.length-1 === i){
+                        res.json(product);
+                    }           
+                } catch (error) {
+                    console.log(error)
+                    return res.status(500).json({
+                        message:'Algo anda mal'
+                    })
                 }
             });
         }
         else if(tipo ==='luna'){
+            console.log('en luna: ',array_productos )
             array_productos.map(async(row,i,arr)=>{
                 const params= {
                     TableName: 'Lunas',
@@ -79,7 +89,9 @@ export const updateListOfProducts=async(req,res)=>{
                     },
                     UpdateExpression: `SET  cantidad= :cantidad,
                                             material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
+                    ConditionExpression: "id_luna = :id_luna", 
                     ExpressionAttributeValues: {
+                        ":id_luna" : row.id_luna,
                         ":cantidad" : row.cantidad,
                         //":fecha_modificacion_luna": fecha_modificacion_luna,
                         ":material" : row.material,
@@ -89,7 +101,8 @@ export const updateListOfProducts=async(req,res)=>{
                 };     
                 //Intento actualizar
                 try {
-                    const product = await dynamoClient.update(params).promise();      
+                    const product = await dynamoClient.update(params).promise();  
+                    console.log(product);    
                     if(arr.length-1 === i){
                         res.json(product);
                     }           
@@ -119,9 +132,18 @@ export const updateListOfProducts=async(req,res)=>{
                         ":precio_accesorio_v"   : row.precio_accesorio_v
                     }
                 };
-                const product = await dynamoClient.update(params).promise();      
-                if(arr.length-1 === i){
-                    res.json(product);
+                //Intento actualizar
+                try {
+                    const product = await dynamoClient.update(params).promise();  
+                    console.log(product);    
+                    if(arr.length-1 === i){
+                        res.json(product);
+                    }           
+                } catch (error) {
+                    console.log(error)
+                    return res.status(500).json({
+                        message:'Algo anda mal'
+                    })
                 }
             })
         }
