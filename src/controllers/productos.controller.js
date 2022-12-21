@@ -38,27 +38,82 @@ export const getProductBySede = async (req, res) => {
 };
 
 
+
+
+
 export const updateListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
-        //Primero actualizo datos de la tabla cliente
-        array_productos.map(async(row,i,arr)=>{
-            const paramsLuna = {
+        const tipo = array_productos[0].tipo;
+
+        if(tipo ==='montura'){
+            const paramsMontura = {
+                TableName: 'Monturas',
+                Key: {
+                    "id_montura":row.id_montura,
+                },
+                UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
+                                        marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
+                                        talla=:talla`,
+                ExpressionAttributeValues: {
+                    ":cantidad" : row.cantidad,
+                    ":codigo"   : row.codigo,
+                    //":fecha_modificacion_monturas": fecha_modificacion_monturas,
+                    ":marca"    : row.marca,
+                    ":material" : row.material,
+                    ":precio_montura_c"   : row.precio_montura_c,
+                    ":precio_montura_v"   : row.precio_montura_v,
+                    ":talla"   : row.talla
+                }
+            };
+            const product = await dynamoClient.update(params).promise();      
+            if(arr.length-1 === i){
+                res.json(product);
+            }
+            
+        }
+        else if(tipo ==='luna'){
+            const paramsLunas = {
                 TableName: 'Lunas',
                 Key: {
                     "id_luna":row.id_luna,
                 },
-                UpdateExpression: "SET  cantidad = :cantidad",
+                UpdateExpression: `SET  cantidad= :cantidad,
+                                        material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
                 ExpressionAttributeValues: {
-                    //":habilitado": row.habilitado,
-                    ":cantidad": row.cantidad
+                    ":cantidad" : row.cantidad,
+                    //":fecha_modificacion_luna": fecha_modificacion_luna,
+                    ":material" : row.material,
+                    ":precio_luna_c"   : row.precio_luna_c,
+                    ":precio_luna_v"   : row.precio_luna_v
                 }
-            };    
-            const luna = await dynamoClient.update(paramsLuna).promise();      
-            if(arr.length-1 === i){
-                res.json(luna);
-            }
-        })
+            };            
+        }
+        else if(tipo ==='accesorio'){
+            array_productos.map(async(row,i,arr)=>{
+                const params = {
+                    TableName: 'Accesorios',
+                    Key: {
+                        "id_accesorio":row.id_accesorio,
+                    },
+                    UpdateExpression: `SET  cantidad= :cantidad, 
+                                            nombre_accesorio=:nombre_accesorio,
+                                            precio_accesorio_c=:precio_accesorio_c,
+                                            precio_accesorio_v=:precio_accesorio_v`,
+                    ExpressionAttributeValues: {
+                        ":cantidad" : row.cantidad,
+                        ":nombre_accesorio" : row.nombre_accesorio,
+                        ":precio_accesorio_c"   : row.precio_accesorio_c,
+                        ":precio_accesorio_v"   : row.precio_accesorio_v
+                    }
+                };
+                const product = await dynamoClient.update(params).promise();      
+                if(arr.length-1 === i){
+                    res.json(product);
+                }
+            })
+        }
+    
         
     } catch (error) {
         console.log(error)
