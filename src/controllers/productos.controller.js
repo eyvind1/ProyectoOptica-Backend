@@ -44,50 +44,54 @@ export const updateListOfProducts=async(req,res)=>{
         const tipo = array_productos[0].tipo;
         const fecha_actual = new Date();
         if(tipo ==='montura'){
-            const params = {
-                TableName: 'Monturas',
-                Key: {
-                    "id_montura":row.id_montura,
-                },
-                UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
-                                        marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
-                                        talla=:talla`,
-                ExpressionAttributeValues: {
-                    ":cantidad" : row.cantidad,
-                    ":codigo"   : row.codigo,
-                    ":fecha_modificacion_monturas": fecha_actual,
-                    ":marca"    : row.marca,
-                    ":material" : row.material,
-                    ":precio_montura_c"   : row.precio_montura_c,
-                    ":precio_montura_v"   : row.precio_montura_v,
-                    ":talla"   : row.talla
+            array_productos.map(async(row,i,arr)=>{
+                const params = {
+                    TableName: 'Monturas',
+                    Key: {
+                        "id_montura":row.id_montura,
+                    },
+                    UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
+                                            marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
+                                            talla=:talla`,
+                    ExpressionAttributeValues: {
+                        ":cantidad" : row.cantidad,
+                        ":codigo"   : row.codigo,
+                        ":fecha_modificacion_monturas": fecha_actual,
+                        ":marca"    : row.marca,
+                        ":material" : row.material,
+                        ":precio_montura_c"   : row.precio_montura_c,
+                        ":precio_montura_v"   : row.precio_montura_v,
+                        ":talla"   : row.talla
+                    }
+                };
+                const product = await dynamoClient.update(params).promise();      
+                if(arr.length-1 === i){
+                    res.json(product);
                 }
-            };
-            const product = await dynamoClient.update(params).promise();      
-            if(arr.length-1 === i){
-                res.json(product);
-            }
+            });
         }
         else if(tipo ==='luna'){
-            const params= {
-                TableName: 'Lunas',
-                Key: {
-                    "id_luna":row.id_luna,
-                },
-                UpdateExpression: `SET  cantidad= :cantidad,
-                                        material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
-                ExpressionAttributeValues: {
-                    ":cantidad" : row.cantidad,
-                    //":fecha_modificacion_luna": fecha_modificacion_luna,
-                    ":material" : row.material,
-                    ":precio_luna_c"   : row.precio_luna_c,
-                    ":precio_luna_v"   : row.precio_luna_v
-                }
-            };     
-            const product = await dynamoClient.update(params).promise();      
-            if(arr.length-1 === i){
-                res.json(product);
-            }       
+            array_productos.map(async(row,i,arr)=>{
+                const params= {
+                    TableName: 'Lunas',
+                    Key: {
+                        "id_luna":row.id_luna,
+                    },
+                    UpdateExpression: `SET  cantidad= :cantidad,
+                                            material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
+                    ExpressionAttributeValues: {
+                        ":cantidad" : row.cantidad,
+                        //":fecha_modificacion_luna": fecha_modificacion_luna,
+                        ":material" : row.material,
+                        ":precio_luna_c"   : row.precio_luna_c,
+                        ":precio_luna_v"   : row.precio_luna_v
+                    }
+                };     
+                const product = await dynamoClient.update(params).promise();      
+                if(arr.length-1 === i){
+                    res.json(product);
+                }       
+            })
         }
         else if(tipo ==='accesorio'){
             array_productos.map(async(row,i,arr)=>{
