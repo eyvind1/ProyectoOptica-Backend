@@ -87,10 +87,18 @@ export const updateListOfProducts=async(req,res)=>{
                         ":precio_luna_v"   : row.precio_luna_v
                     }
                 };     
-                const product = await dynamoClient.update(params).promise();      
-                if(arr.length-1 === i){
-                    res.json(product);
-                }       
+                //Intento actualizar
+                try {
+                    const product = await dynamoClient.update(params).promise();      
+                    if(arr.length-1 === i){
+                        res.json(product);
+                    }           
+                } catch (error) {
+                    console.log(error)
+                    return res.status(500).json({
+                        message:'Algo anda mal'
+                    })
+                }
             })
         }
         else if(tipo ==='accesorio'){
