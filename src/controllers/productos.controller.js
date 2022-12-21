@@ -7,7 +7,6 @@ import {v4} from 'uuid';
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
-// Log to con
 
 /* Esta funcion lista todas las sedes que se encuentran con "estado = Habikitado" */
 
@@ -31,8 +30,40 @@ export const getProductBySede = async (req, res) => {
         res.json(sedes.Items);
     } 
      catch(error) {
+        console.log(error)
         return res.status(500).json({
             message:error
         })
     }
 };
+
+
+export const updateListOfProducts=async(req,res)=>{
+    try {
+        const array_productos = req.body;
+        //Primero actualizo datos de la tabla cliente
+        array_productos.map(async(row,i,arr)=>{
+            const paramsLuna = {
+                TableName: 'Lunas',
+                Key: {
+                    "id_luna":row.id_luna,
+                },
+                UpdateExpression: "SET  cantidad = :cantidad",
+                ExpressionAttributeValues: {
+                    //":habilitado": row.habilitado,
+                    ":cantidad": row.cantidad
+                }
+            };    
+            const luna = await dynamoClient.update(paramsLuna).promise();      
+            if(arr.length-1 === i){
+                res.json(luna);
+            }
+        })
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:'Algo anda mal'
+        })
+    }
+}
