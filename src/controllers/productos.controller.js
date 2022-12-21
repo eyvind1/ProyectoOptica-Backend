@@ -83,7 +83,11 @@ export const updateListOfProducts=async(req,res)=>{
                     ":precio_luna_c"   : row.precio_luna_c,
                     ":precio_luna_v"   : row.precio_luna_v
                 }
-            };            
+            };     
+            const product = await dynamoClient.update(params).promise();      
+            if(arr.length-1 === i){
+                res.json(product);
+            }       
         }
         else if(tipo ==='accesorio'){
             array_productos.map(async(row,i,arr)=>{
