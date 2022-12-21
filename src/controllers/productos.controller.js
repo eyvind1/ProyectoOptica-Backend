@@ -38,16 +38,13 @@ export const getProductBySede = async (req, res) => {
 };
 
 
-
-
-
 export const updateListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
         const tipo = array_productos[0].tipo;
-
+        const fecha_actual = new Date();
         if(tipo ==='montura'){
-            const paramsMontura = {
+            const params = {
                 TableName: 'Monturas',
                 Key: {
                     "id_montura":row.id_montura,
@@ -58,7 +55,7 @@ export const updateListOfProducts=async(req,res)=>{
                 ExpressionAttributeValues: {
                     ":cantidad" : row.cantidad,
                     ":codigo"   : row.codigo,
-                    //":fecha_modificacion_monturas": fecha_modificacion_monturas,
+                    ":fecha_modificacion_monturas": fecha_actual,
                     ":marca"    : row.marca,
                     ":material" : row.material,
                     ":precio_montura_c"   : row.precio_montura_c,
@@ -70,10 +67,9 @@ export const updateListOfProducts=async(req,res)=>{
             if(arr.length-1 === i){
                 res.json(product);
             }
-            
         }
         else if(tipo ==='luna'){
-            const paramsLunas = {
+            const params= {
                 TableName: 'Lunas',
                 Key: {
                     "id_luna":row.id_luna,
@@ -113,8 +109,6 @@ export const updateListOfProducts=async(req,res)=>{
                 }
             })
         }
-    
-        
     } catch (error) {
         console.log(error)
         return res.status(500).json({
