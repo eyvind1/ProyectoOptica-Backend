@@ -37,7 +37,6 @@ export const getProductBySede = async (req, res) => {
     }
 };
 
-
 export const updateListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
@@ -104,7 +103,7 @@ export const updateListOfProducts=async(req,res)=>{
                     const product = await dynamoClient.update(params).promise();  
                     console.log(product);    
                     if(arr.length-1 === i){
-                        res.json(product);
+                        res.json(product); 
                     }           
                 } catch (error) {
                     console.log(error)
@@ -114,7 +113,7 @@ export const updateListOfProducts=async(req,res)=>{
                 }
             })
         }
-        else if(tipo ==='accesorio'){
+        else if(tipo === 'accesorio'){
             array_productos.map(async(row,i,arr)=>{
                 const params = {
                     TableName: 'Accesorios',

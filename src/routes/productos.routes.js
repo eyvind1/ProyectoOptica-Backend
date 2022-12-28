@@ -8,7 +8,7 @@ const router = Router();
 
 
 router.get('/getProductBySede/:idSede/:productName',getProductBySede);
-router.post('/updateListOfProducts',updateListOfProducts);
+router.put('/updateListOfProducts',updateListOfProducts);
 
 
 
