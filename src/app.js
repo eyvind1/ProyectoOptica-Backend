@@ -12,6 +12,7 @@ import lunasRoutes from './routes/lunas.routes.js';
 import sedesRoutes from './routes/sedes.routes.js';
 import ventasRoutes from './routes/ventas.routes.js';
 import productosRoutes from './routes/productos.routes.js';
+import cajaRoutes from './routes/caja.routes.js';
 /* Fin Importando rutas creadas */
 
 const app = express();
@@ -44,6 +45,8 @@ app.use(accesoriosRoutes);
 app.use(sedesRoutes);
 app.use(ventasRoutes);
 app.use(productosRoutes);
+app.use(cajaRoutes);
+
 /* Fin  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 
 export default app;

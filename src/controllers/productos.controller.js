@@ -37,6 +37,10 @@ export const getProductBySede = async (req, res) => {
     }
 };
 
+
+/* Esta funcion queda pendiente cuadno se envian 2 o mas productos y uno falla en su ID se salta al otro y al retornar
+sale cannot set headers before ..... entonces al encontrar al menos un id fallido debe retornar error defrente */
+
 export const updateListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
@@ -86,14 +90,13 @@ export const updateListOfProducts=async(req,res)=>{
                     Key: {
                         "id_luna":row.id_luna,
                     },
-                    UpdateExpression: `SET  cantidad= :cantidad,
-                                            material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
+                    UpdateExpression: `SET  cantidad= :cantidad, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
                     ConditionExpression: "id_luna = :id_luna", 
                     ExpressionAttributeValues: {
                         ":id_luna" : row.id_luna,
                         ":cantidad" : row.cantidad,
                         //":fecha_modificacion_luna": fecha_modificacion_luna,
-                        ":material" : row.material,
+                        //":material" : row.material,
                         ":precio_luna_c"   : row.precio_luna_c,
                         ":precio_luna_v"   : row.precio_luna_v
                     }
@@ -106,9 +109,10 @@ export const updateListOfProducts=async(req,res)=>{
                         res.json(product); 
                     }           
                 } catch (error) {
-                    console.log(error)
+                    console.log(error);
+                    delete array_productos[0];
                     return res.status(500).json({
-                        message:'Algo anda mal'
+                        message:'Algo anda mal',
                     })
                 }
             })
