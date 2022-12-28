@@ -6,6 +6,6 @@ import {createNewIngreso} from '../controllers/caja.controller.js';
 const router = Router();
 
 
-router.get('/createNewIngreso',createNewIngreso);
+router.post('/createNewIngreso',createNewIngreso);
 
 export default router;
