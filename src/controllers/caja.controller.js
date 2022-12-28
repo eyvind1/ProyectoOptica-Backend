@@ -10,14 +10,15 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 export const createNewIngreso = async (req, res) => {
     try {
         const id_caja = v4() + codeForTables.tablaCaja;
-        const {id_sede,descripcion,encargado,egreso,fecha_creacion_caja} = (req.body);
+        const {id_sede,monto,descripcion,encargado,egreso,fecha_creacion_caja} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
+            monto,
             egreso,
             descripcion,
-            encargado
-            //fecha_creacion_caja,
+            encargado,
+            fecha_creacion_caja,
         }
         const newCaja = await dynamoClient.put({
             TableName: TABLE_NAME_CAJA,
