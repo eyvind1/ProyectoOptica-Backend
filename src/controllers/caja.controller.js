@@ -60,8 +60,9 @@ export const getAllEgresos = async (req, res) => {
       }
 };
 
-/* Funcion Verificada
-   1.- Cuando el valor
+/* 
+     Funcion Verificada
+     1.-el campo egreso es falso si es un ingreso
 */ 
 export const getAllIngresos = async (req, res) => {
     try {
