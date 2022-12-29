@@ -8,9 +8,9 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
 export const createNewIngreso = async (req, res) => {
+    const id_caja = v4() + codeForTables.tablaCaja;
     try {
-        const id_caja = v4() + codeForTables.tablaCaja;
-        const {id_sede,monto,descripcion,encargado,egreso,fecha_creacion_caja} = (req.body);
+        const {id_sede,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
@@ -18,6 +18,7 @@ export const createNewIngreso = async (req, res) => {
             egreso,
             descripcion,
             encargado,
+            habilitado,
             fecha_creacion_caja,
         }
         const newCaja = await dynamoClient.put({
@@ -31,4 +32,58 @@ export const createNewIngreso = async (req, res) => {
             message:error
         })
     }
+};
+
+
+export const getAllEgresos = async (req, res) => {
+    try {
+        /* Obtengo todos los egresos */ 
+        const params = {
+            TableName: TABLE_NAME_CAJA,
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueEgreso": true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
+        };
+        const egresos = await dynamoClient.scan(params).promise();
+        res.json(egresos.Items);
+    } 
+     catch(error) {
+        console.log(error)
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
+
+/* Funcion Verificada
+   1.- Cuando el valor
+*/ 
+export const getAllIngresos = async (req, res) => {
+    try {
+        /* Obtengo todos los ingresos */ 
+        const params = {
+            TableName: TABLE_NAME_CAJA,
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueEgreso": false
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
+            }
+        };
+        const ingresos = await dynamoClient.scan(params).promise();
+        res.json(ingresos.Items);
+    } 
+     catch(error) {
+        console.log(error)
+        return res.status(500).json({
+            message:error
+        })
+      }
 };
