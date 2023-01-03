@@ -11,3 +11,12 @@ export const codeForTables={
     tablaCaja       : 'Caj009'
 }
 /* Fin  Estos codigos se concatenan al primary key o ID de cada tabla */
+
+
+/* Sufijos que utilizo para los codigos internos de los productos */
+
+export const prefixesForProducts={
+    ProdMontura : 'Mont',
+}
+
+/* Fin */

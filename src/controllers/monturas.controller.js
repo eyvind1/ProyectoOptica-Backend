@@ -1,6 +1,6 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
-import {codeForTables} from '../utils/codigosTablas.js';
+import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
 import { nanoid } from 'nanoid';
 
 /* Variables Globales que se utilizan en las funciones */ 
@@ -42,7 +42,7 @@ export const createNewMontura = async (req, res) => {
     try {
         const id_montura = v4() + codeForTables.tablaMonturas;
         //Genero el codigo interno para el codigo de barras
-        let codigo_interno = nanoid(8); 
+        let codigo_interno = nanoid(8) + prefixesForProducts.ProdMontura; 
         const {id_sede,tipo,habilitado,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {
             id_montura,
