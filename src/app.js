@@ -18,13 +18,9 @@ import cajaRoutes from './routes/caja.routes.js';
 
 const app = express();
 app.use(cors());
-//Paso esta funcion para que express entienda cuando se le envia un Json
-app.use(express.json());
+//Paso esta funcion para que express entienda cuando se le envia un Json, limit sirve para evitar el error too large (413)
+app.use(express.json({limit: '50mb'}));
 
-
-// Express 4.0
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 /* *********** MUY IMPORTANTE DEFINIRLO ANTES DE LLAMAR A LAS RUTAS PARA HABILITAR EL CORS */
 app.use(function (req, res, next) {
