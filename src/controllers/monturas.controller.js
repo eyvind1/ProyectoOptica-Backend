@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 /* Variables Globales que se utilizan en las funciones */ 
 
 const TABLE_NAME_MONTURAS  = "Monturas";
-const dynamoClient = new AWS.DynamoDB.DocumentClient();
+const dynamoClient         = new AWS.DynamoDB.DocumentClient();
 
 export const getAllMonturas = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
@@ -43,10 +43,11 @@ export const createNewMontura = async (req, res) => {
         const id_montura = v4() + codeForTables.tablaMonturas;
         //Genero el codigo interno para el codigo de barras
         let codigo_interno = nanoid(8) + prefixesForProducts.ProdMontura; 
-        const {id_sede,tipo,habilitado,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {
             id_montura,
             tipo,
+            color,
             cantidad,
             habilitado,
             codigo,

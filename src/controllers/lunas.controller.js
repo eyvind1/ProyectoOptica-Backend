@@ -1,7 +1,7 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 
-import {codeForTables} from '../utils/codigosTablas.js';
+import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
 
 const TABLE_NAME_LUNA  = "Lunas";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
@@ -32,12 +32,14 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_luna = v4() + codeForTables.tablaLunas;
+        let codigo_interno = nanoid(8) + prefixesForProducts.ProdLuna; 
         const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         const datosLuna = {
             id_luna,
             id_sede,
             tipo,
             habilitado,
+            codigo_interno,
             fecha_creacion_luna,
             fecha_modificacion_luna,
             material,

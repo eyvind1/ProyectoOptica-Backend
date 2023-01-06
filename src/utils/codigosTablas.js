@@ -16,7 +16,9 @@ export const codeForTables={
 /* Sufijos que utilizo para los codigos internos de los productos */
 
 export const prefixesForProducts={
-    ProdMontura : 'Mont',
+    ProdMontura   : 'Mont',
+    ProdLuna      : 'Luna',
+    ProdAccesorio : 'Acce',
 }
 
 /* Fin */
