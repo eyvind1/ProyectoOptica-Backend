@@ -1,6 +1,6 @@
 import {Router} from 'express';
 
-
+import{isAuthen} from '../helpers/auth.js'
 //Obtengo las funciones del controlador
 import {getAllMonturas, editMonturaById,createNewMontura,unsubscribeMonturasById}  from '../controllers/monturas.controller.js';
 
@@ -14,3 +14,9 @@ router.post('/createNewMontura',createNewMontura);
 router.put('/unsubscribeMonturasById/:idMontura',unsubscribeMonturasById);
 router.put('/editMonturaById/:idMontura',editMonturaById);
 export default router;
+
+
+//Tutorial 
+
+
+// https://www.youtube.com/watch?v=NN-Jt6EjFAc

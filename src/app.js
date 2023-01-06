@@ -21,10 +21,6 @@ app.use(cors());
 //Paso esta funcion para que express entienda cuando se le envia un Json, limit sirve para evitar el error too large (413)
 app.use(express.json({limit: '50mb'}));
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a9937cbdef5be52e262a1e0436240eae9506ba6c
 /* *********** MUY IMPORTANTE DEFINIRLO ANTES DE LLAMAR A LAS RUTAS PARA HABILITAR EL CORS */
 app.use(function (req, res, next) {
 
