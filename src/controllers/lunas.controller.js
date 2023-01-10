@@ -1,5 +1,6 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
+import { nanoid } from 'nanoid';
 
 import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
 
