@@ -1,6 +1,6 @@
 import {Router} from 'express';
 
-import{isAuthen} from '../helpers/auth.js'
+//import{isAuthenticated} from '../helpers/auth.js'
 //Obtengo las funciones del controlador
 import {getAllMonturas, editMonturaById,createNewMontura,unsubscribeMonturasById}  from '../controllers/monturas.controller.js';
 
@@ -13,6 +13,9 @@ router.get('/getAllMonturas',getAllMonturas);
 router.post('/createNewMontura',createNewMontura);
 router.put('/unsubscribeMonturasById/:idMontura',unsubscribeMonturasById);
 router.put('/editMonturaById/:idMontura',editMonturaById);
+
+
+
 export default router;
 
 
