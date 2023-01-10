@@ -48,11 +48,12 @@ export const createNewLuna = async (req, res) => {
             precio_luna_v,
         }
         const newLuna = await dynamoClient.put({
-            TableName: TABLE_NAME_LUNA,
-            Item: datosLuna
+            TableName : TABLE_NAME_LUNA,
+            Item      : datosLuna
         }).promise()
         res.json(newLuna);       
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ 
             message:error
         })
