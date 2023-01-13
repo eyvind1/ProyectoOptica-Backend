@@ -1,7 +1,7 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
-import { customAlphabet,customRandom} from 'nanoid';
+import { customAlphabet} from 'nanoid';
 
 /* Variables Globales que se utilizan en las funciones */ 
 
@@ -44,14 +44,6 @@ export const createNewMontura = async (req, res) => {
         //Genero el codigo interno para el codigo de barras
         const nanoid       = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',6)
         let codigo_interno = nanoid() + prefixesForProducts.ProdMontura; 
-
-
-        // const rng = seedrandom(seed)
-        // const nanoid = customRandom('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 10, size => {
-        // return (new Uint8Array(size)).map(() => 256 * rng())
-        // })
-
-        // const codigo_interno =nanoid()
 
         const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {

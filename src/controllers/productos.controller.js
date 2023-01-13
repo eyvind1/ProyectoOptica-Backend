@@ -3,7 +3,7 @@ import AWS from '../db.js'
 /* Libreria para poder generar ID's aleatorios*/
 import {v4} from 'uuid';
 import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
-import { nanoid } from 'nanoid';
+import { customAlphabet} from 'nanoid';
 
 
 /* Constantes Globales que utilizan las funciones de este archivo */
@@ -55,7 +55,9 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_montura   = v4() + codeForTables.tablaMonturas;
-                let codigo_interno = nanoid(8) + prefixesForProducts.ProdMontura; 
+                const nanoid       = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',6)
+                let codigo_interno = nanoid() + prefixesForProducts.ProdMontura; 
+
                 const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 const datosMontura = {
                     id_montura,
