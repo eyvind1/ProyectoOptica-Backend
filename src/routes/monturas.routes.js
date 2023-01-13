@@ -1,6 +1,6 @@
 import {Router} from 'express';
 
-//import{isAuthenticated} from '../helpers/auth.js'
+import  isAuthenticated from '../helpers/auth.js'
 //Obtengo las funciones del controlador
 import {getAllMonturas, editMonturaById,createNewMontura,unsubscribeMonturasById}  from '../controllers/monturas.controller.js';
 
