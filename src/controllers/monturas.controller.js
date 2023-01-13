@@ -42,8 +42,17 @@ export const createNewMontura = async (req, res) => {
     try {
         const id_montura = v4() + codeForTables.tablaMonturas;
         //Genero el codigo interno para el codigo de barras
-        const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',6)
-        let codigo_interno = nanoid() + prefixesForProducts.ProdMontura; 
+        //const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',6)
+        //let codigo_interno = nanoid() + prefixesForProducts.ProdMontura; 
+
+
+        const rng = seedrandom(seed)
+        const nanoid = customRandom('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 10, size => {
+        return (new Uint8Array(size)).map(() => 256 * rng())
+        })
+
+        const codigo_interno = nanoid()
+
         const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {
             id_montura,
