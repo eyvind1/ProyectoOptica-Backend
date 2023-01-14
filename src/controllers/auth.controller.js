@@ -14,10 +14,25 @@ const TABLE_NAME_USUARIO  = "Usuarios";
 
 
 export const signIn = passport.authenticate("local", {
-    successRedirect: "/notes",
+    successRedirect: "/",
     failureRedirect: "/auth/signin",
     failureFlash: true,
   });
+
+export const logOut = async (req, res, next) => {
+    console.log(req.session.id)
+    await req.logout((err) => {
+        console.log(err)
+        if (err) return next(err);
+        req.flash("success_msg", "You are logged out now.");
+        //res.redirect("/signIn");
+        res.send('se borro la session')
+        console.log('segundo',req.session.id)
+
+    });
+  };
+  
+
 
 // export const signIn = async (req, res,next) => {
 //     console.log('xd')

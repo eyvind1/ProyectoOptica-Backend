@@ -28,6 +28,25 @@ async function findUserByEmail(usuario,contrasenia){
             return error;
         }
 }
+/* Por el momento solo valido el email  OJO  ************* */ 
+async function findUserById(id_usuario){
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    try {
+        const paramsUsuario = {
+            TableName: TABLE_NAME_USUARIOS,
+            FilterExpression:
+              'id_usuario = :id_usuario',
+            ExpressionAttributeValues: {
+                ":id_usuario": id_usuario
+            }
+        };
+        const user  = await dynamoClient.scan(paramsUsuario).promise();      
+        return user.Items;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
 
     passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -50,10 +69,14 @@ async function findUserByEmail(usuario,contrasenia){
         done(null, user[0].id_usuario);
       });
       
-    passport.deserializeUser((user, done) => {
+    passport.deserializeUser(async(id, done) => {
         /*User.findById(id, (err, user) => {
           done(err, user);
         });*/
-        //done(null, user.id_usuario);
-
+        const user = await findUserById(id);
+        if(user){
+            console.log('cuando entra a desra **************',id)
+            done(null, user[0].id_usuario);    
+        }
+ 
       });
