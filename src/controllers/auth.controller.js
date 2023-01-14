@@ -30,8 +30,26 @@ async function findUserByEmail(usuario,contrasenia){
                 ":usuario": usuario
             }
         };
-        const user  = await dynamoClient.scan(paramsUsuario).promise();      
-        return user.Items;
+        const user  = await dynamoClient.scan(paramsUsuario).promise();  
+        try {
+            const paramsPersona = {
+                TableName: 'Persona',
+                FilterExpression:
+                  'id_persona = :id_persona',
+                ExpressionAttributeValues: {
+                    ":id_persona": user.Items[0].id_persona
+                }
+            };
+            let result= await dynamoClient.scan(paramsPersona).promise();      
+            user.Items[0].nombres = result.Items[0].nombres;
+            user.Items[0].apellidos = result.Items[0].apellidos;
+            //Agrego atributos de la persona al json usuario
+            return user.Items;
+
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
     } catch (error) {
         console.log(error);
         return error;
@@ -39,19 +57,19 @@ async function findUserByEmail(usuario,contrasenia){
 }
 
 
-export const signIn=  async (req, res) => {
+export const signIn = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await findUserByEmail(email,password);
+    console.log(user[0].id_usuario)
     //Si existe un usuario
-    if (user.length > 0) {
-        const token = jwt.sign({_id: user[0].id_usuario}, 'secretkey');
-        return res.status(200).json({token});
+    if (user.length> 0) {
+        const token = jwt.sign({_id: user[0].id_usuario}, 'secretkey',{expiresIn:'1h'});
+        return res.status(200).json({token,user});
     }
     else{
         return res.status(401).send('The email doen\' exists');
     }
-
 };
 
 async function verifyToken(req, res, next) {
