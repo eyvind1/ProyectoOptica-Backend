@@ -25,7 +25,7 @@ import flash from "flash";
 
 
 const app = express();
-app.use(cors({credentials: true,origin: 'https://localhost:5000'}));
+app.use(cors());
 //Paso esta funcion para que express entienda cuando se le envia un Json, limit sirve para evitar el error too large (413)
 app.use(express.json({limit: '50mb'}));
 
