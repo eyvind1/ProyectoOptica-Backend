@@ -14,9 +14,9 @@ const TABLE_NAME_USUARIO  = "Usuarios";
 
 
 export const signIn = passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/auth/signin",
-    failureFlash: true,
+    //successRedirect: "/",
+    //failureRedirect: "/auth/signin",
+    //failureFlash: true,
   });
 
 export const logOut = async (req, res, next) => {
