@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors'
 import bodyParser from 'body-parser';
+import passport from 'passport';
 /* Fin Librerias propias de Node */
 
 /* Importando las rutas creadas */
@@ -16,6 +17,9 @@ import productosRoutes from './routes/productos.routes.js';
 import cajaRoutes from './routes/caja.routes.js';
 import authRoutes from './routes/auth.routes.js';
 /* Fin Importando rutas creadas */
+
+/* Inicializociones */
+import './config/passport.js';
 
 const app = express();
 app.use(cors());
@@ -52,4 +56,11 @@ app.use(authRoutes);
 
 /* Fin  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 
-export default app;
+/* Inicializando la libreria passport para autenticacion */
+app.use(passport.initialize());
+app.use(passport.session());
+
+/* Fin inicializando la libreria passport para autenticacion  */
+
+
+export default app; 
