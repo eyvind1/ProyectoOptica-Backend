@@ -18,8 +18,11 @@ import cajaRoutes from './routes/caja.routes.js';
 import authRoutes from './routes/auth.routes.js';
 /* Fin Importando rutas creadas */
 
-/* Inicializociones */
+/* Inicializociones para login */
 import './config/passport.js';
+import session from "express-session";
+import flash from "flash";
+
 
 const app = express();
 app.use(cors());
@@ -42,6 +45,19 @@ app.use(function (req, res, next) {
     next();
 });
 
+/* Inicializando session-express para almacenar cookies */
+app.use(
+    session({
+      secret: "secret",
+      resave: true,
+      saveUninitialized: true,
+    })
+  );
+/* Inicializando la libreria passport para autenticacion */
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash()); // use connect-flash for flash messages stored in session
+
 /*  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 app.use(clientsRoutes);
 app.use(usersRoutes);
@@ -56,9 +72,7 @@ app.use(authRoutes);
 
 /* Fin  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 
-/* Inicializando la libreria passport para autenticacion */
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 /* Fin inicializando la libreria passport para autenticacion  */
 
