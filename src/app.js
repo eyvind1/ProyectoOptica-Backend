@@ -19,10 +19,9 @@ import authRoutes from './routes/auth.routes.js';
 /* Fin Importando rutas creadas */
 
 /* Inicializociones para login */
-import './config/passport.js';
 import session from "express-session";
 import flash from "flash";
-
+import { JwtStrategy } from './config/passport.js';
 
 const app = express();
 app.use(cors());
@@ -54,9 +53,10 @@ app.use(
     })
   );
 /* Inicializando la libreria passport para autenticacion */
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash()); // use connect-flash for flash messages stored in session
+passport.use(JwtStrategy);
+//app.use(passport.initialize());
+//app.use(passport.session());
+//app.use(flash()); // use connect-flash for flash messages stored in session
 
 /*  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 app.use(clientsRoutes);

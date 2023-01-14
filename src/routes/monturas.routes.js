@@ -1,15 +1,14 @@
 import {Router} from 'express';
 
-import  helpers from '../helpers/auth.js'
 //Obtengo las funciones del controlador
 import {getAllMonturas, editMonturaById,createNewMontura,unsubscribeMonturasById}  from '../controllers/monturas.controller.js';
-
+import passport from 'passport';
 
 const router = Router();
 
 
 //Defino nombres de las rutas, 
-router.get('/getAllMonturas',helpers.isAuthenticated,getAllMonturas);
+router.get('/getAllMonturas',passport.authenticate('jwt',{session:false}),getAllMonturas);
 router.post('/createNewMontura',createNewMontura);
 router.put('/unsubscribeMonturasById/:idMontura',unsubscribeMonturasById);
 router.put('/editMonturaById/:idMontura',editMonturaById);
