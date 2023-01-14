@@ -54,8 +54,15 @@ async function findUserById(id_usuario){
     }, async(email, password, done) => {
         console.log('Email: pass: ',email,password);
         const user = await findUserByEmail(email,password);
-        console.log('user ',user);
-        return done(null, user);
+        if (user.length > 0) {
+            console.log('if ', user)
+            return done(null, user);
+          }
+          else{
+            console.log('entro al no user')
+            return done(null, false, { message: "No existe el usuario" });
+
+          }
 
         //Verifico si existe en la base de datos el usuario
         

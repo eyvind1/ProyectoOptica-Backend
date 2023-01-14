@@ -13,11 +13,24 @@ const TABLE_NAME_USUARIO  = "Usuarios";
 
 
 
-export const signIn = passport.authenticate("local", {
-    //successRedirect: "/",
+
+export const responseSignIn = (req, res) => res.send("login OK");
+
+export const signIn=passport.authenticate("local", {
+    successRedirect: "/responseSignIn",
     //failureRedirect: "/auth/signin",
-    //failureFlash: true,
-  });
+    failureFlash: true,
+})
+// export const signIn = async (req, res) =>{
+//     passport.authenticate("local", {
+//         //successRedirect: "/",
+//         //failureRedirect: "/auth/signin",
+//         //failureFlash: true,
+//     }, function(req, res) {
+//         //     console.log('res',res)
+//            })    
+
+// };
 
 export const logOut = async (req, res, next) => {
     console.log(req.session.id)
