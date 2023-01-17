@@ -10,17 +10,20 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_PERSONA  = "Persona";
 const TABLE_NAME_USUARIO  = "Usuarios";
 
+async function encriptarPassword(contrasenia){
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(contrasenia,salt);
+}
 export const createNewUser = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
         const id_persona = v4() + codeForTables.tablaPersonas;
         const id_usuario = v4() + codeForTables.tablaUsers;
         //Obtengo los campos que se envia por POST desde el Front
-        const {nombres,apellidos,dni,rol,habilitado,observaciones,email,
+        let {nombres,apellidos,dni,rol,habilitado,observaciones,email,
             fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
         // Encriptando la contrasenia recibida desde el front utilizando Bcrypt
-        const salt                 = await bcrypt.genSalt(10);
-        let contraseniaEncriptada  = await bcrypt.hash(contrasenia,salt);
+        contrasenia = encriptarPassword(contrasenia);
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni
         const usuario = apellidos.substr(0,3) + nombres.substr(0,2)+dni.substr(0,2);
         const newPersona = {
@@ -40,7 +43,7 @@ export const createNewUser = async (req, res) => {
             observaciones,
             habilitado,
             id_persona,
-            contraseniaEncriptada,
+            contrasenia,
             id_sede,
             rol
         };
