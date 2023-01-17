@@ -23,7 +23,7 @@ export const createNewUser = async (req, res) => {
         let {nombres,apellidos,dni,rol,habilitado,observaciones,email,
             fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
         // Encriptando la contrasenia recibida desde el front utilizando Bcrypt
-        contrasenia = encriptarPassword(contrasenia);
+        contrasenia = await encriptarPassword(contrasenia);
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni
         const usuario = apellidos.substr(0,3) + nombres.substr(0,2)+dni.substr(0,2);
         const newPersona = {
