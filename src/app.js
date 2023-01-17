@@ -19,7 +19,6 @@ import authRoutes from './routes/auth.routes.js';
 /* Fin Importando rutas creadas */
 
 /* Inicializociones para login */
-import session from "express-session";
 import flash from "flash";
 import { JwtStrategy } from './config/passport.js';
 
@@ -44,14 +43,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-/* Inicializando session-express para almacenar cookies */
-app.use(
-    session({
-      secret: "secret",
-      resave: true,
-      saveUninitialized: true,
-    })
-  );
+
 /* Inicializando la libreria passport para autenticacion */
 passport.use(JwtStrategy);
 //app.use(passport.initialize());

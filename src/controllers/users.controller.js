@@ -1,6 +1,6 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
-
+import bcrypt from 'bcrypt';
 /* Agregar md5 a la contra, indicar que el dni no se repita */
 
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
@@ -18,6 +18,9 @@ export const createNewUser = async (req, res) => {
         //Obtengo los campos que se envia por POST desde el Front
         const {nombres,apellidos,dni,rol,habilitado,observaciones,email,
             fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
+        // Encriptando la contrasenia recibida desde el front utilizando Bcrypt
+        const salt                 = await bcrypt.genSalt(10);
+        let contraseniaEncriptada  = await bcrypt.hash(contrasenia,salt);
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni
         const usuario = apellidos.substr(0,3) + nombres.substr(0,2)+dni.substr(0,2);
         const newPersona = {
@@ -37,7 +40,7 @@ export const createNewUser = async (req, res) => {
             observaciones,
             habilitado,
             id_persona,
-            contrasenia,
+            contraseniaEncriptada,
             id_sede,
             rol
         };
