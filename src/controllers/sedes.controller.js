@@ -57,6 +57,24 @@ export const createNewSede = async (req, res) => {
 };
 
 
+const validateSede  = async (idSede) => {
+    const id_sede   = idSede;
+    try {
+        const paramsSede = {
+            TableName: TABLE_NAME_SEDE,
+            KeyConditionExpression:
+              'id_sede = :id_sede',
+            ExpressionAttributeValues: {
+                ":id_sede": id_sede
+            }
+        };
+        const sede  = await dynamoClient.query(paramsSede).promise();      
+        return sede.Items;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
 /*
     1.-  Funcion para Dar de Baja a una Sede en especifico  
     2.-  Antes de dar de baja a un accesorio valido que exista
@@ -64,27 +82,33 @@ export const createNewSede = async (req, res) => {
 */ 
 export const unsubscribeSedeById = async (req, res) => {
     const id_sede = req.params.idSede;
-    try {
-        const paramsSede = {
-            TableName: TABLE_NAME_SEDE,
-            Key: {
-                "id_sede":id_sede,
-            },
-            UpdateExpression: "SET habilitado = :habilitado",
-            KeyConditionExpression: 
-                'id_sede = :id_sede',
-            ExpressionAttributeValues: {
-                ":habilitado": false,
-                //":id_sede": id_sede
-            }
-        };
-        const sede = await dynamoClient.update(paramsSede).promise();      
-        res.json(sede);
-        return sede;
-    } catch (error) {
-        console.log(error)
+    const existeSede = await validateSede(id_sede);
+    if(existeSede.length > 0) {
+        try {
+            const paramsSede = {
+                TableName: TABLE_NAME_SEDE,
+                Key: {
+                    "id_sede":id_sede,
+                },
+                UpdateExpression: "SET habilitado = :habilitado",
+                ExpressionAttributeValues: {
+                    ":habilitado": false
+                }
+            };
+            const sede = await dynamoClient.update(paramsSede).promise();      
+            res.json(sede);
+            return sede;
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'Algo anda mal'
+            })
+        }
+    }
+    else{
+        console.log('no existe la sede')
         return res.status(500).json({
-            message:'Algo anda mal'
+            message:'La sede no existe'
         })
     }
 };
