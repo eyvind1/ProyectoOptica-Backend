@@ -1,11 +1,11 @@
-/* En este file se definen las funciones relacionadas a
-  
-1.- Autenticacion del usuario
+/* En este file se definen las funciones relacionadas a  
+    1.- Autenticacion del usuario
 */
 import AWS from '../db.js';
-import {v4} from 'uuid';
 //import passport from 'passport';  
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
 
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import {codeForTables} from '../utils/codigosTablas.js';
@@ -13,14 +13,11 @@ import {codeForTables} from '../utils/codigosTablas.js';
 const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_USUARIO  = "Usuarios";
 
+async function desencriptarPassword(contraseniabd,contrasenia){
+    return await bcrypt.compare(contrasenia,contraseniabd);
+}
 
-
-
-//export const responseSignIn = (req, res) => res.send("login OK");
-
-/* Por el momento solo valido el email  OJO  ************* */ 
-/* Validamos que el usuario este habilitado */ 
-async function findUserByEmail(usuario,contrasenia){
+async function findUserByEmail(usuario){
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsUsuario = {
@@ -33,7 +30,6 @@ async function findUserByEmail(usuario,contrasenia){
             }
         };
         const user  = await dynamoClient.scan(paramsUsuario).promise();  
-        console.log(user);
         
         //En este caso utilizamos scan y sino encuentran no retorna error simplemente retora un vacio por eso valido
         if(user.Items.length>0){
@@ -50,7 +46,7 @@ async function findUserByEmail(usuario,contrasenia){
                 user.Items[0].nombres = result.Items[0].nombres;
                 user.Items[0].apellidos = result.Items[0].apellidos;
                 //Agrego atributos de la persona al json usuario
-                return user.Items;
+                return user;
     
             } catch (error) {
                 console.log(error);
@@ -67,27 +63,19 @@ async function findUserByEmail(usuario,contrasenia){
 
 export const signIn = async (req, res) => {
     const { email, password } = req.body;
-    const user = await findUserByEmail(email,password);
-    //Si existe un usuario
-    if (user.length> 0) {
-        const token = jwt.sign({_id: user[0].id_usuario}, 'secretkey',{expiresIn:'120s'});
-        return res.status(200).json({token,user});
+    //Valido usuario y contrasenia
+    const user       = await findUserByEmail(email);
+    console.log('user ' ,user)
+    if (user.Items.length ===0) {
+        return res.status(401).send('El email no existe');
     }
-    else{
-        return res.status(401).send('The email doen\' exists');
+    //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
+    console.log(user.Items[0].contrasenia,' ',password)
+    const validarPassword  = await desencriptarPassword(user.Items[0].contrasenia,password);
+    if(validarPassword===false){
+        return res.status(401).send('La contrasenia no coincide');
     }
+    const token = jwt.sign({_id: user.Items[0].id_usuario}, 'secretkey',{expiresIn:'120s'});
+    return res.status(200).json({token,user});
 };
-
-export const logOut = async (req, res, next) => {
-    await req.logout((err) => {
-        console.log(err)
-        if (err) return next(err);
-        req.flash("success_msg", "You are logged out now.");
-        //res.redirect("/signIn");
-        res.send('se borro la session')
-        console.log('segundo',req.session.id)
-
-    });
-  };
-  
 
