@@ -62,6 +62,8 @@ app.use(productosRoutes);
 app.use(cajaRoutes);
 app.use(authRoutes);
 
+
+
 /* Fin  Se le indica al servidor que quiero utilizar  todas las rutas que contiene el archivo */ 
 
 

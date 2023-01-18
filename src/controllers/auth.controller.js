@@ -75,7 +75,7 @@ export const signIn = async (req, res) => {
     if(validarPassword===false){
         return res.status(401).send('La contrasenia no coincide');
     }
-    const token = jwt.sign({_id: user.Items[0].id_usuario}, 'secretkey',{expiresIn:'120s'});
+    const token = jwt.sign({_id: user.Items[0].id_usuario}, 'secretkey',{expiresIn:'3h'});
     return res.status(200).json({token,user});
 };
 

@@ -1,4 +1,5 @@
 import {Router} from 'express';
+import passport from 'passport';
 
 
 //Obtengo las funciones del controlador
@@ -7,9 +8,9 @@ import {getProductBySede,updateListOfProducts,createListOfProducts}  from '../co
 const router = Router();
 
 
-router.get('/getProductBySede/:idSede/:productName',getProductBySede);
-router.put('/updateListOfProducts',updateListOfProducts);   
-router.post('/createListOfProducts',createListOfProducts);   
+router.get('/getProductBySede/:idSede/:productName',passport.authenticate('jwt',{session:false}),getProductBySede);
+router.put('/updateListOfProducts',passport.authenticate('jwt',{session:false}),updateListOfProducts);   
+router.post('/createListOfProducts',passport.authenticate('jwt',{session:false}),createListOfProducts);   
 
 
 export default router;

@@ -1,8 +1,8 @@
-const helpers = {};
 
 /* Creando un middleware, es decir las rutas primero pasan este filtro */
-helpers.isAuthenticated = (req,res,next) => {
-    if (req.isAuthenticated()) {
+export const isUserAuthenticated = (req,res,next) => {
+    console.log(req.isAuthenticated())
+    /*if (req.isAuthenticated()) {
         return next();
     } else {
         //req.send('error no autenticado')
@@ -10,7 +10,6 @@ helpers.isAuthenticated = (req,res,next) => {
         return res.status(500).json({
             message:'No has iniciado sesion'
         })
-    }
+    }*/
 
 }
-export default helpers;
