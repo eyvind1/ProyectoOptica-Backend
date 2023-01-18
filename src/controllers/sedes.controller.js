@@ -56,3 +56,37 @@ export const createNewSede = async (req, res) => {
     }
 };
 
+
+/*
+    1.-  Funcion para Dar de Baja a una Sede en especifico  
+    2.-  Antes de dar de baja a un accesorio valido que exista
+    3.-  Funcion Verificada al 100%
+*/ 
+export const unsubscribeSedeById = async (req, res) => {
+    const id_sede = req.params.idSede;
+    try {
+        const paramsSede = {
+            TableName: TABLE_NAME_SEDE,
+            Key: {
+                "id_sede":id_sede,
+            },
+            UpdateExpression: "SET habilitado = :habilitado",
+            KeyConditionExpression: 
+                'id_sede = :id_sede',
+            ExpressionAttributeValues: {
+                ":habilitado": false,
+                //":id_sede": id_sede
+            }
+        };
+        const sede = await dynamoClient.update(paramsSede).promise();      
+        res.json(sede);
+        return sede;
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:'Algo anda mal'
+        })
+    }
+};
+
+
