@@ -46,7 +46,26 @@ export const getProductBySede = async (req, res) => {
 
 */
 
-
+/* Funcion*/ 
+function castIsoDateToDate(fecha){
+    const date = new Date(fecha);
+    //const timestamp = date
+    let mes     = (date.getMonth()+1).toString();
+    let anio    = date.getFullYear();
+    let dia     = date.getDate().toString();
+    let hora    = date.getHours().toString();
+    if (mes.length < 2) {
+        mes = '0' + mes;
+    }
+    if (dia.length < 2) {
+        dia = '0' + dia;
+    }
+    if (hora.length < 2) {
+        hora = '0' + hora;
+    }
+    const result = (dia+mes+ anio);
+    return result;
+}
 
 export const createListOfProducts=async(req,res)=>{
     try {
@@ -55,10 +74,11 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_montura   = v4() + codeForTables.tablaMonturas;
-                const nanoid       = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',6)
-                let codigo_interno = nanoid() + prefixesForProducts.ProdMontura; 
+                const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
+                //Para generar el codigo interno
+                let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
+                let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
 
-                const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 const datosMontura = {
                     id_montura,
                     tipo,
