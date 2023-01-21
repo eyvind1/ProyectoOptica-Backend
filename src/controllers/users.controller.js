@@ -14,6 +14,26 @@ async function encriptarPassword(contrasenia){
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(contrasenia,salt);
 }
+// Funcion que permite validar si un DNI existe o no 
+async function validarDni(dni){
+    try {
+        const paramsPersona = {
+            TableName: 'Persona',
+            FilterExpression:
+              'dni = :dni' ,
+            ExpressionAttributeValues: {
+                ":dni": dni
+            }
+        };
+        let result= await dynamoClient.scan(paramsPersona).promise();      
+        //Retorno 1 si encuentra y  0 sino encuentra
+        return result.Count;
+
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
 export const createNewUser = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
@@ -22,6 +42,14 @@ export const createNewUser = async (req, res) => {
         //Obtengo los campos que se envia por POST desde el Front
         let {nombres,apellidos,dni,rol,habilitado,observaciones,email,
             fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
+        console.log(dni)
+        //Validamos que el DNI no sea repetido
+        const dniValidado = await validarDni(dni);
+        if(dniValidado>0){
+            return res.status(500).json({ 
+                message:'Dni Duplicado'
+            })
+        }
         // Encriptando la contrasenia recibida desde el front utilizando Bcrypt
         contrasenia = await encriptarPassword(contrasenia);
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni

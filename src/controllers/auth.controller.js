@@ -67,13 +67,13 @@ export const signIn = async (req, res) => {
     const user       = await findUserByEmail(email);
     console.log('user ' ,user)
     if (user.Items.length ===0) {
-        return res.status(401).send('El email no existe');
+        return res.status(401).send('El usuario no existe');
     }
     //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
     console.log(user.Items[0].contrasenia,' ',password)
     const validarPassword  = await desencriptarPassword(user.Items[0].contrasenia,password);
     if(validarPassword===false){
-        return res.status(401).send('La contrasenia no coincide');
+        return res.status(401).send('La contraseña no coincide');
     }
     const token        = jwt.sign({_id: user.Items[0].id_usuario}, 'secretkey',{expiresIn:'3h'});
     const onlyDataUser = user.Items[0]; 
