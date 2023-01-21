@@ -46,7 +46,7 @@ export const createNewUser = async (req, res) => {
         //Validamos que el DNI no sea repetido
         const dniValidado = await validarDni(dni);
         if(dniValidado>0){
-            return res.status(500).json({ 
+            return res.status(400).json({ 
                 message:'Dni Duplicado'
             })
         }
