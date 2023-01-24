@@ -45,10 +45,11 @@ export const createNewMontura = async (req, res) => {
         const nanoid       = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',6)
         let codigo_interno = nanoid() + prefixesForProducts.ProdMontura; 
 
-        const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const datosMontura = {
             id_montura,
             tipo,
+            num_orden,
             color,
             cantidad,
             habilitado,
