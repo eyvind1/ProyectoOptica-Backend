@@ -11,12 +11,14 @@ export const getAllLunas = async (req, res) => {
     try {
         const params = {
             TableName: TABLE_NAME_LUNA,
-            FilterExpression : "#habilitado = :valueHabilitado",
+            FilterExpression : "#habilitado = :valueHabilitado and #cantidad > :valueCantidad",
             ExpressionAttributeValues: {
-                ":valueHabilitado":true
+                ":valueHabilitado":true,
+                ":valueCantidad": 0
             },
             ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
+                "#habilitado": "habilitado",
+                "#cantidad": "cantidad"
             }
         };
         const lunas = await dynamoClient.scan(params).promise();

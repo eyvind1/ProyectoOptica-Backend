@@ -14,12 +14,14 @@ export const getAllMonturas = async (req, res) => {
         /* Obtengo todas las monturas */ 
         const params = {
             TableName: TABLE_NAME_MONTURAS,
-            FilterExpression : "#habilitado = :valueHabilitado",
+            FilterExpression : "#habilitado = :valueHabilitado and #cantidad > :valueCantidad",
             ExpressionAttributeValues: {
-                ":valueHabilitado":true
+                ":valueHabilitado":true,
+                ":valueCantidad": 0
             },
             ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
+                "#habilitado": "habilitado",
+                "#cantidad": "cantidad"
             }
         };
         const monturas = await dynamoClient.scan(params).promise();

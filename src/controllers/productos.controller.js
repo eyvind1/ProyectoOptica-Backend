@@ -92,6 +92,17 @@ export const createListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
         const tipo = array_productos[0].tipo;
+        //Antes de iniciar toda operacion, verifico que el array(excel) no traiga numero_de_orden repetidos
+        let resultToReturn = false;
+        resultToReturn = array_productos.some((element, index) => {
+            return array_productos.indexOf(element) !== index
+        });
+        if (resultToReturn) {
+            return res.status(400).json({ 
+                message:'El archivo excel contiene numeros de orden repetidos'
+            })
+        }
+
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_montura   = v4() + codeForTables.tablaMonturas;

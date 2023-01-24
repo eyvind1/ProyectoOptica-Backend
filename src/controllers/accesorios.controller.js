@@ -11,12 +11,15 @@ export const getAllAccesorios = async (req, res) => {
     try {
         const params = {
             TableName: TABLE_NAME_ACCESORIO,
-            FilterExpression : "#habilitado = :valueHabilitado",
+            FilterExpression : "#habilitado = :valueHabilitado and #cantidad > :valueCantidad",
             ExpressionAttributeValues: {
-                ":valueHabilitado":true
+                ":valueHabilitado":true,
+                ":valueCantidad": 0
             },
             ExpressionAttributeNames:{
-                "#habilitado": "habilitado"
+                "#habilitado": "habilitado",
+                "#cantidad": "cantidad"
+                
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();
