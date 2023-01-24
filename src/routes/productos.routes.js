@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/getProductBySede/:idSede/:productName',passport.authenticate('jwt',{session:false}),getProductBySede);
 router.put('/updateListOfProducts',passport.authenticate('jwt',{session:false}),updateListOfProducts);   
-router.post('/createListOfProducts',passport.authenticate('jwt',{session:false}),createListOfProducts);   
+router.post('/createListOfProducts',createListOfProducts);   
 
 
 export default router;

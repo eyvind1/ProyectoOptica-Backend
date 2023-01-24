@@ -69,6 +69,7 @@ function castIsoDateToDate(fecha){
 /* Funcion para validar el Dni */ 
 async function validarNroOrden(num_orden,productName){
     try {
+        console.log(num_orden)
         const params = {
             TableName: productName,
             FilterExpression:
@@ -79,6 +80,7 @@ async function validarNroOrden(num_orden,productName){
         };
         let result= await dynamoClient.scan(params).promise();      
         //Retorno 1 si encuentra y  0 sino encuentra
+        console.log(result)
         return result.Count;
     } catch (error) {
         console.log(error);
@@ -96,8 +98,8 @@ export const createListOfProducts=async(req,res)=>{
                 const nameOfTable  = 'Monturas';
                 const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 //Valido el Nro de Orden segun el producto
-                validarNroOrden(num_orden,nameOfTable);
-                if(validarNroOrden>0){
+                const nroOrdenValidado = await validarNroOrden(num_orden,nameOfTable);
+                if(nroOrdenValidado>0){
                     return res.status(400).json({ 
                         message:'Nro de Orden repetido'
                     })
@@ -146,8 +148,8 @@ export const createListOfProducts=async(req,res)=>{
                 const id_luna = v4() + codeForTables.tablaLunas;
                 const nameOfTable  = 'Lunas';
                 const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
-                validarNroOrden(num_orden,nameOfTable);
-                if(validarNroOrden>0){
+                const nroOrdenValidado = await validarNroOrden(num_orden,nameOfTable);
+                if(nroOrdenValidado>0){
                     return res.status(400).json({ 
                         message:'Nro de Orden repetido'
                     })
@@ -193,8 +195,8 @@ export const createListOfProducts=async(req,res)=>{
                 const id_accesorio  = v4() + codeForTables.tablaAccesorios;
                 const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
                 const nameOfTable  = 'Accesorios';
-                validarNroOrden(num_orden,nameOfTable);
-                if(validarNroOrden>0){
+                const nroOrdenValidado = await validarNroOrden(num_orden,nameOfTable);
+                if(nroOrdenValidado>0){
                     return res.status(400).json({ 
                         message:'Nro de Orden repetido'
                     })
