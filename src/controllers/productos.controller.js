@@ -46,7 +46,7 @@ export const getProductBySede = async (req, res) => {
 
 */
 
-/* Funcion*/ 
+/* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
 function castIsoDateToDate(fecha){
     const date = new Date(fecha);
     //const timestamp = date
@@ -66,6 +66,25 @@ function castIsoDateToDate(fecha){
     const result = (dia+mes+ anio);
     return result;
 }
+/* Funcion para validar el Dni */ 
+async function validarNroOrden(num_orden,productName){
+    try {
+        const params = {
+            TableName: productName,
+            FilterExpression:
+              'num_orden = :num_orden' ,
+            ExpressionAttributeValues: {
+                ":num_orden": num_orden
+            }
+        };
+        let result= await dynamoClient.scan(params).promise();      
+        //Retorno 1 si encuentra y  0 sino encuentra
+        return result.Count;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
 
 export const createListOfProducts=async(req,res)=>{
     try {
@@ -74,7 +93,15 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_montura   = v4() + codeForTables.tablaMonturas;
+                const nameOfTable  = 'Monturas';
                 const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
+                //Valido el Nro de Orden segun el producto
+                validarNroOrden(num_orden,nameOfTable);
+                if(validarNroOrden>0){
+                    return res.status(400).json({ 
+                        message:'Nro de Orden repetido'
+                    })
+                }
                 //Para generar el codigo interno
                 let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
                 let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
@@ -82,6 +109,7 @@ export const createListOfProducts=async(req,res)=>{
                 const datosMontura = {
                     id_montura,
                     tipo,
+                    num_orden,
                     color,
                     cantidad,
                     habilitado,
@@ -116,10 +144,20 @@ export const createListOfProducts=async(req,res)=>{
         else if(tipo === 'luna'){
             array_productos.map(async(row,i,arr)=>{
                 const id_luna = v4() + codeForTables.tablaLunas;
-                let codigo_interno = nanoid(8) + prefixesForProducts.ProdLuna;
-                const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
+                const nameOfTable  = 'Lunas';
+                const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
+                validarNroOrden(num_orden,nameOfTable);
+                if(validarNroOrden>0){
+                    return res.status(400).json({ 
+                        message:'Nro de Orden repetido'
+                    })
+                }
+                let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
+                let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
+
                 const datosLuna = {
                     id_luna,
+                    num_orden,
                     id_sede,
                     tipo,
                     codigo_interno,
@@ -152,12 +190,23 @@ export const createListOfProducts=async(req,res)=>{
         }
         else if(tipo === 'accesorio'){
             array_productos.map(async(row,i,arr)=>{
-                let codigo_interno  = nanoid(8) + prefixesForProducts.ProdAccesorio; 
                 const id_accesorio  = v4() + codeForTables.tablaAccesorios;
-                const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
+                const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
+                const nameOfTable  = 'Accesorios';
+                validarNroOrden(num_orden,nameOfTable);
+                if(validarNroOrden>0){
+                    return res.status(400).json({ 
+                        message:'Nro de Orden repetido'
+                    })
+                }
+                let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
+                let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
+
+
                 const datosAccesorio = {
                     id_accesorio,
                     tipo,
+                    num_orden,
                     cantidad,
                     id_sede,
                     codigo_interno,
