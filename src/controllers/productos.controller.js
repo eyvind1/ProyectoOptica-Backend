@@ -87,21 +87,28 @@ async function validarNroOrden(num_orden,productName){
         return error;
     }
 }
+/* Esta funcion valida al inicio que el array que contiene todos los productos(Excel) no tenga numero de orden repetido*/ 
+async function validarNroOrdenExcel(arrayProductos){
+    let resultToReturn = false;
+    resultToReturn = arrayProductos.some((element, index) => {
+        return arrayProductos.indexOf(element) !== index
+    });
+    return resultToReturn;
+}
 
 export const createListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
         const tipo = array_productos[0].tipo;
-        //Antes de iniciar toda operacion, verifico que el array(excel) no traiga numero_de_orden repetidos
-        let resultToReturn = false;
-        resultToReturn = array_productos.some((element, index) => {
-            return array_productos.indexOf(element) !== index
-        });
-        if (resultToReturn) {
+        /* Antes de iniciar toda operacion, verifico que el array(excel) no traiga numero_de_orden repetidos */
+        let validarExcel = await validarNroOrdenExcel(array_productos)
+        console.log(validarExcel);
+        if (validarExcel) {
             return res.status(400).json({ 
                 message:'El archivo excel contiene numeros de orden repetidos'
             })
         }
+        /* Fin verificacion de array(Excel)*/ 
 
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    

@@ -8,7 +8,8 @@ import { customAlphabet} from 'nanoid';
 const TABLE_NAME_MONTURAS  = "Monturas";
 const dynamoClient         = new AWS.DynamoDB.DocumentClient();
 
-export const getAllMonturas = async (req, res) => {
+
+export const getAllMonturasForVenta = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         /* Obtengo todas las monturas */ 
@@ -22,6 +23,30 @@ export const getAllMonturas = async (req, res) => {
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
                 "#cantidad": "cantidad"
+            }
+        };
+        const monturas = await dynamoClient.scan(params).promise();
+        res.json(monturas.Items);
+    } 
+     catch(error) {
+        console.log(error)
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
+
+export const getAllMonturas = async (req, res) => {
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    try {
+        /* Obtengo todas las monturas */ 
+        const params = {
+            TableName: TABLE_NAME_MONTURAS,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
             }
         };
         const monturas = await dynamoClient.scan(params).promise();

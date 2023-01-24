@@ -7,7 +7,8 @@ import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
 const TABLE_NAME_LUNA  = "Lunas";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
-export const getAllLunas = async (req, res) => {
+
+export const getAllLunasForVenta = async (req, res) => {
     try {
         const params = {
             TableName: TABLE_NAME_LUNA,
@@ -19,6 +20,27 @@ export const getAllLunas = async (req, res) => {
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
                 "#cantidad": "cantidad"
+            }
+        };
+        const lunas = await dynamoClient.scan(params).promise();
+        res.json(lunas.Items);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+    }
+};
+export const getAllLunas = async (req, res) => {
+    try {
+        const params = {
+            TableName: TABLE_NAME_LUNA,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
             }
         };
         const lunas = await dynamoClient.scan(params).promise();

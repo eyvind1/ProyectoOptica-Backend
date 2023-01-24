@@ -7,7 +7,8 @@ import {codeForTables} from '../utils/codigosTablas.js';
 const TABLE_NAME_ACCESORIO = "Accesorios";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
-export const getAllAccesorios = async (req, res) => {
+
+export const getAllAccesoriosForVenta = async (req, res) => {
     try {
         const params = {
             TableName: TABLE_NAME_ACCESORIO,
@@ -20,6 +21,28 @@ export const getAllAccesorios = async (req, res) => {
                 "#habilitado": "habilitado",
                 "#cantidad": "cantidad"
                 
+            }
+        };
+        const accesorios = await dynamoClient.scan(params).promise();
+        res.json(accesorios.Items);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
+
+export const getAllAccesorios = async (req, res) => {
+    try {
+        const params = {
+            TableName: TABLE_NAME_ACCESORIO,
+            FilterExpression : "#habilitado = :valueHabilitado",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado"
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();
