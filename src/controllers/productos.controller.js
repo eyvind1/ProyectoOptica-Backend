@@ -67,61 +67,59 @@ function castIsoDateToDate(fecha){
     return result;
 }
 /* Funcion para validar el Dni */ 
-async function validarNroOrden(num_orden,productName){
-    try {
+async function validarNroOrden(arrayProductos,productName){
+    let verificar = false;
+    arrayProductos.map(async(row,i,arr)=>{    
         console.log(num_orden)
         const params = {
             TableName: productName,
             FilterExpression:
-              'num_orden = :num_orden' ,
+            'num_orden = :num_orden' ,
             ExpressionAttributeValues: {
-                ":num_orden": num_orden
+                ":num_orden": row.num_orden
             }
         };
         let result= await dynamoClient.scan(params).promise();      
-        //Retorno 1 si encuentra y  0 sino encuentra
-        console.log(result)
-        return result.Count;
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
+        if(result.Count>0){
+            verificar = true
+            return verificar;
+        }
+    })
+    return verificar;
 }
-/* Esta funcion valida al inicio que el array que contiene todos los productos(Excel) no tenga numero de orden repetido*/ 
+/* Esta funcion valida al inicio que el array que contiene todos los productos(Excel) no tenga numero de orden repetido */ 
+/* Falta Validar esta funcion ojo */  
 async function validarNroOrdenExcel(arrayProductos){
-    let resultToReturn = false;
-    resultToReturn = arrayProductos.some((element, index) => {
-        return arrayProductos.indexOf(element) !== index
-    });
-    return resultToReturn;
+    const busqueda = arrayProductos.reduce((acc, element) => {
+        acc[element.num_orden] = ++acc[element.num_orden] || 0;
+        return acc;
+      }, {});
+      
+      const duplicados = arrayProductos.filter( (element) => {
+          return busqueda[element.num_orden];
+      });
+    return duplicados;
 }
 
 export const createListOfProducts=async(req,res)=>{
-    try {
-        const array_productos = req.body;
-        const tipo = array_productos[0].tipo;
-        /* Antes de iniciar toda operacion, verifico que el array(excel) no traiga numero_de_orden repetidos */
-        let validarExcel = await validarNroOrdenExcel(array_productos)
-        console.log(validarExcel);
-        if (validarExcel) {
-            return res.status(400).json({ 
-                message:'El archivo excel contiene numeros de orden repetidos'
-            })
-        }
-        /* Fin verificacion de array(Excel)*/ 
+    const array_productos = req.body;
+    const tipo = array_productos[0].tipo;
+    //Valido que no haya "Nro_Orden" repetidos en el excel
+  //  let validarExcel = await validarNroOrdenExcel(array_productos);
+   // let validarNro   = await validarNroOrden(array_productos,'Monturas');
+    // console.log(validarExcel)
+    // if(validarExcel>0){
+    //     console.log('El excel tiene repetidos')
+    // }
+    // if()
+    //Valido que no exista 
 
+    try {
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_montura   = v4() + codeForTables.tablaMonturas;
                 const nameOfTable  = 'Monturas';
                 const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
-                //Valido el Nro de Orden segun el producto
-                const nroOrdenValidado = await validarNroOrden(num_orden,nameOfTable);
-                if(nroOrdenValidado>0){
-                    return res.status(400).json({ 
-                        message:'Nro de Orden repetido'
-                    })
-                }
                 //Para generar el codigo interno
                 let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
                 let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
@@ -167,11 +165,6 @@ export const createListOfProducts=async(req,res)=>{
                 const nameOfTable  = 'Lunas';
                 const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
                 const nroOrdenValidado = await validarNroOrden(num_orden,nameOfTable);
-                if(nroOrdenValidado>0){
-                    return res.status(400).json({ 
-                        message:'Nro de Orden repetido'
-                    })
-                }
                 let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
                 let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
 
@@ -255,7 +248,7 @@ export const createListOfProducts=async(req,res)=>{
             })
         }
     } catch (error) {
-        console.log(error)
+        console.log('adadads')
         return res.status(500).json({
             message:'Algo anda mal'
         })
