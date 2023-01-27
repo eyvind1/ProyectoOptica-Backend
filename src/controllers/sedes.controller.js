@@ -119,6 +119,7 @@ export const editSedeById = async (req, res) => {
     
     const id_sede = req.params.idSede;
     const {direccion,nombre_sede,fecha_modificacion_sede} = req.body;
+    console.log(direccion,nombre_sede,fecha_modificacion_sede);
     try {
         const paramsSede = {
             TableName: TABLE_NAME_SEDE,
@@ -126,7 +127,9 @@ export const editSedeById = async (req, res) => {
                 "id_sede":id_sede,
             },
             UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, fecha_modificacion_sede = :fecha_modificacion_sede`,
+            ConditionExpression: "id_sede = :id_sede", 
             ExpressionAttributeValues: {
+                ":id_sede" : id_sede,
                 ":direccion"   : direccion,
                 ":nombre_sede" : nombre_sede,
                 ":fecha_modificacion_sede": fecha_modificacion_sede,
@@ -134,11 +137,11 @@ export const editSedeById = async (req, res) => {
         };
         const sede = await dynamoClient.update(paramsSede).promise();
         res.json(sede)
-        return sede;  
+        return sede;    
     } catch (error) {
         console.log(error)
         return res.status(500).json({
-            message:'No se puede actualizar la Sede'
+            message:'Ocurrio un error o no se encuentra la sede'
         })
     }
    
