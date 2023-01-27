@@ -36,32 +36,6 @@ export const getAllMonturasForVenta = async (req, res) => {
       }
 };
 
-export const getAllMonturasBySede= async (req, res) => {
-    const id_sede = req.params.idSede;
-    try {
-        /* Obtengo todas las monturas */ 
-        const params = {
-            TableName: TABLE_NAME_MONTURAS,
-            FilterExpression : "#habilitado = :valueHabilitado and #id_sede = :valueSede",
-            ExpressionAttributeValues: {
-                ":valueHabilitado":true,
-                ":valueSede": id_sede,
-            },
-            ExpressionAttributeNames:{
-                "#habilitado": "habilitado",
-                "#id_sede"   : "id_sede"
-            }
-        };
-        const monturas = await dynamoClient.scan(params).promise();
-        res.json(monturas.Items);
-    } 
-     catch(error) {
-        console.log(error)
-        return res.status(500).json({
-            message:error
-        })
-      }
-};
 
 export const getAllMonturas = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();

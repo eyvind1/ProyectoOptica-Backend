@@ -16,11 +16,12 @@ const TABLE_NAME_MONTURAS  = "Monturas";
 /* Esta funcion lista todas las sedes que se encuentran con "estado = Habikitado" */
 
 export const getProductBySede = async (req, res) => {
-    let id_sede      = req.params.idSede;
-    let product_name = req.params.productName;
+    let id_sede       = req.params.idSede;
+    let product_name  = req.params.productName;
+    const nameOfTable = product_name.replace(product_name[0],product_name[0].toUpperCase())+'s';
     try{
         const params = {
-            TableName: product_name,
+            TableName: nameOfTable,
             FilterExpression : "#habilitado = :valueHabilitado and #idsede =:idsede",
             ExpressionAttributeValues: {
                 ":valueHabilitado": true,
@@ -83,6 +84,7 @@ async function validarNroOrdenExcel(arrayProductos){
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
+    // Le damos formato al string =>  luna = Lunas, accesorio = Acecesorio, montura = Monturas
     const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
 
     //Valido que no haya "Nro_Orden" repetidos en el excel

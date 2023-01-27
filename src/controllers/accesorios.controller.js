@@ -33,6 +33,7 @@ export const getAllAccesoriosForVenta = async (req, res) => {
       }
 };
 
+
 export const getAllAccesorios = async (req, res) => {
     try {
         const params = {
