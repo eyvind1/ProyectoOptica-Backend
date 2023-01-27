@@ -9,7 +9,7 @@ const router = Router();
 
 
 router.get('/getAllLunas',passport.authenticate('jwt',{session:false}),getAllLunas);
-router.get('/getAllLunasForVenta',passport.authenticate('jwt',{session:false}),getAllLunasForVenta);
+router.get('/getAllLunasForVenta/:idSede',passport.authenticate('jwt',{session:false}),getAllLunasForVenta);
 router.post('/createNewLuna',passport.authenticate('jwt',{session:false}),createNewLuna);
 router.put('/editLunaById/:idLuna',passport.authenticate('jwt',{session:false}),editLunaById );
 router.put('/unsubscribeLunasById/:idLuna', passport.authenticate('jwt',{session:false}),unsubscribeLunasById);

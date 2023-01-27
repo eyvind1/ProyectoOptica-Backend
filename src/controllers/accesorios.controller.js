@@ -9,18 +9,20 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
 export const getAllAccesoriosForVenta = async (req, res) => {
+    const id_sede = req.params.idSede;
     try {
         const params = {
             TableName: TABLE_NAME_ACCESORIO,
-            FilterExpression : "#habilitado = :valueHabilitado and #cantidad > :valueCantidad",
+            FilterExpression : "#habilitado = :valueHabilitado and #cantidad > :valueCantidad and #id_sede = :valueSede",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
-                ":valueCantidad": 0
+                ":valueCantidad": 0,
+                ":valueSede": id_sede
             },
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
-                "#cantidad": "cantidad"
-                
+                "#cantidad": "cantidad",
+                "#id_sede":    "id_sede"
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();

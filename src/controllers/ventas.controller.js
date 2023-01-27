@@ -30,6 +30,8 @@ function castIsoDateToDate(fecha){
     const result = (anio+'-'+mes+'-'+ dia+' '+hora+':'+minutos);
     return result;
 }
+
+
 export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
