@@ -20,7 +20,7 @@ async function validarDni(dni){
         const paramsPersona = {
             TableName: 'Persona',
             FilterExpression:
-              'dni = :dni' ,
+              'dni = :dni and habilitado =:' ,
             ExpressionAttributeValues: {
                 ":dni": dni
             }

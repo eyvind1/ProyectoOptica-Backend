@@ -31,6 +31,29 @@ export const getAllLunasForVenta = async (req, res) => {
         })
     }
 };
+export const getAllLunasBySede = async (req, res) => {
+    try {
+        const params = {
+            TableName: TABLE_NAME_LUNA,
+            FilterExpression : "#habilitado = :valueHabilitado and #cantidad > :valueCantidad",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueCantidad": 0
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado",
+                "#cantidad": "cantidad"
+            }
+        };
+        const lunas = await dynamoClient.scan(params).promise();
+        res.json(lunas.Items);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+    }
+};
 export const getAllLunas = async (req, res) => {
     try {
         const params = {
