@@ -165,7 +165,6 @@ export const editUserById = async (req, res) => {
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
     const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    console.log(req.body)
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {

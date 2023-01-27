@@ -36,12 +36,13 @@ export const createNewSede = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
         const id_sede = v4() + codeForTables.tablaSedes;
-        const {habilitado,direccion,fecha_creacion_sede,nombre_sede} = (req.body);
+        const {habilitado,direccion,fecha_modificacion_sede,fecha_creacion_sede,nombre_sede} = (req.body);
         const datosSede = {
             id_sede,
             habilitado,
             direccion,
             fecha_creacion_sede,
+            fecha_modificacion_sede,
             nombre_sede
         }
         const newSede = await dynamoClient.put({
@@ -114,3 +115,31 @@ export const unsubscribeSedeById = async (req, res) => {
 };
 
 
+export const editSedeById = async (req, res) => {
+    
+    const id_sede = req.params.idSede;
+    const {direccion,nombre_sede,fecha_modificacion_sede} = req.body;
+    try {
+        const paramsSede = {
+            TableName: TABLE_NAME_SEDE,
+            Key: {
+                "id_sede":id_sede,
+            },
+            UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, fecha_modificacion_sede = :fecha_modificacion_sede`,
+            ExpressionAttributeValues: {
+                ":direccion"   : direccion,
+                ":nombre_sede" : nombre_sede,
+                ":fecha_modificacion_sede": fecha_modificacion_sede,
+            }
+        };
+        const sede = await dynamoClient.update(paramsSede).promise();
+        res.json(sede)
+        return sede;  
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:'No se puede actualizar la Sede'
+        })
+    }
+   
+};

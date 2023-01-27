@@ -34,7 +34,6 @@ export const createNewIngreso = async (req, res) => {
     }
 };
 
-
 export const getAllEgresos = async (req, res) => {
     try {
         /* Obtengo todos los egresos */ 
@@ -59,7 +58,6 @@ export const getAllEgresos = async (req, res) => {
         })
       }
 };
-
 /* 
      Funcion Verificada
      1.-el campo egreso es falso si es un ingreso
@@ -87,4 +85,46 @@ export const getAllIngresos = async (req, res) => {
             message:error
         })
       }
+};
+
+
+
+
+/*
+    1.-  Funcion para Dar de Baja a un egreso en especifico  
+    2.-  Antes de dar de baja a un accesorio valido que exista
+    3.-  Funcion Verificada al 100%
+    4.-  Egreso e ingreso estan en una sola tabla ojo, idCaja se refiere aL ID_INGRESO O ID_EGRESO es igual
+*/ 
+export const unsubscribeEgresoById = async (req, res) => {
+    const id_caja = req.params.idCaja;
+    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    if(existeAccesorio.length > 0) {
+        try {
+            const paramsAccesorio = {
+                TableName: TABLE_NAME_ACCESORIO,
+                Key: {
+                    "id_accesorio":id_accesorio,
+                },
+                UpdateExpression: "SET habilitado = :habilitado",
+                ExpressionAttributeValues: {
+                    ":habilitado": false
+                }
+            };
+            const accesorio = await dynamoClient.update(paramsAccesorio).promise();      
+            res.json(accesorio);
+            return accesorio;
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message:'Algo anda mal'
+            })
+        }
+    }
+    else{
+        console.log('no existe el accesorio')
+        return res.status(500).json({
+            message:'El accesorio no existe'
+        })
+    }
 };
