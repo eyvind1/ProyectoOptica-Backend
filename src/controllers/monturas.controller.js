@@ -38,7 +38,6 @@ export const getAllMonturasForVenta = async (req, res) => {
 
 export const getAllMonturasBySede= async (req, res) => {
     const id_sede = req.params.idSede;
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         /* Obtengo todas las monturas */ 
         const params = {

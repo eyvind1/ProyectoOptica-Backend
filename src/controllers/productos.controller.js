@@ -88,7 +88,6 @@ export const createListOfProducts=async(req,res)=>{
     //Valido que no haya "Nro_Orden" repetidos en el excel
     let validarExcel = await validarNroOrdenExcel(array_productos);
     if(validarExcel.length > 0){
-        validator = true;
         return res.status(400).json({
             message:'En el excel hay numeros de orden repetidos'
         })

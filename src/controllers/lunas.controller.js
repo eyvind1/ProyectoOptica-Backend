@@ -9,6 +9,7 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
 export const getAllLunasForVenta = async (req, res) => {
+    const id_sede = req.params.idSede;
     try {
         const params = {
             TableName: TABLE_NAME_LUNA,
