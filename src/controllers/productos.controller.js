@@ -13,7 +13,10 @@ const TABLE_NAME_LUNA      = "Lunas";
 const TABLE_NAME_MONTURAS  = "Monturas";
 
 
-/* Esta funcion lista todas las sedes que se encuentran con "estado = Habikitado" */
+/* Esta funcion lista todas las sedes que se encuentran con "estado = Habikitado" 
+    Cabe recalcar que el product name que viene por parametro debe ser [luna, accesorio,montura] 
+    es decir en minuscula y en singular
+*/
 
 export const getProductBySede = async (req, res) => {
     let id_sede       = req.params.idSede;
