@@ -87,9 +87,6 @@ export const getAllIngresos = async (req, res) => {
       }
 };
 
-
-
-
 /*
     1.-  Funcion para Dar de Baja a un egreso en especifico  
     2.-  Antes de dar de baja a un accesorio valido que exista
@@ -98,33 +95,26 @@ export const getAllIngresos = async (req, res) => {
 */ 
 export const unsubscribeEgresoById = async (req, res) => {
     const id_caja = req.params.idCaja;
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    if(existeAccesorio.length > 0) {
-        try {
-            const paramsAccesorio = {
-                TableName: TABLE_NAME_ACCESORIO,
-                Key: {
-                    "id_accesorio":id_accesorio,
-                },
-                UpdateExpression: "SET habilitado = :habilitado",
-                ExpressionAttributeValues: {
-                    ":habilitado": false
-                }
-            };
-            const accesorio = await dynamoClient.update(paramsAccesorio).promise();      
-            res.json(accesorio);
-            return accesorio;
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                message:'Algo anda mal'
-            })
-        }
-    }
-    else{
-        console.log('no existe el accesorio')
+    try {
+        const paramsCaja = {
+            TableName: TABLE_NAME_CAJA,
+            Key: {
+                "id_caja":id_caja
+            },
+            UpdateExpression: "SET habilitado = :habilitado",
+            ConditionExpression: "id_caja = :id_caja", 
+            ExpressionAttributeValues: {
+                ":habilitado": false,
+                ":id_caja": id_caja,
+            }
+        };
+        const caja = await dynamoClient.update(paramsCaja).promise();      
+        res.json(caja);
+        return accesorio;
+    } catch (error) {
         return res.status(500).json({
-            message:'El accesorio no existe'
+            message:'Algo anda mal'
         })
     }
+   
 };
