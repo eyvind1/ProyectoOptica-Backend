@@ -31,6 +31,61 @@ function castIsoDateToDate(fecha){
     return result;
 }
 
+async function restarStockProductos(list_monturas, list_lunas){
+    const tableName = ['Monturas','Lunas','Accesorios']
+    
+    if(list_monturas.length>0){
+        list_monturas.map(async(row,i)=>{   
+            try {
+                // Hago la resta de lo que hay en stock menos lo vendido
+                console.log('row',row)
+                const params = {
+                    TableName: tableName[0],
+                    Key: {
+                        "id_montura": row.id_montura,
+                    },
+                    UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
+                    ExpressionAttributeValues: {
+                        ":cant_vendida": row.cant_vendida
+                    }
+                };
+                const montura = await dynamoClient.update(params).promise();      
+                res.json(montura);
+                return montura;
+            } catch (error) {
+                console.log(error)
+                return res.status(500).json({
+                    message:'Algo anda mal'
+                })
+            }
+        })
+    }
+    else if(list_lunas.length>0){
+        list_lunas.map(async(row,i)=>{   
+            try {
+                // Hago la resta de lo que hay en stock menos lo vendido
+                const params = {
+                    TableName: tableName[1],
+                    Key: {
+                        "id_luna": row.id_luna,
+                    },
+                    UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
+                    ExpressionAttributeValues: {
+                        ":cant_vendida": row.cant_vendida
+                    }
+                };
+                const luna = await dynamoClient.update(params).promise();      
+                return luna;
+            } catch (error) {
+                console.log(error)
+                return res.status(500).json({
+                    message:'Algo anda mal'
+                })
+            }
+        })
+    }
+
+}
 
 export const createNewVenta = async (req, res) => {
     try {
@@ -56,6 +111,8 @@ export const createNewVenta = async (req, res) => {
             TableName: TABLE_NAME_VENTAS,
             Item: datosVenta
         }).promise()
+        
+        const restarStock  = await   restarStockProductos(list_monturas,list_lunas);
         res.json(newVenta);       
     } catch (error) {
         return res.status(500).json({ 
