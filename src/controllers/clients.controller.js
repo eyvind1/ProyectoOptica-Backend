@@ -34,7 +34,7 @@ export const getAllClientsMinified = async (req, res) => {
                 Key:{
                     id_persona
                 },
-                AttributesToGet:['apellidos','nombres','dni']
+                AttributesToGet:['apellidos','nombres','dni','email','telefono','fecha_nacimiento']
 
             }).promise()
             result = {...cliente,...result.Item};
@@ -205,6 +205,8 @@ export const getAllClientsById = async (req, res) => {
         
     }
 };
+
+
 
 /*
 OJO ESTA FUNCION ESTA FUNCIONANDO, PERO FALTA VALIDAR LOS CAMPOS CON EL FRONT, NADA MAS
