@@ -117,7 +117,6 @@ const validateUser = async (idUsuario) => {
         return error;
     }
 }
-
 /*
     1.-  Funcion para Dar de Baja a un usuario en especifico  
     2.-  Antes de dar de baja al usuario valido que exista

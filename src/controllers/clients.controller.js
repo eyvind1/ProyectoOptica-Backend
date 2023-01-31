@@ -4,9 +4,10 @@ import { accessKeyId } from '../config.js';
 
 const TABLE_NAME_CLIENTE  = "Clientes";
 const TABLE_NAME_PERSONA  = "Persona";
+const dynamoClient = new AWS.DynamoDB.DocumentClient();
+
 
 export const getAllClientsMinified = async (req, res) => {
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     let result={};
     try {
         /*Primero obtengo el json con todos los clientes */ 
@@ -20,7 +21,6 @@ export const getAllClientsMinified = async (req, res) => {
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
             },
-
         };
         const characters = await dynamoClient.scan(params).promise();
         let arr=[];
@@ -34,7 +34,7 @@ export const getAllClientsMinified = async (req, res) => {
                 Key:{
                     id_persona
                 },
-                AttributesToGet:['apellidos','nombres','dni','email','telefono','fecha_nacimiento']
+                AttributesToGet:['apellidos','nombres','dni','email','telefono','fecha_nacimiento','direccion']
 
             }).promise()
             result = {...cliente,...result.Item};
@@ -52,10 +52,49 @@ export const getAllClientsMinified = async (req, res) => {
         })
       }
 };
+
+
+export const getClientById = async (req, res) => {
+    const id_cliente = req.params.idCliente;
+    try {
+        /*Primero obtengo el json con todos los usuarios */ 
+        const params = {
+            TableName: TABLE_NAME_CLIENTE,
+            FilterExpression : "#habilitado = :valueHabilitado and #id_cliente = :valueIdCliente",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueIdCliente":id_cliente
+            },
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado",
+                "#id_cliente": "id_cliente"
+            }
+        };
+        const cliente = await dynamoClient.scan(params).promise();
+        console.log(cliente.Items[0].id_persona);
+        /* Segundo itero sobre cada usuario y obtengo la persona */
+        const id_persona = cliente.Items[0].id_persona;
+        const persona    = await dynamoClient.get({
+            TableName:TABLE_NAME_PERSONA,
+            Key:{
+                id_persona
+            }
+        }).promise();
+        //console.log(persona)
+        let result = {...cliente.Items[0],...persona.Item};
+        res.json(result);
+
+    } 
+    catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            message:error
+        })
+      }
+}
 /* Esta funcion retorna infomacion del cliente unido a la info de la persona */
 /* No quieres medidas, nombre + apellido , dni, ids, */
 export const getAllClients = async (req, res) => {
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_CLIENTE  = "Clientes";
     const TABLE_NAME_PERSONA  = "Persona";
     let result={};
@@ -101,7 +140,6 @@ export const getAllClients = async (req, res) => {
 
 /* Dar de Baja al Cliente */ 
 export const darBajaClienteById = async (req, res) => {
-    const id_cliente = req.params.idCliente;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
     try {
@@ -129,7 +167,6 @@ export const editClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
     const id_persona = req.params.idPersona;
     const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento,antecedentes} = req.body;
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     console.log(req.body)
     try {
         //Primero actualizo datos de la tabla cliente
@@ -204,6 +241,9 @@ export const getAllClientsById = async (req, res) => {
         })
         
     }
+
+
+    
 };
 
 
@@ -214,7 +254,6 @@ RECALCAR QUE EL CAMPO MEDIDA ES UNA LISTA DE OBJETOS
 */ 
 
 export const createNewClient = async (req, res) => {
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     //estado bool
     try {
         const id_persona = v4();
