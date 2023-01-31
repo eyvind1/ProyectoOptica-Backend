@@ -98,7 +98,6 @@ export const createNewVenta = async (req, res) => {
             nombre_cliente,
             list_monturas,
             list_lunas,
-            observaciones,
             list_accesorios,
             id_vendedor,
             habilitado,
@@ -120,7 +119,12 @@ export const createNewVenta = async (req, res) => {
         })
     }
 };
+/* Esta funcion permite actualizar el tipo de venta
+   - El tipo de venta se refiere al pago de una  o varias cuotas
+*/
+export const updatePagoCuotasVenta = async (req, res) => {
 
+}
 /* Esta funcion busca todas las ventas de una sede en especifica */
 export const getAllVentasBySede = async (req, res) => {
     try{
