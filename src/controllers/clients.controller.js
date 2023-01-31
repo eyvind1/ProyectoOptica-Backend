@@ -68,17 +68,18 @@ export const getClientById = async (req, res) => {
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
                 "#id_cliente": "id_cliente"
-            }
+            },
+            "ProjectionExpression": "id_cliente,id_persona,medidas"
         };
         const cliente = await dynamoClient.scan(params).promise();
-        console.log(cliente.Items[0].id_persona);
         /* Segundo itero sobre cada usuario y obtengo la persona */
         const id_persona = cliente.Items[0].id_persona;
         const persona    = await dynamoClient.get({
             TableName:TABLE_NAME_PERSONA,
             Key:{
                 id_persona
-            }
+            },
+            AttributesToGet:['apellidos','nombres','dni','email','telefono','fecha_nacimiento','direccion']
         }).promise();
         //console.log(persona)
         let result = {...cliente.Items[0],...persona.Item};
