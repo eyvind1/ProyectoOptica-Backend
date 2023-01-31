@@ -124,20 +124,19 @@ export const createNewVenta = async (req, res) => {
 */
 export const updatePagoCuotasVentaById = async (req, res) => {
     let id_venta = req.params.idVenta;
-    const {tipo_venta} = req.body;
+    const {tipo_venta} = req.body;  
     try {
         const paramsVenta = {
             TableName: TABLE_NAME_VENTAS,
             Key: {
                 "id_ventas":id_venta,
             },
-            UpdateExpression: "SET tipo_venta = :tipo_venta",
-            ConditionExpression: "id_ventas = :id_venta", 
+            UpdateExpression: `SET tipo_venta = :tipo_venta`,
+            ConditionExpression: "id_ventas = :id_venta",
             ExpressionAttributeValues: {
-                ":tipo_venta": tipo_venta,
-                ":id_venta" : id_venta
-            }
-        };
+                ":id_venta": id_venta,
+                ":tipo_venta": tipo_venta            }
+        }
         const venta = await dynamoClient.update(paramsVenta).promise();      
         res.json(venta);
         return venta;
