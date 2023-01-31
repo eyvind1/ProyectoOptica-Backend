@@ -43,9 +43,9 @@ async function findUserByEmail(usuario){
                     }
                 };
                 let result= await dynamoClient.scan(paramsPersona).promise();      
-                let union = {...user.Items[0],...result.Items[0]};
+                user = {...user.Items[0],...result.Items[0]};
                 //Agrego atributos de la persona al json usuario
-                return union;
+                return user;
     
             } catch (error) {
                 console.log(error);
