@@ -4,12 +4,14 @@ import passport from 'passport';
 
 //Obtengo las funciones del controlador
 import {createNewVenta, getAllVentas,getAllVentasByDate,
+    updatePagoCuotasVentaById,
     getAllVentasBySede,getAllVentasBySeller,unsubscribeVentasById} from '../controllers/ventas.controller.js';
 
 
 const router = Router();
 
 router.post('/createNewVenta',passport.authenticate('jwt',{session:false}),createNewVenta);
+router.put('/updatePagoCuotasVentaById/idVenta',passport.authenticate('jwt',{session:false}),updatePagoCuotasVentaById);
 router.get('/getAllVentasBySede/:idsede',passport.authenticate('jwt',{session:false}),getAllVentasBySede);
 router.get('/getAllVentasBySeller/:idvendedor',passport.authenticate('jwt',{session:false}),getAllVentasBySeller);
 router.get('/getAllVentas',passport.authenticate('jwt',{session:false}),getAllVentas);

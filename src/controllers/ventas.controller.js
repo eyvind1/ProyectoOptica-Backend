@@ -110,8 +110,8 @@ export const createNewVenta = async (req, res) => {
             TableName: TABLE_NAME_VENTAS,
             Item: datosVenta
         }).promise()
-        
-        const restarStock  = await   restarStockProductos(list_monturas,list_lunas);
+        //Una vez que se realiza la venta restamos del STOCK
+        const restarStock  = await restarStockProductos(list_monturas,list_lunas);
         res.json(newVenta);       
     } catch (error) {
         return res.status(500).json({ 
@@ -122,8 +122,31 @@ export const createNewVenta = async (req, res) => {
 /* Esta funcion permite actualizar el tipo de venta
    - El tipo de venta se refiere al pago de una  o varias cuotas
 */
-export const updatePagoCuotasVenta = async (req, res) => {
-
+export const updatePagoCuotasVentaById = async (req, res) => {
+    let id_venta = req.params.idVenta;
+    const {tipo_venta} = req.body;
+    try {
+        const paramsVenta = {
+            TableName: TABLE_NAME_VENTAS,
+            Key: {
+                "id_ventas":id_venta,
+            },
+            UpdateExpression: "SET tipo_venta = :tipo_venta",
+            ConditionExpression: "id_ventas = :id_venta", 
+            ExpressionAttributeValues: {
+                ":tipo_venta": tipo_venta,
+                ":id_venta" : id_venta
+            }
+        };
+        const venta = await dynamoClient.update(paramsVenta).promise();      
+        res.json(venta);
+        return venta;
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:error
+        })
+    }
 }
 /* Esta funcion busca todas las ventas de una sede en especifica */
 export const getAllVentasBySede = async (req, res) => {
