@@ -100,7 +100,6 @@ export const createNewUser = async (req, res) => {
 
 const validateUser = async (idUsuario) => {
     const id_usuario = idUsuario;
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsUsuario = {
             TableName: TABLE_NAME_USUARIO,
@@ -126,7 +125,6 @@ export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const existeUsuario = await validateUser(id_usuario)
     console.log(existeUsuario);
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     if(existeUsuario.length > 0) {
         try {
             //Primero actualizo datos de la tabla cliente
@@ -163,7 +161,7 @@ export const editUserById = async (req, res) => {
     const id_persona = req.params.idPersona;
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
     const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    let contraseniaEncriptada = await encriptarPassword(contrasenia);
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {
@@ -171,11 +169,12 @@ export const editUserById = async (req, res) => {
             Key: {
                 "id_usuario":id_usuario,
             },
-            UpdateExpression: "SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones",
+            UpdateExpression: "SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones, contrasenia = :contrasenia",
             ExpressionAttributeValues: {
                 ":rol": rol,
                 ":id_sede": id_sede,
-                ":observaciones": observaciones
+                ":observaciones": observaciones,
+                ":contrasenia": contraseniaEncriptada
             }
         };
         const usuario = await dynamoClient.update(paramsUsuario).promise();
