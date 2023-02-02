@@ -192,10 +192,10 @@ export  const getAllVentas = async (req, res) => {
             }
         };
         const sedes = await dynamoClient.scan(params).promise();
-        //console.log(sedes.Items);
+        //console.log(sedes.Items); 
         const rpta  = await sortArrayJsonByDate(sedes.Items); 
         console.log(rpta,'rpta')
-        res.json(sedes);
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
