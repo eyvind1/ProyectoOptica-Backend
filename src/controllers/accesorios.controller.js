@@ -1,13 +1,34 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 
-import {codeForTables} from '../utils/codigosTablas.js';
+import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
 
 
 const TABLE_NAME_ACCESORIO = "Accesorios";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 /* Funciones que se utilizan en el archivo */ 
+
+/* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
+function castIsoDateToDate(fecha){
+    const date = new Date(fecha);
+    //const timestamp = date
+    let mes     = (date.getMonth()+1).toString();
+    let anio    = date.getFullYear();
+    let dia     = date.getDate().toString();
+    let hora    = date.getHours().toString();
+    if (mes.length < 2) {
+        mes = '0' + mes;
+    }
+    if (dia.length < 2) {
+        dia = '0' + dia;
+    }
+    if (hora.length < 2) {
+        hora = '0' + hora;
+    }
+    const result = (dia+mes+ anio);
+    return result;
+}
 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
@@ -76,6 +97,10 @@ export const createNewAccesorio = async (req, res) => {
         //Concatenar con la letra de la tabla
         const id_accesorio = v4() + codeForTables.tablaAccesorios;
         const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
+        
+        let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
+        let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
+
         const datosAccesorio = {
             id_accesorio,
             tipo,

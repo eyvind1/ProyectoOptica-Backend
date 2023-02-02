@@ -18,9 +18,9 @@ async function encriptarPassword(contrasenia){
 async function validarDni(dni){
     try {
         const paramsPersona = {
-            TableName: 'Persona',
+            TableName: TABLE_NAME_USUARIO,
             FilterExpression:
-              'dni = :dni and habilitado =:' ,
+              'dni = :dni' ,
             ExpressionAttributeValues: {
                 ":dni": dni
             }
@@ -28,22 +28,27 @@ async function validarDni(dni){
         let result= await dynamoClient.scan(paramsPersona).promise();      
         //Retorno 1 si encuentra y  0 sino encuentra
         return result.Count;
-
     } catch (error) {
         console.log(error);
         return error;
     }
 }
+
+/* Funcion que permite crear un nuevo usuario 
+    VALIDACIONES 
+    ----------------------------------------------------------------
+    1.- Dni's repetidos
+    2.- 
+*/
+
 export const createNewUser = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
-        const id_persona = v4() + codeForTables.tablaPersonas;
         const id_usuario = v4() + codeForTables.tablaUsers;
         //Obtengo los campos que se envia por POST desde el Front
         let {nombres,apellidos,dni,rol,habilitado,observaciones,email,
             fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
-        console.log(dni)
-        //Validamos que el DNI no sea repetido
+        // Validamos que el DNI no sea repetido
         const dniValidado = await validarDni(dni);
         if(dniValidado>0){
             return res.status(400).json({ 
@@ -54,8 +59,9 @@ export const createNewUser = async (req, res) => {
         contrasenia = await encriptarPassword(contrasenia);
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni
         const usuario = apellidos.substr(0,3) + nombres.substr(0,2)+dni.substr(0,2);
-        const newPersona = {
-            id_persona,
+      
+        const newUser = {
+            id_usuario,
             apellidos,
             dni,
             email,
@@ -63,24 +69,15 @@ export const createNewUser = async (req, res) => {
             fecha_nacimiento,
             fecha_modificacion,
             nombres,
-            telefono
-        }
-        const newUser = {
-            id_usuario,
+            telefono,
             usuario,
             observaciones,
             habilitado,
-            id_persona,
             contrasenia,
             id_sede,
             rol
         };
-        console.log(newPersona,newUser)
         //Si no le pongo .promise, solo seria un callback        
-        await dynamoClient.put({
-            TableName: TABLE_NAME_PERSONA,
-            Item: newPersona
-        }).promise()
         const createdUser = await dynamoClient.put({
             TableName: TABLE_NAME_USUARIO,
             Item: newUser
@@ -92,6 +89,7 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
+
 /* 
     1.- Esta funcion permite validar si el usuario que se envia desde el front existe en la BD 
     2.- Funcion validada al 100%    
@@ -115,6 +113,7 @@ const validateUser = async (idUsuario) => {
         return error;
     }
 }
+
 /*
     1.-  Funcion para Dar de Baja a un usuario en especifico  
     2.-  Antes de dar de baja al usuario valido que exista
@@ -123,11 +122,9 @@ const validateUser = async (idUsuario) => {
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     const existeUsuario = await validateUser(id_usuario)
-    console.log(existeUsuario);
     if(existeUsuario.length > 0) {
         try {
             //Primero actualizo datos de la tabla cliente
-            console.log('entro al try')
             const paramsUsuario = {
                 TableName: TABLE_NAME_USUARIO,
                 Key: {
@@ -255,11 +252,9 @@ export const getAllUsers = async (req, res) => {
         })
     }
 };
-/* Estea funcion */ 
+
+/* Esta funcion */ 
 export const getAllUsersById = async (req, res) => {
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
-    const TABLE_NAME_USUARIO  = "Usuarios";
-    const TABLE_NAME_PERSONA  = "Persona";
     let result={};
     try {
         /*Primero obtengo el json con todos los usuarios */ 
