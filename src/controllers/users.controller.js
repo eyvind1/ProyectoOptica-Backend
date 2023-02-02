@@ -38,7 +38,6 @@ async function validarDni(dni){
     1.- Dni's repetidos
     2.- 
 */
-
 export const createNewUser = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
@@ -88,29 +87,6 @@ export const createNewUser = async (req, res) => {
     }
 };
 
-/* 
-    1.- Esta funcion permite validar si el usuario que se envia desde el front existe en la BD 
-    2.- Funcion validada al 100%    
-*/
-
-const validateUser = async (idUsuario) => {
-    const id_usuario = idUsuario;
-    try {
-        const paramsUsuario = {
-            TableName: TABLE_NAME_USUARIO,
-            KeyConditionExpression:
-              'id_usuario= :id_usuario',
-            ExpressionAttributeValues: {
-                ":id_usuario": id_usuario
-            }
-        };
-        const usuario  = await dynamoClient.query(paramsUsuario).promise();      
-        return usuario.Items;
-    } catch (error) {
-        console.log(error)
-        return error;
-    }
-}
 
 /*
     1.-  Funcion para Dar de Baja a un usuario en especifico  
@@ -119,33 +95,24 @@ const validateUser = async (idUsuario) => {
 */ 
 export const darBajaUsuarioById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
-    const existeUsuario = await validateUser(id_usuario)
-    if(existeUsuario.length > 0) {
-        try {
-            //Primero actualizo datos de la tabla cliente
-            const paramsUsuario = {
-                TableName: TABLE_NAME_USUARIO,
-                Key: {
-                    "id_usuario":id_usuario,
-                },
-                UpdateExpression: "SET habilitado = :habilitado",
-                ExpressionAttributeValues: {
-                    ":habilitado": false
-                }
-            };
-            const usuario = await dynamoClient.update(paramsUsuario).promise();      
-            return res.json(usuario);
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                message:'Algo anda mal'
-            })
-        }
-    }
-    else{
-        console.log('no existe')
+    try {
+        //Primero actualizo datos de la tabla cliente
+        const paramsUsuario = {
+            TableName: TABLE_NAME_USUARIO,
+            Key: {
+                "id_usuario":id_usuario,
+            },
+            UpdateExpression: "SET habilitado = :habilitado",
+            ExpressionAttributeValues: {
+                ":habilitado": false
+            }
+        };
+        const usuario = await dynamoClient.update(paramsUsuario).promise();      
+        return res.json(usuario);
+    } catch (error) {
+        console.log(error)
         return res.status(500).json({
-            message:'El usuario no existe'
+            message:'Algo anda mal'
         })
     }
 };
@@ -153,6 +120,13 @@ export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
     const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
+    // Antes de seguir avanzando valido si el dni que ingresa no existe anteriormente
+    const dniValidado = await validarDni(dni);
+    if(dniValidado>0){
+        return res.status(400).json({ 
+            message:'Dni Duplicado'
+        })
+    }
     let contraseniaEncriptada = await encriptarPassword(contrasenia);
     try {
         //Primero actualizo datos de la tabla cliente

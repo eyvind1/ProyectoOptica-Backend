@@ -36,7 +36,6 @@ async function findUserByEmail(usuario){
         return error;
     }
 }
-
 export const signIn = async (req, res) => {
     const { email, password } = req.body;
     //Valido usuario y contrasenia
