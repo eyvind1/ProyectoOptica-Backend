@@ -12,7 +12,7 @@ async function encriptarPassword(contrasenia){
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(contrasenia,salt);
 }
-// Funcion que permite validar si un DNI existe o no 
+
 /* Obligatoriamente tiene que verificar solamente usuarios habilitados por q ...*/ 
 async function validarDni(dni){
     try {
