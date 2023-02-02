@@ -174,7 +174,7 @@ async function sortArrayJsonByDate(arrayJson){
 
     arrayJson.sort((a, b) => {
         //console.log(b.id_vendedor,'a')
-        return new Date(a.fecha_creacion_venta) - new Date(b.fecha_creacion_venta); // descending
+        return new Date(b.fecha_creacion_venta) - new Date(a.fecha_creacion_venta); // descending
       })
       return arrayJson
 }
@@ -194,7 +194,7 @@ export  const getAllVentas = async (req, res) => {
         const sedes = await dynamoClient.scan(params).promise();
         //console.log(sedes.Items); 
         const rpta  = await sortArrayJsonByDate(sedes.Items); 
-        console.log(rpta,'rpta')
+        //console.log(rpta,'rpta')
         res.json(rpta);
     } 
      catch(error) {
