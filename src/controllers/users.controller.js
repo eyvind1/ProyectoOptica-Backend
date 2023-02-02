@@ -18,6 +18,13 @@ async function encriptarPassword(contrasenia){
     1.- Obligatoriamente tiene que verificar solamente sobre usuarios habilitados porque los dados de baja 
         podrian haber tenido el mismo DNI
 */ 
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(b.fecha_creacion) - new Date(a.fecha_creacion); // ascending order
+      })
+      return arrayJson;
+}
+
 async function validarDni(dni){
     try {
         const paramsPersona = {
@@ -174,7 +181,8 @@ export const getAllUsers = async (req, res) => {
             }
         };
         const usuarios = await dynamoClient.scan(params).promise();
-        return res.json(usuarios.Items);
+        const rpta     = await sortArrayJsonByDate(usuarios.Items); 
+        return res.json(rpta);
     } 
     catch(error) {
         return res.status(500).json({
@@ -197,7 +205,8 @@ export const getAllUsersById = async (req, res) => {
             }
         };
         const usuarios = await dynamoClient.scan(params).promise();
-        return res.json(usuarios.Items);
+        const rpta     = await sortArrayJsonByDate(usuarios.Items); 
+        return res.json(rpta);
     } 
     catch(error) {
         return res.status(500).json({

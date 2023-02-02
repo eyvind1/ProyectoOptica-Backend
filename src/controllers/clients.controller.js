@@ -12,7 +12,7 @@ async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
         return new Date(b.fecha_creacion_) - new Date(a.fecha_creacion_venta); // descending
       })
-      return arrayJson
+      return arrayJson;
 }
 
 /* End funciones que se utilizan en el archivo */ 
@@ -33,7 +33,8 @@ export const getAllClientsMinified = async (req, res) => {
             },
         };
         const clientes = await dynamoClient.scan(params).promise();
-        return res.json(clientes.Items);
+        const rpta     = await sortArrayJsonByDate(clientes.Items); 
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
