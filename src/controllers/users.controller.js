@@ -206,7 +206,7 @@ export const getAllUsers = async (req, res) => {
             }
         };
         const usuarios = await dynamoClient.scan(params).promise();
-        return res.json(usuarios.Items);
+        return res.json(usuarios);
     } 
     catch(error) {
         return res.status(500).json({
@@ -230,7 +230,7 @@ export const getAllUsersById = async (req, res) => {
             }
         };
         const usuarios = await dynamoClient.scan(params).promise();
-        return res.json(usuarios.Items);
+        return res.json(usuarios);
     } 
     catch(error) {
         return res.status(500).json({

@@ -119,7 +119,6 @@ export const editSedeById = async (req, res) => {
     
     const id_sede = req.params.idSede;
     const {direccion,nombre_sede,fecha_modificacion_sede} = req.body;
-    console.log(direccion,nombre_sede,fecha_modificacion_sede);
     try {
         const paramsSede = {
             TableName: TABLE_NAME_SEDE,
