@@ -13,6 +13,7 @@ async function encriptarPassword(contrasenia){
     return await bcrypt.hash(contrasenia,salt);
 }
 // Funcion que permite validar si un DNI existe o no 
+/* Obligatoriamente tiene que verificar solamente usuarios habilitados por q ...*/ 
 async function validarDni(dni){
     try {
         const paramsPersona = {
@@ -119,14 +120,7 @@ export const darBajaUsuarioById = async (req, res) => {
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
-    const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
-    // Antes de seguir avanzando valido si el dni que ingresa no existe anteriormente
-    const dniValidado = await validarDni(dni);
-    if(dniValidado>0){
-        return res.status(400).json({ 
-            message:'Dni Duplicado'
-        })
-    }
+    const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
     let contraseniaEncriptada = await encriptarPassword(contrasenia);
     try {
         //Primero actualizo datos de la tabla cliente
@@ -137,7 +131,7 @@ export const editUserById = async (req, res) => {
             },
             UpdateExpression: `SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones, contrasenia = :contrasenia,
                                    apellidos = :apellidos, nombres = :nombres,
-                                   telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
+                                   telefono = :telefono,fecha_nacimiento=:fecha_nacimiento,
                                    fecha_modificacion=:fecha_modificacion, email=:email`,
             ExpressionAttributeValues: {
                 ":rol": rol,
@@ -147,7 +141,6 @@ export const editUserById = async (req, res) => {
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
-                ":dni"       : dni,
                 ":fecha_nacimiento" : fecha_nacimiento,
                 ":fecha_modificacion" : fecha_modificacion,
                 ":email"       : email,
@@ -155,16 +148,13 @@ export const editUserById = async (req, res) => {
         };
         const usuario = await dynamoClient.update(paramsUsuario).promise();
         return res.json(usuario.Items);
-
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             message:'Algo anda mal'
         })
     }
 };
 
-/* Estea funcion */ 
 export const getAllUsers = async (req, res) => {
     const TABLE_NAME_USUARIO  = "Usuarios";
     try {
@@ -189,7 +179,6 @@ export const getAllUsers = async (req, res) => {
     }
 };
 
-/* Esta funcion */ 
 export const getAllUsersById = async (req, res) => {
     try {
         /*Primero obtengo el json con todos los usuarios */ 
