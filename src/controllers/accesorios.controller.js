@@ -106,6 +106,7 @@ export const createNewAccesorio = async (req, res) => {
             tipo,
             num_orden,
             cantidad,
+            codigo_interno,
             id_sede,
             habilitado,
             nombre_accesorio,
