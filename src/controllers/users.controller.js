@@ -19,9 +19,10 @@ async function validarDni(dni){
         const paramsPersona = {
             TableName: TABLE_NAME_USUARIO,
             FilterExpression:
-              'dni = :dni' ,
+              'dni = :dni and habilitado = :habilitado' ,
             ExpressionAttributeValues: {
-                ":dni": dni
+                ":dni"        : dni,
+                ":habilitado" : true,
             }
         };
         let result= await dynamoClient.scan(paramsPersona).promise();      
