@@ -9,6 +9,26 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
 /* Funciones que se utilizan en el archivo */ 
+function castIsoDateToDate(fecha){
+    const date = new Date(fecha);
+    //const timestamp = date
+    let mes     = (date.getMonth()+1).toString();
+    let anio    = date.getFullYear();
+    let dia     = date.getDate().toString();
+    let hora    = date.getHours().toString();
+    if (mes.length < 2) {
+        mes = '0' + mes;
+    }
+    if (dia.length < 2) {
+        dia = '0' + dia;
+    }
+    if (hora.length < 2) {
+        hora = '0' + hora;
+    }
+    const result = (dia+mes+ anio);
+    return result;
+}
+
 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
@@ -74,8 +94,10 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_luna = v4() + codeForTables.tablaLunas;
-        let codigo_interno = nanoid(8) + prefixesForProducts.ProdLuna; 
         const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
+        
+        let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
+        let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
         const datosLuna = {
             id_luna,
             id_sede,
