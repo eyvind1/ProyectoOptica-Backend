@@ -28,11 +28,12 @@ export function castIsoDateToDate(fecha){
 /*  Funcion que permite validar Dni solo al momento de crear un usuario 
     1.- Obligatoriamente tiene que verificar solamente sobre usuarios habilitados porque los dados de baja 
         podrian haber tenido el mismo DNI
+    2.- Recibe como parametro el DNI y la tabla donde debe verificar 
 */ 
-export async function validarDniClientes(dni){
+export async function validarDni(dni, tableName){
     try {
         const paramsCliente = {
-            TableName: TABLE_NAME_CLIENTE,
+            TableName: tableName,
             FilterExpression:
               'dni = :dni and habilitado = :habilitado' ,
             ExpressionAttributeValues: {

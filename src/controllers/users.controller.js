@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import {codeForTables} from '../utils/codigosTablas.js';
+import { validarDni}  from '../helpers/helperFunctions.js';
+
 /* Constantes Globales que utilizan las funciones de este archivo */
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_USUARIO  = "Usuarios";
@@ -25,25 +27,6 @@ async function sortArrayJsonByDate(arrayJson){
       return arrayJson;
 }
 
-async function validarDni(dni){
-    try {
-        const paramsPersona = {
-            TableName: TABLE_NAME_USUARIO,
-            FilterExpression:
-              'dni = :dni and habilitado = :habilitado' ,
-            ExpressionAttributeValues: {
-                ":dni"        : dni,
-                ":habilitado" : true,
-            }
-        };
-        let result= await dynamoClient.scan(paramsPersona).promise();      
-        //Retorno 1 si encuentra y  0 sino encuentra
-        return result.Count;
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
-}
 
 /* 
     Funcion que permite crear un nuevo usuario 
@@ -60,7 +43,7 @@ export const createNewUser = async (req, res) => {
         let {nombres,apellidos,dni,rol,habilitado,observaciones,email,
             fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
         // Validamos que el DNI no sea repetido
-        const dniValidado = await validarDni(dni);
+        const dniValidado = await validarDni(dni, TABLE_NAME_USUARIO);
         if(dniValidado>0){
             return res.status(400).json({ 
                 message:'Dni Duplicado'

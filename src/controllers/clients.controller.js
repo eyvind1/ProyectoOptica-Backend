@@ -1,7 +1,7 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 import {codeForTables} from '../utils/codigosTablas.js';
-import { validarDniClientes }  from '../helpers/helperFunctions.js';
+import { validarDni }  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_CLIENTE  = "Clientes";
 const dynamoClient        = new AWS.DynamoDB.DocumentClient();
@@ -18,7 +18,6 @@ async function sortArrayJsonByDate(arrayJson){
 /* End funciones que se utilizan en el archivo */ 
 
 export const getAllClientsMinified = async (req, res) => {
-    let result={};
     try {
         /*Primero obtengo el json con todos los clientes */ 
         const params = {
@@ -88,7 +87,8 @@ export const getAllClients = async (req, res) => {
             },
         };
         const clientes = await dynamoClient.scan(params).promise();
-        return res.json(clientes.Items);
+        const rpta     = await sortArrayJsonByDate(clientes.Items); 
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -112,7 +112,7 @@ export const darBajaClienteById = async (req, res) => {
             }
         };
         const usuario = await dynamoClient.update(paramsUsuario).promise();        
-        res.json(usuario);
+        return res.json(usuario);
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -161,7 +161,7 @@ export const createNewClient = async (req, res) => {
         const id_cliente = v4() + codeForTables.tablaClients;
 
         const {nombres,apellidos,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
-        const dniValidado = await validarDniClientes(dni);
+        const dniValidado = await validarDni(dni,TABLE_NAME_CLIENTE);
         if(dniValidado>0){
             return res.status(400).json({ 
                 message:'Dni Duplicado'
@@ -181,7 +181,7 @@ export const createNewClient = async (req, res) => {
             email,
             telefono
         };     
-        const createdClient = await dynamoClient.put({
+        const createdClient = await dynamoClient.put({  
             TableName: TABLE_NAME_CLIENTE,
             Item: newCliente
         }).promise()
