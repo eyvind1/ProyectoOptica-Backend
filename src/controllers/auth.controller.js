@@ -47,7 +47,6 @@ async function findUserByEmail(usuario){
                 user.Items[0].nombres = result.Items[0].nombres;
                 user.Items[0].apellidos = result.Items[0].apellidos;
                 user.Items[0].email = result.Items[0].email;
-                user.Items[0].direccion = result.Items[0].direccion;
                 user.Items[0].dni = result.Items[0].dni;
                 user.Items[0].telefono = result.Items[0].telefono;
                 //Agrego atributos de la persona al json usuario

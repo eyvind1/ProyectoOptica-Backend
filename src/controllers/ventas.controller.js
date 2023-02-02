@@ -170,9 +170,16 @@ export const getAllVentasBySede = async (req, res) => {
         })
     }
 };
+async function sortArrayJsonByDate(arrayJson){
 
+    arrayJson.sort((a, b) => {
+        //console.log(b.id_vendedor,'a')
+        return new Date(a.fecha_creacion_venta) - new Date(b.fecha_creacion_venta); // descending
+      })
+      return arrayJson
+}
 /* Esta funcion lista todas las ventas */
-export const getAllVentas = async (req, res) => {
+export  const getAllVentas = async (req, res) => {
     try{
         const params = {
             TableName: TABLE_NAME_VENTAS,
@@ -185,7 +192,10 @@ export const getAllVentas = async (req, res) => {
             }
         };
         const sedes = await dynamoClient.scan(params).promise();
-        res.json(sedes.Items);
+        //console.log(sedes.Items);
+        const rpta  = await sortArrayJsonByDate(sedes.Items); 
+        console.log(rpta,'rpta')
+        res.json(sedes);
     } 
      catch(error) {
         return res.status(500).json({
