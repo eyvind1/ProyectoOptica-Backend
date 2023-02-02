@@ -10,7 +10,7 @@ const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
-        return new Date(b.fecha_creacion_) - new Date(a.fecha_creacion_venta); // descending
+        return new Date(b.fecha_creacion) - new Date(a.fecha_creacion); // descending
       })
       return arrayJson;
 }
@@ -41,7 +41,6 @@ export const getAllClientsMinified = async (req, res) => {
         })
       }
 };
-
 
 export const getClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
@@ -99,6 +98,7 @@ export const getAllClients = async (req, res) => {
 
 /* Dar de Baja al Cliente */ 
 export const darBajaClienteById = async (req, res) => {
+    const id_cliente = req.params.idCliente;
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {
@@ -148,13 +148,17 @@ export const editClientById = async (req, res) => {
         return res.json(cliente)
         
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json({
             message:'Algo anda mal'
         })
     }
 };
 
+/*
+     Validaciones
+     1.- Validamos que el dni ingresado no exista en la tabla Clientes
+*/ 
 export const createNewClient = async (req, res) => {
     //estado bool
     try {

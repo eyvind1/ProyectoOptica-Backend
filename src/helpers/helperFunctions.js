@@ -5,7 +5,8 @@ const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 
 
 /* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
-export function castIsoDateToDate(fecha){
+
+export async function castIsoDateToDate(fecha){
     const date = new Date(fecha);
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
@@ -25,7 +26,7 @@ export function castIsoDateToDate(fecha){
     return result;
 }
 
-/*  Funcion que permite validar Dni solo al momento de crear un usuario 
+/*  Funcion que permite validar Dni solo al momento de crear ya sea un usuario o un cliente
     1.- Obligatoriamente tiene que verificar solamente sobre usuarios habilitados porque los dados de baja 
         podrian haber tenido el mismo DNI
     2.- Recibe como parametro el DNI y la tabla donde debe verificar 
