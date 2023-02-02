@@ -1,13 +1,11 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 import bcrypt from 'bcrypt';
-/* Agregar md5 a la contra, indicar que el dni no se repita */
 
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import {codeForTables} from '../utils/codigosTablas.js';
 /* Constantes Globales que utilizan las funciones de este archivo */
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME_PERSONA  = "Persona";
 const TABLE_NAME_USUARIO  = "Usuarios";
 
 async function encriptarPassword(contrasenia){
@@ -136,8 +134,7 @@ export const darBajaUsuarioById = async (req, res) => {
                 }
             };
             const usuario = await dynamoClient.update(paramsUsuario).promise();      
-            res.json(usuario);
-            return usuario;
+            return res.json(usuario);
         } catch (error) {
             console.log(error)
             return res.status(500).json({
@@ -154,7 +151,6 @@ export const darBajaUsuarioById = async (req, res) => {
 };
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
-    const id_persona = req.params.idPersona;
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
     const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,dni,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
     let contraseniaEncriptada = await encriptarPassword(contrasenia);
@@ -165,25 +161,15 @@ export const editUserById = async (req, res) => {
             Key: {
                 "id_usuario":id_usuario,
             },
-            UpdateExpression: "SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones, contrasenia = :contrasenia",
+            UpdateExpression: `SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones, contrasenia = :contrasenia,
+                                   apellidos = :apellidos, nombres = :nombres,
+                                   telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
+                                   fecha_modificacion=:fecha_modificacion, email=:email`,
             ExpressionAttributeValues: {
                 ":rol": rol,
                 ":id_sede": id_sede,
                 ":observaciones": observaciones,
-                ":contrasenia": contraseniaEncriptada
-            }
-        };
-        const usuario = await dynamoClient.update(paramsUsuario).promise();
-        //Segundo actualizo datos de la tabla persona
-        const paramsPersona = {
-            TableName: TABLE_NAME_PERSONA,
-            Key: {
-                "id_persona":id_persona,
-            },
-            UpdateExpression: `SET apellidos = :apellidos, nombres = :nombres,
-                                   telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
-                                   fecha_modificacion=:fecha_modificacion, email=:email,contrasenia=:contrasenia`,
-            ExpressionAttributeValues: {
+                ":contrasenia": contraseniaEncriptada,
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
@@ -191,13 +177,11 @@ export const editUserById = async (req, res) => {
                 ":fecha_nacimiento" : fecha_nacimiento,
                 ":fecha_modificacion" : fecha_modificacion,
                 ":email"       : email,
-                ":contrasenia" : contrasenia
             }
         };
-        const persona = await dynamoClient.update(paramsPersona).promise();
-        res.json(persona)
-        return persona;  
-        
+        const usuario = await dynamoClient.update(paramsUsuario).promise();
+        return res.json(usuario.Items);
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -208,12 +192,9 @@ export const editUserById = async (req, res) => {
 
 /* Estea funcion */ 
 export const getAllUsers = async (req, res) => {
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     const TABLE_NAME_USUARIO  = "Usuarios";
-    const TABLE_NAME_PERSONA  = "Persona";
-    let result={};
     try {
-        /*Primero obtengo el json con todos los usuarios */ 
+        /* Obtengo el json con todos los usuarios */ 
         const params = {
             TableName: TABLE_NAME_USUARIO,
             FilterExpression : "#habilitado = :valueHabilitado",
@@ -225,26 +206,7 @@ export const getAllUsers = async (req, res) => {
             }
         };
         const usuarios = await dynamoClient.scan(params).promise();
-        let arr=[];
-        let cont = 0;
-        /* Segundo itero sobre cada usuario y obtengo la persona */
-        usuarios.Items.map(async function(usuario,i)
-        {
-            const id_persona = usuario.id_persona
-            result = await dynamoClient.get({
-                TableName:TABLE_NAME_PERSONA,
-                Key:{
-                    id_persona
-                }
-            }).promise()
-            result = {...usuario,...result.Item};
-            arr.push(result);
-            //Count es un atributo propio y devuelto por dinamo
-            if(cont==usuarios.Count-1){   
-                res.json(arr);
-            }
-            cont +=1;
-        })
+        return res.json(usuarios.Items);
     } 
     catch(error) {
         return res.status(500).json({
@@ -255,7 +217,6 @@ export const getAllUsers = async (req, res) => {
 
 /* Esta funcion */ 
 export const getAllUsersById = async (req, res) => {
-    let result={};
     try {
         /*Primero obtengo el json con todos los usuarios */ 
         const params = {
@@ -269,26 +230,7 @@ export const getAllUsersById = async (req, res) => {
             }
         };
         const usuarios = await dynamoClient.scan(params).promise();
-        let arr=[];
-        let cont = 0;
-        /* Segundo itero sobre cada usuario y obtengo la persona */
-        usuarios.Items.map(async function(usuario,i)
-        {
-            const id_persona = usuario.id_persona
-            result = await dynamoClient.get({
-                TableName:TABLE_NAME_PERSONA,
-                Key:{
-                    id_persona
-                }
-            }).promise()
-            result = {...usuario,...result.Item};
-            arr.push(result);
-            //Count es un atributo propio y devuelto por dinamo
-            if(cont==usuarios.Count-1){   
-                res.json(arr);
-            }
-            cont +=1;
-        })
+        return res.json(usuarios.Items);
     } 
     catch(error) {
         return res.status(500).json({
