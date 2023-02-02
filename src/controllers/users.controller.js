@@ -127,7 +127,6 @@ export const editUserById = async (req, res) => {
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
     const {id_sede,observaciones, apellidos,nombres,telefono,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
     //let contraseniaEncriptada = await encriptarPassword(contrasenia);
-    let castFechaNacimiento = new Date (fecha_nacimiento);
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {
@@ -146,7 +145,7 @@ export const editUserById = async (req, res) => {
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
-                ":fecha_nacimiento" : castFechaNacimiento,
+                ":fecha_nacimiento" : fecha_nacimiento,
                 ":fecha_modificacion" : fecha_modificacion,
                 ":email"       : email
             }

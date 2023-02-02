@@ -34,7 +34,6 @@ export const getAllClientsMinified = async (req, res) => {
         };
         const clientes = await dynamoClient.scan(params).promise();
         return res.json(clientes.Items);
-        
     } 
      catch(error) {
         return res.status(500).json({
