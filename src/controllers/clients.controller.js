@@ -32,29 +32,9 @@ export const getAllClientsMinified = async (req, res) => {
                 "#habilitado": "habilitado",
             },
         };
-        const characters = await dynamoClient.scan(params).promise();
-
-        /* Segundo itero sobre cada cliente y obtengo la persona */
-        characters.Items.map(async function(cliente,i)
-        {
-            const id_persona = cliente.id_persona
-            result = await dynamoClient.get({
-                TableName:TABLE_NAME_PERSONA,
-                Key:{
-                    id_persona
-                },
-                AttributesToGet:['apellidos','nombres','dni','email','telefono','fecha_nacimiento','direccion']
-
-            }).promise()
-            result = {...cliente,...result.Item};
-            arr.push(result);
-            console.log('resutl: ',result)
-            if(cont==characters.Count-1){   
-                const rpta  = await sortArrayJsonByDate(arr); 
-                res.json(rpta);
-            }
-            cont +=1;
-        })
+        const clientes = await dynamoClient.scan(params).promise();
+        return res.json(clientes.Items);
+        
     } 
      catch(error) {
         return res.status(500).json({
