@@ -28,34 +28,7 @@ async function findUserByEmail(usuario){
                 ":estado" : true,
             }
         };
-        const user  = await dynamoClient.scan(paramsUsuario).promise();  
-        
-        //En este caso utilizamos scan y sino encuentran no retorna error simplemente retora un vacio por eso valido
-        if(user.Items.length>0){
-            try {
-                const paramsPersona = {
-                    TableName: 'Persona',
-                    FilterExpression:
-                      'id_persona = :id_persona' ,
-                    ExpressionAttributeValues: {
-                        ":id_persona": user.Items[0].id_persona
-                    }
-                };
-                let result= await dynamoClient.scan(paramsPersona).promise();      
-                //let union = {...user.Items[0],...result};
-                user.Items[0].nombres = result.Items[0].nombres;
-                user.Items[0].apellidos = result.Items[0].apellidos;
-                user.Items[0].email = result.Items[0].email;
-                user.Items[0].dni = result.Items[0].dni;
-                user.Items[0].telefono = result.Items[0].telefono;
-                //Agrego atributos de la persona al json usuario
-                return user;
-    
-            } catch (error) {
-                console.log(error);
-                return error;
-            }
-        }
+        const user  = await dynamoClient.scan(paramsUsuario).promise();         
         //En otro caso retorno un array vacio
         return user;
     } catch (error) {
@@ -68,7 +41,6 @@ export const signIn = async (req, res) => {
     const { email, password } = req.body;
     //Valido usuario y contrasenia
     const user       = await findUserByEmail(email);
-    console.log('user ' ,user)
     if (user.Items.length ===0) {
         return res.status(401).send('El usuario no existe');
     }
