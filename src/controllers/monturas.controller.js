@@ -8,9 +8,19 @@ import { customAlphabet} from 'nanoid';
 const TABLE_NAME_MONTURAS  = "Monturas";
 const dynamoClient         = new AWS.DynamoDB.DocumentClient();
 
+/* Funciones que se utilizan en el archivo */ 
+
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(a.num_orden) - new Date(b.num_orden); // ascending order
+      })
+      return arrayJson
+}
+
+/* End funciones que se utilizan en el archivo */ 
 
 export const getAllMonturasForVenta = async (req, res) => {
-    let id_sede       = req.params.idSede;
+    let id_sede = req.params.idSede;
     try {
         /* Obtengo todas las monturas */ 
         const params = {
@@ -28,7 +38,8 @@ export const getAllMonturasForVenta = async (req, res) => {
             }
         };
         const monturas = await dynamoClient.scan(params).promise();
-        res.json(monturas.Items);
+        const rpta     = await sortArrayJsonByDate(monturas.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         console.log(error)
@@ -53,7 +64,8 @@ export const getAllMonturas = async (req, res) => {
             }
         };
         const monturas = await dynamoClient.scan(params).promise();
-        res.json(monturas.Items);
+        const rpta  = await sortArrayJsonByDate(monturas.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         console.log(error)

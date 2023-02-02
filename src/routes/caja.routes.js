@@ -7,8 +7,8 @@ import {createNewIngreso,unsubscribeEgresoById,getAllEgresos,getAllIngresos} fro
 const router = Router();
 
 router.post('/createNewIngreso', passport.authenticate('jwt',{session:false}),createNewIngreso);
-router.put('/unsubscribeEgresoById/idCaja', passport.authenticate('jwt',{session:false}),unsubscribeEgresoById);
+router.put('/unsubscribeEgresoById/:idCaja', unsubscribeEgresoById);
 router.get('/getAllIngresos',passport.authenticate('jwt',{session:false}),getAllIngresos);
 router.get('/getAllEgresos',passport.authenticate('jwt',{session:false}),getAllEgresos);
 
-export default router;
+export default router;  

@@ -6,7 +6,7 @@ import {codeForTables} from '../utils/codigosTablas.js';
 const TABLE_NAME_VENTAS = "Ventas";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
-/* Funcion*/ 
+/* Funciones que se utilizan en el archivo */ 
 function castIsoDateToDate(fecha){
     const date = new Date(fecha);
     //const timestamp = date
@@ -30,6 +30,13 @@ function castIsoDateToDate(fecha){
     const result = (anio+'-'+mes+'-'+ dia+' '+hora+':'+minutos);
     return result;
 }
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(b.fecha_creacion_venta) - new Date(a.fecha_creacion_venta); // descending
+      })
+      return arrayJson
+}
+/* End funciones que se utilizan en el archivo */ 
 
 async function restarStockProductos(list_monturas, list_lunas){
     const tableName = ['Monturas','Lunas','Accesorios']
@@ -162,7 +169,8 @@ export const getAllVentasBySede = async (req, res) => {
             }
         };
         const ventasBySede = await dynamoClient.scan(params).promise();
-        res.json(ventasBySede.Items);
+        const rpta  = await sortArrayJsonByDate(ventasBySede.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -170,14 +178,7 @@ export const getAllVentasBySede = async (req, res) => {
         })
     }
 };
-async function sortArrayJsonByDate(arrayJson){
 
-    arrayJson.sort((a, b) => {
-        //console.log(b.id_vendedor,'a')
-        return new Date(b.fecha_creacion_venta) - new Date(a.fecha_creacion_venta); // descending
-      })
-      return arrayJson
-}
 /* Esta funcion lista todas las ventas */
 export  const getAllVentas = async (req, res) => {
     try{
@@ -192,9 +193,8 @@ export  const getAllVentas = async (req, res) => {
             }
         };
         const sedes = await dynamoClient.scan(params).promise();
-        //console.log(sedes.Items); 
+        //Ordeno los datos en forma descendente antes de enviar al Front
         const rpta  = await sortArrayJsonByDate(sedes.Items); 
-        //console.log(rpta,'rpta')
         res.json(rpta);
     } 
      catch(error) {
@@ -218,7 +218,8 @@ export const getAllVentasBySeller = async (req, res) => {
             }
         };
         const ventasBySeller = await dynamoClient.scan(params).promise();
-        res.json(ventasBySeller.Items);
+        const rpta  = await sortArrayJsonByDate(ventasBySeller.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -249,7 +250,8 @@ export const getAllVentasByDate = async (req, res) => {
             }
         };
         const ventasBySeller = await dynamoClient.scan(params).promise();
-        res.json(ventasBySeller.Items);
+        const rpta  = await sortArrayJsonByDate(ventasBySeller.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({

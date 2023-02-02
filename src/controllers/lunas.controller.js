@@ -8,6 +8,16 @@ const TABLE_NAME_LUNA  = "Lunas";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
+/* Funciones que se utilizan en el archivo */ 
+
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(a.num_orden) - new Date(b.num_orden); // ascending order
+      })
+      return arrayJson
+}
+/* End funciones que se utilizan en el archivo */ 
+
 export const getAllLunasForVenta = async (req, res) => {
     const id_sede = req.params.idSede;
     try {
@@ -27,7 +37,8 @@ export const getAllLunasForVenta = async (req, res) => {
             }
         };
         const lunas = await dynamoClient.scan(params).promise();
-        res.json(lunas.Items);
+        const rpta  = await sortArrayJsonByDate(lunas.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -49,7 +60,8 @@ export const getAllLunas = async (req, res) => {
             }
         };
         const lunas = await dynamoClient.scan(params).promise();
-        res.json(lunas.Items);
+        const rpta  = await sortArrayJsonByDate(lunas.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({

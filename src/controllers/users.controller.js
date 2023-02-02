@@ -92,7 +92,6 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
-
 /* 
     1.- Esta funcion permite validar si el usuario que se envia desde el front existe en la BD 
     2.- Funcion validada al 100%    
@@ -254,7 +253,7 @@ export const getAllUsers = async (req, res) => {
         return res.status(500).json({
             message:error
         })
-      }
+    }
 };
 /* Estea funcion */ 
 export const getAllUsersById = async (req, res) => {

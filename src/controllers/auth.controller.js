@@ -18,7 +18,6 @@ async function desencriptarPassword(contraseniabd,contrasenia){
 }
 
 async function findUserByEmail(usuario){
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsUsuario = {
             TableName: TABLE_NAME_USUARIO,

@@ -7,6 +7,15 @@ import {codeForTables} from '../utils/codigosTablas.js';
 const TABLE_NAME_ACCESORIO = "Accesorios";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
+/* Funciones que se utilizan en el archivo */ 
+
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(a.num_orden) - new Date(b.num_orden); // ascending order
+      })
+      return arrayJson
+}
+/* End funciones que se utilizan en el archivo */ 
 
 export const getAllAccesoriosForVenta = async (req, res) => {
     const id_sede = req.params.idSede;
@@ -26,7 +35,10 @@ export const getAllAccesoriosForVenta = async (req, res) => {
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();
-        res.json(accesorios.Items);
+        const rpta  = await sortArrayJsonByDate(accesorios.Items); 
+        res.json(rpta);
+        
+        
     } 
      catch(error) {
         return res.status(500).json({
@@ -49,7 +61,8 @@ export const getAllAccesorios = async (req, res) => {
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();
-        res.json(accesorios.Items);
+        const rpta  = await sortArrayJsonByDate(accesorios.Items); 
+        res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -111,7 +124,6 @@ const validateAccesorio  = async (idAccesorio) => {
         return error;
     }
 }
-
 /*
     1.-  Funcion para Dar de Baja a un accesorio en especifico  
     2.-  Antes de dar de baja a un accesorio valido que exista
@@ -150,8 +162,6 @@ export const unsubscribeAccesoriosById = async (req, res) => {
         })
     }
 };
-
-
 
 /*
     1.-  Funcion para editar un accesorio en especifico  

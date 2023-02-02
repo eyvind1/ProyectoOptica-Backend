@@ -5,7 +5,7 @@
   "main": "dynamo.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon src/index.js"
   },
   "repository": {
@@ -27,12 +27,14 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "flash": "^1.1.0",
+    "jest": "^29.4.1",
     "jsonwebtoken": "^9.0.0",
     "md5": "^2.3.0",
     "nanoid": "^4.0.0",
     "nodemon": "^2.0.20",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
+    "supertest": "^6.3.3",
     "unique-hash": "^2.6.0"
   }
 }

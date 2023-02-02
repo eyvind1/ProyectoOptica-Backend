@@ -6,6 +6,16 @@ const TABLE_NAME_CLIENTE  = "Clientes";
 const TABLE_NAME_PERSONA  = "Persona";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
+/* Funciones que se utilizan en el archivo */ 
+
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(b.fecha_creacion_) - new Date(a.fecha_creacion_venta); // descending
+      })
+      return arrayJson
+}
+
+/* End funciones que se utilizan en el archivo */ 
 
 export const getAllClientsMinified = async (req, res) => {
     let result={};
@@ -41,7 +51,8 @@ export const getAllClientsMinified = async (req, res) => {
             arr.push(result);
             console.log('resutl: ',result)
             if(cont==characters.Count-1){   
-                res.json(arr);
+                const rpta  = await sortArrayJsonByDate(arr); 
+                res.json(rpta);
             }
             cont +=1;
         })
@@ -127,7 +138,8 @@ export const getAllClients = async (req, res) => {
             result = {...cliente,...result.Item};
             arr.push(result);
             if(cont==characters.Count-1){   
-                res.json(arr);
+                const rpta  = await sortArrayJsonByDate(arr); 
+                res.json(rpta);
             }
             cont +=1;
         })
@@ -213,39 +225,39 @@ export const editClientById = async (req, res) => {
     }
 };
 
-/* Esta funcion retorna infomacion del cliente unido a la info de la persona */
+// /* Esta funcion retorna infomacion del cliente unido a la info de la persona */
 
-export const getAllClientsById = async (req, res) => {
-    try {
-        // Create the DynamoDB service object
-        var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-        var params = {
-        TableName: 'Persona',
-        Item: {
-            'id_persona' : {S: '001'},
-            'apellidos' : {S: 'Richard Roe'}
-            }
-        };
-        // Call DynamoDB to add the item to the table
-        ddb.putItem(params, function(err, data) {
-        if (err) {
-            console.log("Error", err);
-            res.send('error')
-        } else {
-            console.log("Success", data);
-            res.send('persona insertada')
-        }
-        });
-    } catch (error) {
-        return res.status(500).json({
-            message:'Algo anda mal'
-        })
+// export const getAllClientsById = async (req, res) => {
+//     try {
+//         // Create the DynamoDB service object
+//         var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+//         var params = {
+//         TableName: 'Persona',
+//         Item: {
+//             'id_persona' : {S: '001'},
+//             'apellidos' : {S: 'Richard Roe'}
+//             }
+//         };
+//         // Call DynamoDB to add the item to the table
+//         ddb.putItem(params, function(err, data) {
+//         if (err) {
+//             console.log("Error", err);
+//             res.send('error')
+//         } else {
+//             console.log("Success", data);
+//             res.send('persona insertada')
+//         }
+//         });
+//     } catch (error) {
+//         return res.status(500).json({
+//             message:'Algo anda mal'
+//         })
         
-    }
+//     }
 
 
     
-};
+// };
 
 
 
