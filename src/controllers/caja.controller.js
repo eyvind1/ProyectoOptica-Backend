@@ -111,6 +111,7 @@ export const unsubscribeEgresoById = async (req, res) => {
         const caja = await dynamoClient.update(paramsCaja).promise();      
         res.json(caja);
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message:'Algo anda mal'
         })
