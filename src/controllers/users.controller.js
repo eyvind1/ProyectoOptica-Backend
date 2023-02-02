@@ -8,12 +8,16 @@ import {codeForTables} from '../utils/codigosTablas.js';
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_USUARIO  = "Usuarios";
 
+/* Funcion especifica para encriptar una contrasenia con Bcrypt*/
 async function encriptarPassword(contrasenia){
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(contrasenia,salt);
 }
 
-/* Obligatoriamente tiene que verificar solamente usuarios habilitados por q ...*/ 
+/*  Funcion que permite validar Dni solo al momento de crear un usuario 
+    1.- Obligatoriamente tiene que verificar solamente sobre usuarios habilitados porque los dados de baja 
+        podrian haber tenido el mismo DNI
+*/ 
 async function validarDni(dni){
     try {
         const paramsPersona = {
@@ -34,11 +38,12 @@ async function validarDni(dni){
     }
 }
 
-/* Funcion que permite crear un nuevo usuario 
+/* 
+    Funcion que permite crear un nuevo usuario 
+    
     VALIDACIONES 
     ----------------------------------------------------------------
-    1.- Dni's repetidos
-    2.- 
+    1.- No debe existir un usuario habilitado con el mismo DNI 
 */
 export const createNewUser = async (req, res) => {
     try {
@@ -88,7 +93,6 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
-
 
 /*
     1.-  Funcion para Dar de Baja a un usuario en especifico  
@@ -150,6 +154,7 @@ export const editUserById = async (req, res) => {
         const usuario = await dynamoClient.update(paramsUsuario).promise();
         return res.json(usuario.Items);
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message:'Algo anda mal'
         })
