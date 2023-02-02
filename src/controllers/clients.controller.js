@@ -3,7 +3,6 @@ import {v4} from 'uuid';
 import { accessKeyId } from '../config.js';
 
 const TABLE_NAME_CLIENTE  = "Clientes";
-const TABLE_NAME_PERSONA  = "Persona";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 /* Funciones que se utilizan en el archivo */ 
@@ -27,13 +26,13 @@ export const getAllClientsMinified = async (req, res) => {
             ExpressionAttributeValues: {
                 ":valueHabilitado":true
             },
-            "ProjectionExpression": "id_cliente,id_persona",
+            "ProjectionExpression": "id_cliente",
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
             },
         };
         const characters = await dynamoClient.scan(params).promise();
-        let arr=[];
+        let arr = [];
         let cont = 0;
         /* Segundo itero sobre cada cliente y obtengo la persona */
         characters.Items.map(async function(cliente,i)

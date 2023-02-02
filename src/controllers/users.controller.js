@@ -125,8 +125,8 @@ export const darBajaUsuarioById = async (req, res) => {
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
-    const {id_sede,contrasenia,observaciones, apellidos,nombres,telefono,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
-    let contraseniaEncriptada = await encriptarPassword(contrasenia);
+    const {id_sede,observaciones, apellidos,nombres,telefono,email,fecha_nacimiento,fecha_modificacion,rol} = req.body;
+    //let contraseniaEncriptada = await encriptarPassword(contrasenia);
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsUsuario = {
@@ -134,7 +134,7 @@ export const editUserById = async (req, res) => {
             Key: {
                 "id_usuario":id_usuario,
             },
-            UpdateExpression: `SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones, contrasenia = :contrasenia,
+            UpdateExpression: `SET rol = :rol, id_sede=:id_sede,observaciones = :observaciones,
                                    apellidos = :apellidos, nombres = :nombres,
                                    telefono = :telefono,fecha_nacimiento=:fecha_nacimiento,
                                    fecha_modificacion=:fecha_modificacion, email=:email`,
@@ -142,13 +142,12 @@ export const editUserById = async (req, res) => {
                 ":rol": rol,
                 ":id_sede": id_sede,
                 ":observaciones": observaciones,
-                ":contrasenia": contraseniaEncriptada,
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
                 ":fecha_nacimiento" : fecha_nacimiento,
                 ":fecha_modificacion" : fecha_modificacion,
-                ":email"       : email,
+                ":email"       : email
             }
         };
         const usuario = await dynamoClient.update(paramsUsuario).promise();
