@@ -10,10 +10,11 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
     try {
-        const {id_sede,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
+        const {id_sede,monto,tipo,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
+            tipo,
             monto,
             egreso,
             descripcion,
@@ -114,5 +115,4 @@ export const unsubscribeEgresoById = async (req, res) => {
             message:'Algo anda mal'
         })
     }
-   
 };

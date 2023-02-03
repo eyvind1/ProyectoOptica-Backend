@@ -119,7 +119,7 @@ export const createNewVenta = async (req, res) => {
         }).promise()
         //Una vez que se realiza la venta restamos del STOCK
         const restarStock  = await restarStockProductos(list_monturas,list_lunas);
-        res.json(newVenta);       
+        return res.json(newVenta);       
     } catch (error) {
         return res.status(500).json({ 
             message:error

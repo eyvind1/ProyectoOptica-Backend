@@ -74,7 +74,7 @@ export const createNewLuna = async (req, res) => {
         const id_luna = v4() + codeForTables.tablaLunas;
         const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         
-        let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
+        let formatoFecha   = await castIsoDateToDate(fecha_creacion_luna);
         let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
         const datosLuna = {
             id_luna,
@@ -94,7 +94,7 @@ export const createNewLuna = async (req, res) => {
             TableName : TABLE_NAME_LUNA,
             Item      : datosLuna
         }).promise()
-        res.json(newLuna);       
+        return res.json(newLuna);       
     } catch (error) {
         console.log(error);
         return res.status(500).json({ 

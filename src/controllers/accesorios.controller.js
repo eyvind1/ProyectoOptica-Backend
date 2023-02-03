@@ -64,7 +64,7 @@ export const getAllAccesorios = async (req, res) => {
         };
         const accesorios = await dynamoClient.scan(params).promise();
         const rpta  = await sortArrayJsonByDate(accesorios.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -100,7 +100,7 @@ export const createNewAccesorio = async (req, res) => {
             TableName: TABLE_NAME_ACCESORIO,
             Item: datosAccesorio
         }).promise()
-        res.json(newAccesorio);       
+        return res.json(newAccesorio);       
     } catch (error) {
         console.log(error);
         return res.status(500).json({ 
