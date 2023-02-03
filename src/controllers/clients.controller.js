@@ -120,6 +120,7 @@ export const darBajaClienteById = async (req, res) => {
         })
     }
 };
+
 export const editClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
     const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento,antecedentes} = req.body;
@@ -146,7 +147,6 @@ export const editClientById = async (req, res) => {
         };
         const cliente = await dynamoClient.update(paramsCliente).promise();
         return res.json(cliente)
-        
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -164,7 +164,7 @@ export const createNewClient = async (req, res) => {
     try {
         const id_cliente = v4() + codeForTables.tablaClients;
 
-        const {nombres,apellidos,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
+        const {nombres,apellidos,direccion,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
         const dniValidado = await validarDni(dni,TABLE_NAME_CLIENTE);
         if(dniValidado>0){
             return res.status(400).json({ 
@@ -174,6 +174,7 @@ export const createNewClient = async (req, res) => {
         const newCliente = {
             id_cliente,
             habilitado,
+            direccion,
             antecedentes,
             medidas,
             apellidos,

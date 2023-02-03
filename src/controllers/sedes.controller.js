@@ -114,7 +114,6 @@ export const unsubscribeSedeById = async (req, res) => {
     }
 };
 
-
 export const editSedeById = async (req, res) => {
     
     const id_sede = req.params.idSede;
