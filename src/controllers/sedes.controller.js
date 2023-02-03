@@ -24,7 +24,7 @@ export const getAllSedes = async (req, res) => {
             }
         };
         const sedes = await dynamoClient.scan(params).promise();
-        res.json(sedes.Items);
+        return res.json(sedes.Items);
     } 
      catch(error) {
         return res.status(500).json({
@@ -49,14 +49,13 @@ export const createNewSede = async (req, res) => {
             TableName: TABLE_NAME_SEDE,
             Item: datosSede
         }).promise()
-        res.json(newSede);       
+        return res.json(newSede);       
     } catch (error) {
         return res.status(500).json({ 
             message:error
         })
     }
 };
-
 
 const validateSede  = async (idSede) => {
     const id_sede   = idSede;
@@ -76,6 +75,7 @@ const validateSede  = async (idSede) => {
         return error;
     }
 }
+
 /*
     1.-  Funcion para Dar de Baja a una Sede en especifico  
     2.-  Antes de dar de baja a un accesorio valido que exista
@@ -134,8 +134,7 @@ export const editSedeById = async (req, res) => {
             }
         };
         const sede = await dynamoClient.update(paramsSede).promise();
-        res.json(sede)
-        return sede;    
+        return res.json(sede)
     } catch (error) {
         console.log(error)
         return res.status(500).json({

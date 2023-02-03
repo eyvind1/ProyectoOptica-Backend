@@ -132,7 +132,7 @@ export const editClientById = async (req, res) => {
                 "id_cliente":id_cliente,
             },
             UpdateExpression: `SET medidas = :medidas, antecedentes = :antecedentes, apellidos = :apellidos, nombres = :nombres,
-                                    telefono = :telefono, dni=:dni, fecha_nacimiento=:fecha_nacimiento,
+                                    telefono = :telefono,fecha_nacimiento=:fecha_nacimiento,
                                     email=:email `,
             ExpressionAttributeValues: {
                 ":medidas": medidas,
@@ -140,7 +140,6 @@ export const editClientById = async (req, res) => {
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
-                ":dni"       : dni,
                 ":fecha_nacimiento" : fecha_nacimiento,
                 ":email"       : email
             }
@@ -190,7 +189,6 @@ export const createNewClient = async (req, res) => {
             TableName: TABLE_NAME_CLIENTE,
             Item: newCliente
         }).promise()
-
         return res.json(createdClient);       
         
     } catch (error) {

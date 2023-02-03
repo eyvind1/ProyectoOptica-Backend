@@ -25,9 +25,8 @@ export const createNewIngreso = async (req, res) => {
             TableName: TABLE_NAME_CAJA,
             Item: datosCaja
         }).promise()
-        res.json(newCaja);       
+        return res.json(newCaja);       
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ 
             message:error
         })
@@ -49,7 +48,7 @@ export const getAllEgresos = async (req, res) => {
             }
         };
         const egresos = await dynamoClient.scan(params).promise();
-        res.json(egresos.Items);
+        return res.json(egresos.Items);
     } 
      catch(error) {
         console.log(error)
@@ -77,7 +76,7 @@ export const getAllIngresos = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();
-        res.json(ingresos.Items);
+        return res.json(ingresos.Items);
     } 
      catch(error) {
         console.log(error)
@@ -109,9 +108,8 @@ export const unsubscribeEgresoById = async (req, res) => {
             }
         };
         const caja = await dynamoClient.update(paramsCaja).promise();      
-        res.json(caja);
+        return res.json(caja);
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             message:'Algo anda mal'
         })
