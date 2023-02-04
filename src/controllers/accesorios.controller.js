@@ -199,7 +199,7 @@ export const editAccesorioById = async (req, res) => {
                                         precio_accesorio_c=:precio_accesorio_c,precio_accesorio_v=:precio_accesorio_v`,
                 ConditionExpression: "id_producto = :id_accesorio", 
                 ExpressionAttributeValues: {
-                    ":id_accesorio" :id_producto, 
+                    ":id_accesorio" :id_accesorio, 
                     ":cantidad" : cantidad,
                     ":nombre_accesorio" : nombre_accesorio,
                     ":fecha_modificacion_accesorio": fecha_modificacion_accesorio,
