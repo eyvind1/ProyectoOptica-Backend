@@ -63,7 +63,7 @@ export const getAllAccesorios = async (req, res) => {
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(accesorios.Items); 
+        const rpta       = await sortArrayJsonByDate(accesorios.Items); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -76,8 +76,8 @@ export const getAllAccesorios = async (req, res) => {
 export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
-        const id_producto = v4() + codeForTables.tablaAccesorios;
-        //const id_producto = "8fccc479-36f3-41e7-ba5a-efe428e53ee6Acc006"
+        //const id_producto = v4() + codeForTables.tablaAccesorios;
+        const id_producto = "8fccc479-36f3-41e7-ba5a-efe428e53ee6Acc006"
         //const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         
@@ -100,8 +100,13 @@ export const createNewAccesorio = async (req, res) => {
         }
         const newAccesorio = await dynamoClient.put({
             TableName: TABLE_NAME_ACCESORIO,
-            Item: datosAccesorio
+            Item: datosAccesorio,
+            /* Ojo valido que el nuevo  id_producto no exista previamente, sino valido, lo que hace Dynamo
+                por defecto es actualizar 
+            */
+            ConditionExpression: 'attribute_not_exists(id_producto)'
         }).promise()
+        console.log(newAccesorio);
         return res.json(newAccesorio);       
     } catch (error) {
         console.log(error);

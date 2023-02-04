@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/getAllAccesorios',passport.authenticate('jwt',{session:false}),getAllAccesorios);
 router.get('/getAllAccesoriosForVenta/:idSede',passport.authenticate('jwt',{session:false}),getAllAccesoriosForVenta);
-router.post('/createNewAccesorio',passport.authenticate('jwt',{session:false}),createNewAccesorio);
+router.post('/createNewAccesorio',createNewAccesorio);
 router.put('/unsubscribeAccesoriosById/:idAccesorio',passport.authenticate('jwt',{session:false}),unsubscribeAccesoriosById);
 router.put('/editAccesorioById/:idAccesorio',passport.authenticate('jwt',{session:false}),editAccesorioById);
 

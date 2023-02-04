@@ -84,6 +84,7 @@ async function validarNroOrdenExcel(arrayProductos){
     return duplicados;
 }
 
+
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
@@ -91,7 +92,7 @@ export const createListOfProducts=async(req,res)=>{
     const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
 
     //Valido que no haya "Nro_Orden" repetidos en el excel
-    let validarExcel = await validarNroOrdenExcel(array_productos);
+    /*let validarExcel = await validarNroOrdenExcel(array_productos);
     if(validarExcel.length > 0){
         return res.status(400).json({
             message:'En el excel hay numeros de orden repetidos'
@@ -109,13 +110,13 @@ export const createListOfProducts=async(req,res)=>{
                     let result= await  dynamoClient.scan(params).promise(); 
                     return result.Count
                 })
-    )
+    )*/
     //Valido que no se repitan numeros de ordon con la BD
-    if(validarNro.includes(1) === true ){
+    /*if(validarNro.includes(1) === true ){
         return res.status(400).json({
             message:'Los numeros de orden ya existen en la BD'
         })
-    }
+    }*/
     //Si paso los 2 filtros de arriba recien inserto
     try {
         if(tipo === 'montura'){
@@ -209,7 +210,6 @@ export const createListOfProducts=async(req,res)=>{
                 const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
                 //let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
                 //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
-
                 const datosAccesorio = {
                     id_accesorio,
                     tipo,
