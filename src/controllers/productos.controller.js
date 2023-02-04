@@ -375,9 +375,10 @@ export const updateListOfProducts=async(req,res)=>{
                         return res.json(product);
                     }           
                 } catch (error) {
-                    validarError = true;
+                    validarError       = true;
+                    let errorPosicion  = i+1
                     return res.status(500).json({
-                        message:'Error al actualizar el producto en la posicion: '+ i+1
+                        message:'Error al actualizar el producto en la posicion: '+ errorPosicion
                     })
                 }
             })
