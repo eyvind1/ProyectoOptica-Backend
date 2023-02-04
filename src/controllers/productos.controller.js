@@ -374,7 +374,9 @@ export const updateListOfProducts=async(req,res)=>{
                         res.json(product);
                     }           
                 } catch (error) {
-                    return res.status(500).json(row)
+                    return res.status(500).json({
+                        message:'Error al actualizar el producto en la posicion: '+ i+1
+                    })
                 }
             })
         }
