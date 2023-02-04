@@ -374,10 +374,7 @@ export const updateListOfProducts=async(req,res)=>{
                         res.json(product);
                     }           
                 } catch (error) {
-                    console.log(error)
-                    return res.status(500).json({
-                        message:'Algo anda mal'
-                    })
+                    return res.status(500).json(row)
                 }
             })
         }
