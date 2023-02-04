@@ -255,7 +255,30 @@ export const updateListOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
         const tipo = array_productos[0].tipo;
-        const fecha_actual = new Date();
+        const fecha_actual    = new Date();
+        // const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
+
+        // //Validamos que todos los productos existan en la base de datos antes de editarlos
+        // const validarProducto = await Promise.all(
+        //     array_productos.map(async(row,i)=>{   
+        //         const params = {    
+        //             TableName: nameOfTable,
+        //             FilterExpression: 'num_orden = :num_orden',
+        //             ExpressionAttributeValues: {
+        //                 ":num_orden": parseInt(row.num_orden)
+        //             }
+        //         };
+        //         let result= await  dynamoClient.scan(params).promise(); 
+        //         return result.Count
+        //     })
+        // )
+        // //Valido que no se repitan numeros de ordon con la BD
+        // if(validarProducto.includes(1) === true ){
+        //     return res.status(400).json({
+        //         message:'Los numeros de orden ya existen en la BD'
+        //     })
+        // }
+
         if(tipo ==='montura'){
             array_productos.map(async(row,i,arr)=>{
                 const params = {

@@ -204,7 +204,7 @@ export const editMonturaById = async (req, res) => {
                 Key: {
                     "id_producto":id_montura,
                 },
-                UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
+                UpdateExpression: `SET  cantidad= :cantidad, color= :color,codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                         marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
                                         talla=:talla`,
                 ExpressionAttributeValues: {
@@ -213,6 +213,7 @@ export const editMonturaById = async (req, res) => {
                     ":fecha_modificacion_monturas": fecha_modificacion_monturas,
                     ":marca"    : marca,
                     ":material" : material,
+                    ":color" : color,
                     ":precio_montura_c"   : precio_montura_c,
                     ":precio_montura_v"   : precio_montura_v,
                     ":talla"   : talla
