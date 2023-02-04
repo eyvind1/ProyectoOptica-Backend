@@ -71,14 +71,14 @@ export const getAllLunas = async (req, res) => {
 
 export const createNewLuna = async (req, res) => {
     try {
-        const id_luna = v4() + codeForTables.tablaLunas;
+        const id_producto = v4() + codeForTables.tablaLunas;
         //const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         
         //let formatoFecha   = await castIsoDateToDate(fecha_creacion_luna);
         //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
         const datosLuna = {
-            id_luna,
+            id_producto,
             id_sede,
             //num_orden,
             tipo,
@@ -110,15 +110,15 @@ export const createNewLuna = async (req, res) => {
 */
 
 const validateLuna  = async (idLuna) => {
-    const id_luna   = idLuna;
+    const id_producto   = idLuna;
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsLuna = {
             TableName: TABLE_NAME_LUNA,
             KeyConditionExpression:
-              'id_luna = :id_luna',
+              'id_producto = :id_producto',
             ExpressionAttributeValues: {
-                ":id_luna": id_luna
+                ":id_producto": id_producto
             }
         };
         const luna  = await dynamoClient.query(paramsLuna).promise();      
@@ -174,17 +174,17 @@ export const unsubscribeLunasById = async (req, res) => {
     3.-  Funcion Verificada al 100%
 */ 
 export const editLunaById = async (req, res) => {
-    const id_luna = req.params.idLuna;
+    const id_producto = req.params.idLuna;
     const {cantidad,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
-    const existeLuna = await validateLuna(id_luna);
+    const existeLuna = await validateLuna(id_producto);
     // Primero valido si la montura a editar existe en la BD 
     if(existeLuna.length > 0) {
         try {
             const paramsLuna = {
                 TableName: TABLE_NAME_LUNA,
                 Key: {
-                    "id_luna":id_luna,
+                    "id_producto":id_producto,
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_luna = :fecha_modificacion_luna,
                                         material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
