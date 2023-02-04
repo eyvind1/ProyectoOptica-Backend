@@ -347,6 +347,7 @@ export const updateListOfProducts=async(req,res)=>{
             })
         }
         else if(tipo === 'accesorio'){
+            let validarError  = false;
             array_productos.map(async(row,i,arr)=>{
                 const params = {
                     TableName: 'Accesorios',
@@ -370,10 +371,11 @@ export const updateListOfProducts=async(req,res)=>{
                 try {
                     const product = await dynamoClient.update(params).promise();  
                     console.log(product);    
-                    if(arr.length-1 === i){
-                        res.json(product);
+                    if(arr.length-1 === i && validarError===false){
+                        return res.json(product);
                     }           
                 } catch (error) {
+                    validarError = true;
                     return res.status(500).json({
                         message:'Error al actualizar el producto en la posicion: '+ i+1
                     })
