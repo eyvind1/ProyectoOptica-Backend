@@ -129,7 +129,6 @@ export const createNewMontura = async (req, res) => {
 
 const validateMontura  = async (idMontura) => {
     const id_montura   = idMontura;
-    console.log('id montura: ', id_montura)
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsMontura = {
@@ -162,7 +161,7 @@ export const unsubscribeMonturasById = async (req, res) => {
             const paramsMontura = {
                 TableName: TABLE_NAME_MONTURAS,
                 Key: {
-                    "id_montura":id_montura,
+                    "id_producto":id_montura,
                 },
                 UpdateExpression: "SET habilitado = :habilitado",
                 ExpressionAttributeValues: {
@@ -203,7 +202,7 @@ export const editMonturaById = async (req, res) => {
             const paramsMontura = {
                 TableName: TABLE_NAME_MONTURAS,
                 Key: {
-                    "id_montura":id_montura,
+                    "id_producto":id_montura,
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                         marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,

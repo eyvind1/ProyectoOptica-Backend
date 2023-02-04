@@ -261,13 +261,13 @@ export const updateListOfProducts=async(req,res)=>{
                 const params = {
                     TableName: 'Monturas',
                     Key: {
-                        "id_montura":row.id_montura,
+                        "id_producto":row.id_producto,
                     },
                     UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                             precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v`,
-                    ConditionExpression: "id_montura = :id_montura", 
+                    ConditionExpression: "id_producto = :id_montura", 
                     ExpressionAttributeValues: {
-                        ":id_montura" : row.id_montura,
+                        ":id_montura" : row.id_producto,
                         ":cantidad" : row.cantidad,
                         ":fecha_modificacion_monturas": fecha_actual,
                         ":precio_montura_c"   : row.precio_montura_c,
@@ -290,18 +290,17 @@ export const updateListOfProducts=async(req,res)=>{
             });
         }
         else if(tipo ==='luna'){
-            console.log('en luna: ',array_productos )
             array_productos.map(async(row,i,arr)=>{
                 const params= {
                     TableName: 'Lunas',
                     Key: {
-                        "id_luna":row.id_luna,
+                        "id_producto":row.id_producto,
                     },
                     UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_luna=:fecha_modificacion_luna
                                                         ,precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
-                    ConditionExpression: "id_luna = :id_luna", 
+                    ConditionExpression: "id_producto = :id_luna", 
                     ExpressionAttributeValues: {
-                        ":id_luna" : row.id_luna,
+                        ":id_luna" : row.id_producto,
                         ":cantidad" : row.cantidad,
                         ":fecha_modificacion_luna": fecha_modificacion_luna,
                         ":precio_luna_c"   : row.precio_luna_c,
@@ -329,15 +328,15 @@ export const updateListOfProducts=async(req,res)=>{
                 const params = {
                     TableName: 'Accesorios',
                     Key: {
-                        "id_accesorio":row.id_accesorio,
+                        "id_producto":row.id_producto,
                     },
                     UpdateExpression: `SET  cantidad= :cantidad, 
                                             fecha_modificacion_accesorio = :fecha_modificacion_accesorio,
                                             precio_accesorio_c=:precio_accesorio_c,
                                             precio_accesorio_v=:precio_accesorio_v`,
-                    ConditionExpression: "id_accesorio = :id_accesorio", 
+                    ConditionExpression: "id_producto = :id_accesorio", 
                     ExpressionAttributeValues: {
-                        ":id_accesorio" :row.id_accesorio, 
+                        ":id_accesorio" :row.id_producto, 
                         ":cantidad" : row.cantidad,
                         ":fecha_modificacion_accesorio" : row.fecha_modificacion_accesorio,
                         ":precio_accesorio_c"   : row.precio_accesorio_c,
