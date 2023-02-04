@@ -13,7 +13,7 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
-        return new Date(a.num_orden) - new Date(b.num_orden); // ascending order
+        return new Date(b.fecha_creacion_accesorio) - new Date(a.fecha_creacion_accesorio); // ascending order
       })
       return arrayJson
 }
@@ -106,7 +106,6 @@ export const createNewAccesorio = async (req, res) => {
             */
             ConditionExpression: 'attribute_not_exists(id_producto)'
         }).promise()
-        console.log(newAccesorio);
         return res.json(newAccesorio);       
     } catch (error) {
         console.log(error);
@@ -161,8 +160,7 @@ export const unsubscribeAccesoriosById = async (req, res) => {
                 }
             };
             const accesorio = await dynamoClient.update(paramsAccesorio).promise();      
-            res.json(accesorio);
-            return accesorio;
+            return res.json(accesorio);
         } catch (error) {
             console.log(error)
             return res.status(500).json({
@@ -207,8 +205,7 @@ export const editAccesorioById = async (req, res) => {
             }
         };
         const accesorio = await dynamoClient.update(paramsAccesorio).promise();
-        res.json(accesorio)
-        return accesorio;  
+        return res.json(accesorio)
     } catch (error) {
         console.log(error)
         return res.status(500).json({

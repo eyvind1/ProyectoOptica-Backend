@@ -13,7 +13,7 @@ const dynamoClient         = new AWS.DynamoDB.DocumentClient();
 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
-        return new Date(a.num_orden) - new Date(b.num_orden); // ascending order
+        return new Date(b.fecha_creacion_monturas) - new Date(a.fecha_creacion_monturas); // ascending order
       })
       return arrayJson
 }
@@ -213,7 +213,7 @@ export const editMonturaById = async (req, res) => {
                     ":fecha_modificacion_monturas": fecha_modificacion_monturas,
                     ":marca"    : marca,
                     ":material" : material,
-                    ":color" : color,
+                    ":color"    : color,
                     ":precio_montura_c"   : precio_montura_c,
                     ":precio_montura_v"   : precio_montura_v,
                     ":talla"   : talla

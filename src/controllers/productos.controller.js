@@ -3,7 +3,6 @@ import AWS from '../db.js'
 /* Libreria para poder generar ID's aleatorios*/
 import {v4} from 'uuid';
 import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
-import { customAlphabet} from 'nanoid';
 
 
 /* Constantes Globales que utilizan las funciones de este archivo */

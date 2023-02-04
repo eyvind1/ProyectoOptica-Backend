@@ -17,6 +17,51 @@ async function desencriptarPassword(contraseniabd,contrasenia){
     return await bcrypt.compare(contrasenia,contraseniabd);
 }
 
+/* Funcion especifica para encriptar una contrasenia con Bcrypt*/
+async function encriptarPassword(contrasenia){
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(contrasenia,salt);
+}
+
+export const editContraseniaUserById = async (req, res) => {.
+
+    const { email, password, newPassword } = req.body;
+    
+    //Valido usuario y contrasenia
+    const user       = await findUserByEmail(email);
+    if (user.Items.length ===0) {
+        return res.status(401).send('El usuario no existe');
+    }
+    //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
+    const validarPassword  = await desencriptarPassword(user.Items[0].contrasenia,password);
+    if(validarPassword===false){
+        return res.status(401).send('La contraseña no coincide');
+    }
+    //Si paso ambos filtros de contrasenia y usuario, recien actualizo su contrasenia
+
+    ////////////////////////
+  
+    try {
+        let contraseniaEncriptada = await encriptarPassword(newPassword);
+        const paramsUsuario = {
+            TableName: TABLE_NAME_USUARIO,
+            Key: {
+                "id_usuario":user.Items[0].id_usuario,
+            },
+            UpdateExpression: `SET contrasenia = :contrasenia`,
+            ExpressionAttributeValues: {
+                ":contrasenia": contraseniaEncriptada,
+            }
+        };
+        const usuario = await dynamoClient.update(paramsUsuario).promise();
+        return res.json(usuario.Items);
+    } catch (error) {
+        return res.status(500).json({
+            message:'No se pudo actualizar la contrasenia '
+        })
+    }
+};
+
 async function findUserByEmail(usuario){
     try {
         const paramsUsuario = {
@@ -44,7 +89,6 @@ export const signIn = async (req, res) => {
         return res.status(401).send('El usuario no existe');
     }
     //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
-    console.log(user.Items[0].contrasenia,' ',password)
     const validarPassword  = await desencriptarPassword(user.Items[0].contrasenia,password);
     if(validarPassword===false){
         return res.status(401).send('La contraseña no coincide');

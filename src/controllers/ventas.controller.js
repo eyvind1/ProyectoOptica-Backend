@@ -2,34 +2,13 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 
 import {codeForTables} from '../utils/codigosTablas.js';
+import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_VENTAS = "Ventas";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 /* Funciones que se utilizan en el archivo */ 
-function castIsoDateToDate(fecha){
-    const date = new Date(fecha);
-    //const timestamp = date
-    let mes     = (date.getMonth()+1).toString();
-    let anio    = date.getFullYear();
-    let dia     = date.getDate().toString();
-    let hora    = date.getHours().toString();
-    let minutos = date.getMinutes().toString();
-    if (mes.length < 2) {
-        mes = '0' + mes;
-    }
-    if (dia.length < 2) {
-        dia = '0' + dia;
-    }
-    if (hora.length < 2) {
-        hora = '0' + hora;
-    }
-    if (minutos.length < 2) {
-        minutos = '0' + minutos;
-    }
-    const result = (anio+'-'+mes+'-'+ dia+' '+hora+':'+minutos);
-    return result;
-}
+
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
         return new Date(b.fecha_creacion_venta) - new Date(a.fecha_creacion_venta); // descending
@@ -116,7 +95,7 @@ async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
 export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
-        const fecha_creacion_venta = castIsoDateToDate(req.body.fecha_creacion_venta);
+        const fecha_creacion_venta = await castIsoDateToDate(req.body.fecha_creacion_venta);
         const {id_sede,nombre_cliente,list_monturas,list_lunas,list_accesorios,id_vendedor,
                tipo_venta,observaciones,id_cliente,habilitado} = (req.body);
         const datosVenta = {
@@ -126,6 +105,7 @@ export const createNewVenta = async (req, res) => {
             list_lunas,
             list_accesorios,
             id_vendedor,
+            observaciones,
             habilitado,
             fecha_creacion_venta,
             tipo_venta,
@@ -164,8 +144,7 @@ export const updatePagoCuotasVentaById = async (req, res) => {
                 ":tipo_venta": tipo_venta            }
         }
         const venta = await dynamoClient.update(paramsVenta).promise();      
-        res.json(venta);
-        return venta;
+        return res.json(venta);
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -189,7 +168,7 @@ export const getAllVentasBySede = async (req, res) => {
         };
         const ventasBySede = await dynamoClient.scan(params).promise();
         const rpta  = await sortArrayJsonByDate(ventasBySede.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -226,7 +205,7 @@ export  const getAllVentas = async (req, res) => {
 export const getAllVentasBySeller = async (req, res) => {
     try{
         let id_vendedor = req.params.idvendedor;
-        const params = {
+        const params    = {
             TableName: TABLE_NAME_VENTAS,
             FilterExpression : "#idVendedor = :valueIdVendedor",
             ExpressionAttributeValues: {
@@ -252,20 +231,19 @@ export const getAllVentasByDate = async (req, res) => {
     try{
         let fechaIni = req.params.fechaIni;
         let fechaFin = req.params.fechaFin;
-        fechaIni = castIsoDateToDate(fechaIni);
-        fechaFin = castIsoDateToDate(fechaFin); 
-        console.log(fechaIni,' :', fechaFin);
+        fechaIni     = await castIsoDateToDate(fechaIni);
+        fechaFin     = await castIsoDateToDate(fechaFin); 
         const params = {
             TableName: TABLE_NAME_VENTAS,
-            FilterExpression : "#fecha_venta  between :val1 and :val2",
+            FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
             ExpressionAttributeValues: {
-                //":val1" : '2022-12-06 00:00',
-                //":val2" : '2022-12-06 20:09'
+                ":valueHabilitado":true,
                 ":val1" : fechaIni,
                 ":val2" : fechaFin
             },
             ExpressionAttributeNames:{
-                "#fecha_venta": "fecha_creacion_venta"
+                "#fecha_venta": "fecha_creacion_venta",
+                "#habilitado": "habilitado"
             }
         };
         const ventasBySeller = await dynamoClient.scan(params).promise();

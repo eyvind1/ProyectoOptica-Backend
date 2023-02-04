@@ -10,7 +10,7 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
-        return new Date(a.num_orden) - new Date(b.num_orden); // ascending order
+        return new Date(b.fecha_creacion_luna) - new Date(a.fecha_creacion_luna); // ascending order
       })
       return arrayJson
 }

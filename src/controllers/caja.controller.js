@@ -2,11 +2,18 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 
 import {codeForTables} from '../utils/codigosTablas.js';
+import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_CAJA  = "Caja";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 
+async function sortArrayJsonByDate(arrayJson){
+    arrayJson.sort((a, b) => {
+        return new Date(b.fecha_creacion_caja) - new Date(a.fecha_creacion_caja); // descending
+      })
+      return arrayJson
+}
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
     try {
@@ -49,7 +56,8 @@ export const getAllEgresos = async (req, res) => {
             }
         };
         const egresos = await dynamoClient.scan(params).promise();
-        return res.json(egresos.Items);
+        const rpta  = await sortArrayJsonByDate(egresos.Items); 
+        return res.json(rpta);
     } 
      catch(error) {
         console.log(error)
@@ -77,7 +85,8 @@ export const getAllIngresos = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();
-        return res.json(ingresos.Items);
+        const rpta  = await sortArrayJsonByDate(ingresos.Items); 
+        return res.json(rpta);
     } 
      catch(error) {
         console.log(error)
@@ -115,4 +124,70 @@ export const unsubscribeEgresoById = async (req, res) => {
             message:'Algo anda mal'
         })
     }
+};
+
+// Esta funcion retorna egresos en un rango de fechas 
+
+export const getAllIngresosByDate = async (req, res) => {
+    try {
+        let fechaIni = req.params.fechaIni;
+        let fechaFin = req.params.fechaFin;
+        fechaIni     = await castIsoDateToDate(fechaIni);
+        fechaFin     = await castIsoDateToDate(fechaFin); 
+
+        const params = {
+            TableName: TABLE_NAME_CAJA,
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_venta  between :val1 and :val2",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueEgreso": false,
+                ":val1" : fechaIni,
+                ":val2" : fechaFin
+            },
+            ExpressionAttributeNames:{
+                "#fecha_venta": "fecha_creacion_venta",
+                "#habilitado" : "habilitado"
+            }
+        };
+        const ingresos = await dynamoClient.scan(params).promise();        
+        const rpta  = await sortArrayJsonByDate(ingresos.Items); 
+        res.json(rpta);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
+
+export const getAllEgresosByDate = async (req, res) => {
+    try {
+        let fechaIni = req.params.fechaIni;
+        let fechaFin = req.params.fechaFin;
+        fechaIni     = await castIsoDateToDate(fechaIni);
+        fechaFin     = await castIsoDateToDate(fechaFin); 
+
+        const params = {
+            TableName: TABLE_NAME_CAJA,
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_venta  between :val1 and :val2",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueEgreso": true,
+                ":val1" : fechaIni,
+                ":val2" : fechaFin
+            },
+            ExpressionAttributeNames:{
+                "#fecha_venta": "fecha_creacion_venta",
+                "#habilitado" : "habilitado"
+            }
+        };
+        const ingresos = await dynamoClient.scan(params).promise();        
+        const rpta  = await sortArrayJsonByDate(ingresos.Items); 
+        res.json(rpta);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
 };

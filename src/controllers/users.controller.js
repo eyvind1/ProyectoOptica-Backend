@@ -112,6 +112,8 @@ export const darBajaUsuarioById = async (req, res) => {
         })
     }
 };
+
+
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;
     //Aqui tengo que validar que ambos IDS llegue y ademas que existan para poder insertar
