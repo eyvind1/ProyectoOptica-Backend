@@ -51,7 +51,7 @@ export const getProductBySede = async (req, res) => {
 */
 
 /* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
-function castIsoDateToDate(fecha){
+/*function castIsoDateToDate(fecha){
     const date = new Date(fecha);
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
@@ -70,10 +70,10 @@ function castIsoDateToDate(fecha){
     const result = (dia+mes+ anio);
     return result;
 }
-
+*/
 /* Esta funcion valida al inicio que el array que contiene todos los productos(Excel) no tenga numero de orden repetido */ 
 /* Falta Validar esta funcion ojo */  
-async function validarNroOrdenExcel(arrayProductos){
+/*async function validarNroOrdenExcel(arrayProductos){
     const busqueda = arrayProductos.reduce((acc, element) => {
         acc[element.num_orden] = ++acc[element.num_orden] || 0;
         return acc;
@@ -83,13 +83,13 @@ async function validarNroOrdenExcel(arrayProductos){
       });
     return duplicados;
 }
-
+*/
 
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
     // Le damos formato al string =>  luna = Lunas, accesorio = Acecesorio, montura = Monturas
-    const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
+    //const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
 
     //Valido que no haya "Nro_Orden" repetidos en el excel
     /*let validarExcel = await validarNroOrdenExcel(array_productos);
@@ -121,15 +121,14 @@ export const createListOfProducts=async(req,res)=>{
     try {
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
-                const id_montura   = v4() + codeForTables.tablaMonturas;
+                const id_producto  = v4() + codeForTables.tablaMonturas;
                 //const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 //Para generar el codigo interno
                 //let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
                 //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
-
                 const datosMontura = {
-                    id_montura,
+                    id_producto,
                     tipo,
                     //num_orden,
                     color,
@@ -164,14 +163,14 @@ export const createListOfProducts=async(req,res)=>{
         }
         else if(tipo === 'luna'){
             array_productos.map(async(row,i,arr)=>{
-                const id_luna = v4() + codeForTables.tablaLunas;
+                const id_producto = v4() + codeForTables.tablaLunas;
                 //const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
                 const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
                 //let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
                 //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
 
                 const datosLuna = {
-                    id_luna,
+                    id_producto,
                     //num_orden,
                     id_sede,
                     tipo,
@@ -205,13 +204,13 @@ export const createListOfProducts=async(req,res)=>{
         }
         else if(tipo === 'accesorio'){
             array_productos.map(async(row,i,arr)=>{
-                const id_accesorio  = v4() + codeForTables.tablaAccesorios;
+                const id_producto  = v4() + codeForTables.tablaAccesorios;
                 //const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
                 const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
                 //let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
                 //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
                 const datosAccesorio = {
-                    id_accesorio,
+                    id_producto,
                     tipo,
                     //num_orden,
                     cantidad,
