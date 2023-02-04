@@ -280,6 +280,7 @@ export const updateListOfProducts=async(req,res)=>{
         // }
 
         if(tipo ==='montura'){
+            let validarErrorMontura  = false;
             array_productos.map(async(row,i,arr)=>{
                 const params = {
                     TableName: 'Monturas',
@@ -301,18 +302,20 @@ export const updateListOfProducts=async(req,res)=>{
                 try {
                     const product = await dynamoClient.update(params).promise();  
                     console.log(product);    
-                    if(arr.length-1 === i){
+                    if(arr.length-1 === i && validarErrorMontura===false){
                         res.json(product);
                     }           
                 } catch (error) {
-                    console.log(error)
-                    return res.status(500).json({
-                        message:'Algo anda mal'
+                    validarErrorMontura  = true;
+                    let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
+                    return res.status(400).json({
+                        message:'Productos actualizados correctamente, excepto el producto en la posicion: '+ errorPosicion
                     })
                 }
             });
         }
         else if(tipo ==='luna'){
+            let validarErrorLuna  = false;
             array_productos.map(async(row,i,arr)=>{
                 const params= {
                     TableName: 'Lunas',
@@ -334,20 +337,20 @@ export const updateListOfProducts=async(req,res)=>{
                 try {
                     const product = await dynamoClient.update(params).promise();  
                     console.log(product);    
-                    if(arr.length-1 === i){
+                    if(arr.length-1 === i && validarErrorLuna===false){
                         res.json(product); 
                     }           
                 } catch (error) {
-                    console.log(error);
-                    delete array_productos[0];
-                    return res.status(500).json({
-                        message:'Algo anda mal',
+                    validarErrorLuna  = true;
+                    let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
+                    return res.status(400).json({
+                        message:'Productos actualizados correctamente, excepto el producto en la posicion: '+ errorPosicion
                     })
                 }
             })
         }
         else if(tipo === 'accesorio'){
-            let validarError  = false;
+            let validarErrorAccesorio  = false;
             array_productos.map(async(row,i,arr)=>{
                 const params = {
                     TableName: 'Accesorios',
@@ -361,7 +364,7 @@ export const updateListOfProducts=async(req,res)=>{
                     ConditionExpression: "id_producto = :id_accesorio", 
                     ExpressionAttributeValues: {
                         ":id_accesorio" :row.id_producto, 
-                        ":cantidad" : row.cantidad,
+                        ":cantidad"     : row.cantidad,
                         ":fecha_modificacion_accesorio" : row.fecha_modificacion_accesorio,
                         ":precio_accesorio_c"   : row.precio_accesorio_c,
                         ":precio_accesorio_v"   : row.precio_accesorio_v
@@ -370,15 +373,14 @@ export const updateListOfProducts=async(req,res)=>{
                 //Intento actualizar
                 try {
                     const product = await dynamoClient.update(params).promise();  
-                    console.log(product);    
-                    if(arr.length-1 === i && validarError===false){
+                    if(arr.length-1 === i && validarErrorAccesorio===false){
                         return res.json(product);
                     }           
                 } catch (error) {
-                    validarError       = true;
-                    let errorPosicion  = i+1
-                    return res.status(500).json({
-                        message:'Error al actualizar el producto en la posicion: '+ errorPosicion
+                    validarErrorAccesorio  = true;
+                    let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
+                    return res.status(400).json({
+                        message:'Productos actualizados correctamente, excepto el producto en la posicion: '+ errorPosicion
                     })
                 }
             })
