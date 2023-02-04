@@ -76,8 +76,8 @@ export const getAllAccesorios = async (req, res) => {
 export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
-        //const id_producto = v4() + codeForTables.tablaAccesorios;
-        const id_producto = "8fccc479-36f3-41e7-ba5a-efe428e53ee6Acc006"
+        const id_producto = v4() + codeForTables.tablaAccesorios;
+        //const id_producto = "8fccc479-36f3-41e7-ba5a-efe428e53ee6Acc006"
         //const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         
