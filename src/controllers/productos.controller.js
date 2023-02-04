@@ -111,7 +111,7 @@ export const createListOfProducts=async(req,res)=>{
                 })
     )
     //Valido que no se repitan numeros de ordon con la BD
-    if(validarNro.includes(1) ===true ){
+    if(validarNro.includes(1) === true ){
         return res.status(400).json({
             message:'Los numeros de orden ya existen en la BD'
         })
@@ -121,21 +121,22 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_montura   = v4() + codeForTables.tablaMonturas;
-                const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
+                //const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
+                const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 //Para generar el codigo interno
-                let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
-                let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
+                //let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
+                //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
 
                 const datosMontura = {
                     id_montura,
                     tipo,
-                    num_orden,
+                    //num_orden,
                     color,
                     cantidad,
                     habilitado,
                     codigo,
                     id_sede,
-                    codigo_interno,
+                    //codigo_interno,
                     fecha_creacion_monturas,
                     fecha_modificacion_monturas,
                     marca,
@@ -163,16 +164,17 @@ export const createListOfProducts=async(req,res)=>{
         else if(tipo === 'luna'){
             array_productos.map(async(row,i,arr)=>{
                 const id_luna = v4() + codeForTables.tablaLunas;
-                const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
-                let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
-                let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
+                //const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
+                const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
+                //let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
+                //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
 
                 const datosLuna = {
                     id_luna,
-                    num_orden,
+                    //num_orden,
                     id_sede,
                     tipo,
-                    codigo_interno,
+                    //codigo_interno,
                     habilitado,
                     fecha_creacion_luna,
                     fecha_modificacion_luna,
@@ -203,17 +205,18 @@ export const createListOfProducts=async(req,res)=>{
         else if(tipo === 'accesorio'){
             array_productos.map(async(row,i,arr)=>{
                 const id_accesorio  = v4() + codeForTables.tablaAccesorios;
-                const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
-                let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
-                let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
+                //const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
+                const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
+                //let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
+                //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
 
                 const datosAccesorio = {
                     id_accesorio,
                     tipo,
-                    num_orden,
+                    //num_orden,
                     cantidad,
                     id_sede,
-                    codigo_interno,
+                    //codigo_interno,
                     habilitado,
                     nombre_accesorio,
                     fecha_creacion_accesorio,
@@ -239,6 +242,7 @@ export const createListOfProducts=async(req,res)=>{
             })
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message:error
         })
