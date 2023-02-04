@@ -187,40 +187,32 @@ export const editAccesorioById = async (req, res) => {
     const id_accesorio = req.params.idAccesorio;
     const {nombre_accesorio,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = req.body;
     const existeAccesorio = await validateAccesorio(id_accesorio);
-    if(existeAccesorio.length > 0) {
-        try {
-            const paramsAccesorio = {
-                TableName: TABLE_NAME_ACCESORIO,
-                Key: {
-                    "id_producto":id_accesorio,
-                },
-                UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_accesorio = :fecha_modificacion_accesorio,
-                                        nombre_accesorio=:nombre_accesorio,
-                                        precio_accesorio_c=:precio_accesorio_c,precio_accesorio_v=:precio_accesorio_v`,
-                ConditionExpression: "id_producto = :id_accesorio", 
-                ExpressionAttributeValues: {
-                    ":id_accesorio" :id_accesorio, 
-                    ":cantidad" : cantidad,
-                    ":nombre_accesorio" : nombre_accesorio,
-                    ":fecha_modificacion_accesorio": fecha_modificacion_accesorio,
-                    ":precio_accesorio_c"   : precio_accesorio_c,
-                    ":precio_accesorio_v"   : precio_accesorio_v
-                }
-            };
-            const accesorio = await dynamoClient.update(paramsAccesorio).promise();
-            res.json(accesorio)
-            return accesorio;  
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                message:'No se puede actualizar el accesorio'
-            })
-        }
-    }
-    else{
-        console.log('No existe el accesorio')
+    try {
+        const paramsAccesorio = {
+            TableName: TABLE_NAME_ACCESORIO,
+            Key: {
+                "id_producto":id_accesorio,
+            },
+            UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_accesorio = :fecha_modificacion_accesorio,
+                                    nombre_accesorio=:nombre_accesorio,
+                                    precio_accesorio_c=:precio_accesorio_c,precio_accesorio_v=:precio_accesorio_v`,
+            ConditionExpression: "id_producto = :id_accesorio", 
+            ExpressionAttributeValues: {
+                ":id_accesorio" :id_accesorio, 
+                ":cantidad" : cantidad,
+                ":nombre_accesorio" : nombre_accesorio,
+                ":fecha_modificacion_accesorio": fecha_modificacion_accesorio,
+                ":precio_accesorio_c"   : precio_accesorio_c,
+                ":precio_accesorio_v"   : precio_accesorio_v
+            }
+        };
+        const accesorio = await dynamoClient.update(paramsAccesorio).promise();
+        res.json(accesorio)
+        return accesorio;  
+    } catch (error) {
+        console.log(error)
         return res.status(500).json({
-            message:'El accesorio no existe'
+            message:'No se puede actualizar el accesorio'
         })
     }
 };

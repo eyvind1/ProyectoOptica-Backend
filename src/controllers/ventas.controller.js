@@ -38,18 +38,17 @@ async function sortArrayJsonByDate(arrayJson){
 }
 /* End funciones que se utilizan en el archivo */ 
 
-async function restarStockProductos(list_monturas, list_lunas){
+async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
     const tableName = ['Monturas','Lunas','Accesorios']
     
     if(list_monturas.length>0){
         list_monturas.map(async(row,i)=>{   
             try {
                 // Hago la resta de lo que hay en stock menos lo vendido
-                console.log('row',row)
                 const params = {
                     TableName: tableName[0],
                     Key: {
-                        "id_montura": row.id_montura,
+                        "id_producto": row.id_producto,
                     },
                     UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
                     ExpressionAttributeValues: {
@@ -57,10 +56,8 @@ async function restarStockProductos(list_monturas, list_lunas){
                     }
                 };
                 const montura = await dynamoClient.update(params).promise();      
-                res.json(montura);
                 return montura;
             } catch (error) {
-                console.log(error)
                 return res.status(500).json({
                     message:'Algo anda mal'
                 })
@@ -74,7 +71,7 @@ async function restarStockProductos(list_monturas, list_lunas){
                 const params = {
                     TableName: tableName[1],
                     Key: {
-                        "id_luna": row.id_luna,
+                        "id_producto": row.id_producto,
                     },
                     UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
                     ExpressionAttributeValues: {
@@ -84,7 +81,29 @@ async function restarStockProductos(list_monturas, list_lunas){
                 const luna = await dynamoClient.update(params).promise();      
                 return luna;
             } catch (error) {
-                console.log(error)
+                return res.status(500).json({
+                    message:'Algo anda mal'
+                })
+            }
+        })
+    }
+    else if(list_accesorios.length>0){
+        list_accesorios.map(async(row,i)=>{   
+            try {
+                // Hago la resta de lo que hay en stock menos lo vendido
+                const params = {
+                    TableName: tableName[2],
+                    Key: {
+                        "id_producto": row.id_producto,
+                    },
+                    UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
+                    ExpressionAttributeValues: {
+                        ":cant_vendida": row.cant_vendida
+                    }
+                };
+                const accesorio = await dynamoClient.update(params).promise();      
+                return accesorio;
+            } catch (error) {
                 return res.status(500).json({
                     message:'Algo anda mal'
                 })
@@ -118,7 +137,7 @@ export const createNewVenta = async (req, res) => {
             Item: datosVenta
         }).promise()
         //Una vez que se realiza la venta restamos del STOCK
-        const restarStock  = await restarStockProductos(list_monturas,list_lunas);
+        const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
         return res.json(newVenta);       
     } catch (error) {
         return res.status(500).json({ 
