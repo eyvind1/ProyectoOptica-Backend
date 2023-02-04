@@ -64,7 +64,7 @@ async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
             }
         })
     }
-    else if(list_lunas.length>0){
+    if(list_lunas.length>0){
         list_lunas.map(async(row,i)=>{   
             try {
                 // Hago la resta de lo que hay en stock menos lo vendido
@@ -87,7 +87,7 @@ async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
             }
         })
     }
-    else if(list_accesorios.length>0){
+    if(list_accesorios.length>0){
         list_accesorios.map(async(row,i)=>{   
             try {
                 // Hago la resta de lo que hay en stock menos lo vendido
