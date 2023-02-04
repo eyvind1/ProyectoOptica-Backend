@@ -72,17 +72,18 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_luna = v4() + codeForTables.tablaLunas;
-        const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
+        //const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
+        const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         
-        let formatoFecha   = await castIsoDateToDate(fecha_creacion_luna);
-        let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
+        //let formatoFecha   = await castIsoDateToDate(fecha_creacion_luna);
+        //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
         const datosLuna = {
             id_luna,
             id_sede,
-            num_orden,
+            //num_orden,
             tipo,
             habilitado,
-            codigo_interno,
+            //codigo_interno,
             fecha_creacion_luna,
             fecha_modificacion_luna,
             material,

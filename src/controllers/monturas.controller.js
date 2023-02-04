@@ -84,21 +84,22 @@ export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const id_montura   = v4() + codeForTables.tablaMonturas;
-        const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        //const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         //Genero el codigo interno para el codigo de barras
-        let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
-        let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
+        //let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
+        //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
         
         const datosMontura = {
             id_montura,
             tipo,
-            num_orden,
+            //num_orden,
             color,
             cantidad,
             habilitado,
             codigo,
             id_sede,
-            codigo_interno,
+            //codigo_interno,
             fecha_creacion_monturas,
             fecha_modificacion_monturas,
             marca,

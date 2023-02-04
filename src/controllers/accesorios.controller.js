@@ -77,17 +77,18 @@ export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
         const id_accesorio = v4() + codeForTables.tablaAccesorios;
-        const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
+        //const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
+        const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         
-        let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
-        let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
+        //let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
+        //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
 
         const datosAccesorio = {
-            id_accesorio,
+            id_producto,
             tipo,
-            num_orden,
+            //num_orden,
             cantidad,
-            codigo_interno,
+            //codigo_interno,
             id_sede,
             habilitado,
             nombre_accesorio,
