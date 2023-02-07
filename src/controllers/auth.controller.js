@@ -31,12 +31,16 @@ export const editContraseniaUserById = async (req, res) => {
     //Valido usuario y contrasenia
     const user       = await findUserByEmail(email);
     if (user.Items.length ===0) {
-        return res.status(400).send('El usuario no existe');
+        return res.status(400).json({
+            message:'El usuario no existe'
+        })
     }
     //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
     const validarPassword  = await desencriptarPassword(user.Items[0].contrasenia,password);
     if(validarPassword===false){
-        return res.status(400).send('La contraseña no coincide');
+        return res.status(400).json({
+            message:'La contraseña no coincide'
+        })
     }
     //Si paso ambos filtros de contrasenia y usuario, recien actualizo su contrasenia
 
