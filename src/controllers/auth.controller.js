@@ -19,13 +19,14 @@ async function desencriptarPassword(contraseniabd,contrasenia){
 
 /* Funcion especifica para encriptar una contrasenia con Bcrypt*/
 async function encriptarPassword(contrasenia){
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genssSalt(10);
     return await bcrypt.hash(contrasenia,salt);
 }
 
 export const editContraseniaUserById = async (req, res) => {
 
     const { email, password, newPassword } = req.body;
+    console.log(email,password,newPassword);
     //Valido usuario y contrasenia
     const user       = await findUserByEmail(email);
     if (user.Items.length ===0) {
