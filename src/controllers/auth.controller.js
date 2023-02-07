@@ -23,9 +23,10 @@ async function encriptarPassword(contrasenia){
     return await bcrypt.hash(contrasenia,salt);
 }
 
-export const editContraseniaUserById = async (req, res) => {.
+export const editContraseniaUserById = async (req, res) => {
 
     const { email, password, newPassword } = req.body;
+    
     
     //Valido usuario y contrasenia
     const user       = await findUserByEmail(email);
