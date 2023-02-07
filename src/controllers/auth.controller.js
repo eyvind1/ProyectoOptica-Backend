@@ -19,7 +19,7 @@ async function desencriptarPassword(contraseniabd,contrasenia){
 
 /* Funcion especifica para encriptar una contrasenia con Bcrypt*/
 async function encriptarPassword(contrasenia){
-    const salt = await bcrypt.genssSalt(10);
+    const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(contrasenia,salt);
 }
 
@@ -43,7 +43,6 @@ export const editContraseniaUserById = async (req, res) => {
             message:'La contraseña no coincide'
         })
     }
-
     //Si paso ambos filtros de contrasenia y usuario, recien actualizo su contrasenia
 
     ////////////////////////
@@ -63,8 +62,9 @@ export const editContraseniaUserById = async (req, res) => {
         const usuario = await dynamoClient.update(paramsUsuario).promise();
         return res.json(usuario.Items);
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
-            message:'No se pudo actualizar la contrasenia '
+            message:'No se pudo actualizar la contrasenia'
         })
     }
 };

@@ -17,10 +17,11 @@ async function sortArrayJsonByDate(arrayJson){
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
     try {
-        const {id_sede,monto,tipo,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
+        const {id_sede,metodo_pago,monto,tipo,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
+            metodo_pago,
             tipo,
             monto,
             egreso,
@@ -150,7 +151,7 @@ export const getAllIngresosByDate = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();        
-        const rpta  = await sortArrayJsonByDate(ingresos.Items); 
+        const rpta     = await sortArrayJsonByDate(ingresos.Items); 
         res.json(rpta);
     } 
      catch(error) {
