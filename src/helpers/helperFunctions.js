@@ -10,7 +10,7 @@ export async function castIsoDateToDate(fecha){
     const date = new Date(fecha);
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
-    let anio    = date.getFullYear().toString();
+    let anio    = date.getFullYear();
     let dia     = date.getDate().toString();
     let hora    = date.getHours().toString();
     if (mes.length < 2) {
