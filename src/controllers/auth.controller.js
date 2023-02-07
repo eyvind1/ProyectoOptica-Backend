@@ -26,8 +26,6 @@ async function encriptarPassword(contrasenia){
 export const editContraseniaUserById = async (req, res) => {
 
     const { email, password, newPassword } = req.body;
-    
-    
     //Valido usuario y contrasenia
     const user       = await findUserByEmail(email);
     if (user.Items.length ===0) {
@@ -35,17 +33,20 @@ export const editContraseniaUserById = async (req, res) => {
             message:'El usuario no existe'
         })
     }
+    console.log(user.Items[0].contrasenia,password)
     //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
     const validarPassword  = await desencriptarPassword(user.Items[0].contrasenia,password);
+    console.log(validarPassword)
     if(validarPassword===false){
         return res.status(400).json({
             message:'La contraseña no coincide'
         })
     }
+
     //Si paso ambos filtros de contrasenia y usuario, recien actualizo su contrasenia
 
     ////////////////////////
-  
+    
     try {
         let contraseniaEncriptada = await encriptarPassword(newPassword);
         const paramsUsuario = {
