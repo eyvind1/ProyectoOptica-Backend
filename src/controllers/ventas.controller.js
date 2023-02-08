@@ -151,10 +151,17 @@ export const createNewVenta = async (req, res) => {
         //Una vez que se realiza la venta restamos del STOCK
         //const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
         /* Agregamos la venta como un ingreso mas */
+        let monto = 0;
+        if(tipo_venta[0].forma_pago ==='Credito'){
+            monto = tipo_venta[0].cantidad_recibida;
+        }
+        else{
+            monto = tipo_venta[0].precio_total;
+        }
         const objetoJsonIngreso = {
             id_sede:id_sede,
             metodo_pago: tipo_venta[0].metodo_pago,
-            monto: tipo_venta[0].precio_total,
+            monto: monto,
             descripcion: 'Ingreso por Venta',
             encargado: id_vendedor,
             habilitado: true,

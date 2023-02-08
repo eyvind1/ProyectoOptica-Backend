@@ -23,6 +23,9 @@ export async function castIsoDateToDate(fecha){
     if (hora.length < 2) {
         hora = '0' + hora;
     }
+    if (minutos.length < 2) {
+        minutos = '0' + minutos;
+    }
     const result = (anio+'-'+mes+'-'+dia+' '+hora+':'+minutos);
     return result;
 }
