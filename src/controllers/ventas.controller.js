@@ -295,7 +295,7 @@ export const getAllVentasByDate = async (req, res) => {
         let fechaFin = req.params.fechaFin;
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
-        console.log(fechaFin,'fechaFin');
+        console.log(fechaFin,fechaIni,'fechaFin');
         //fechaIni     = await castIsoDateToDate(fechaIni);
         //fechaFin     = await castIsoDateToDate(fechaFin); 
         const params = {
