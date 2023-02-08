@@ -21,7 +21,8 @@ async function sortArrayJsonByDate(arrayJson){
 /* Insertar un nuevo ingreso */
 
 async function createNewIngreso(objetoJson){
-    const id_caja = v4() + codeForTables.tablaCaja;
+    const id_caja     = v4() + codeForTables.tablaCaja;
+    const customFecha = await castIsoDateToDate(objetoJson.fecha_creacion_caja);
     try {
         const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (objetoJson);
         const datosCaja = {
@@ -33,7 +34,7 @@ async function createNewIngreso(objetoJson){
             descripcion,
             encargado,
             habilitado,
-            fecha_creacion_caja,
+            customFecha,
         }
         const newCaja = await dynamoClient.put({
             TableName: TABLE_NAME_CAJA,
@@ -186,7 +187,6 @@ export const createNewVenta = async (req, res) => {
 export const updatePagoCuotasVentaById = async (req, res) => {
     let id_venta = req.params.idVenta;
     const {tipo_venta,id_sede,id_vendedor} = req.body;  
-    console.log(req.body, 'body')
     try {
         const paramsVenta = {
             TableName: TABLE_NAME_VENTAS,
