@@ -22,9 +22,9 @@ async function sortArrayJsonByDate(arrayJson){
 
 async function createNewIngreso(objetoJson){
     const id_caja     = v4() + codeForTables.tablaCaja;
-    const customFecha = await castIsoDateToDate(objetoJson.fecha_creacion_caja);
+    const fecha_creacion_caja = await castIsoDateToDate(objetoJson.fecha_creacion_caja);
     try {
-        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (objetoJson);
+        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso} = (objetoJson);
         const datosCaja = {
             id_caja,
             id_sede,
@@ -34,7 +34,7 @@ async function createNewIngreso(objetoJson){
             descripcion,
             encargado,
             habilitado,
-            customFecha,
+            fecha_creacion_caja,
         }
         const newCaja = await dynamoClient.put({
             TableName: TABLE_NAME_CAJA,
