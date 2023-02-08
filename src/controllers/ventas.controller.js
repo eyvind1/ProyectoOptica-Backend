@@ -39,7 +39,7 @@ async function createNewIngreso(objetoJson){
             TableName: TABLE_NAME_CAJA,
             Item: datosCaja
         }).promise()
-        return json(newCaja);       
+        return newCaja;       
     } catch (error) {
         return error;
     }
@@ -185,7 +185,8 @@ export const createNewVenta = async (req, res) => {
 */
 export const updatePagoCuotasVentaById = async (req, res) => {
     let id_venta = req.params.idVenta;
-    const {tipo_venta} = req.body;  
+    const {tipo_venta,id_sede} = req.body;  
+    console.log(req.body, 'body')
     try {
         const paramsVenta = {
             TableName: TABLE_NAME_VENTAS,
