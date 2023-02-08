@@ -185,7 +185,7 @@ export const createNewVenta = async (req, res) => {
 */
 export const updatePagoCuotasVentaById = async (req, res) => {
     let id_venta = req.params.idVenta;
-    const {tipo_venta,id_sede} = req.body;  
+    const {tipo_venta,id_sede,id_vendedor} = req.body;  
     console.log(req.body, 'body')
     try {
         const paramsVenta = {
@@ -210,7 +210,7 @@ export const updatePagoCuotasVentaById = async (req, res) => {
             encargado: id_vendedor,
             habilitado: true,
             egreso: false, //False porque es un ingreso
-            fecha_creacion_caja: fecha_creacion_venta
+            fecha_creacion_caja: tipo_venta[0].fecha_pago
         }
         const newIngreso = await createNewIngreso(objetoJsonIngreso); 
         /* Fin Agregamos la venta como un ingreso mas */
