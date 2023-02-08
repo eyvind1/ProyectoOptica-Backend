@@ -13,6 +13,7 @@ export async function castIsoDateToDate(fecha){
     let anio    = date.getFullYear();
     let dia     = date.getDate().toString();
     let hora    = date.getHours().toString();
+    let minutos = date.getMinutes().toString();
     if (mes.length < 2) {
         mes = '0' + mes;
     }
@@ -22,7 +23,7 @@ export async function castIsoDateToDate(fecha){
     if (hora.length < 2) {
         hora = '0' + hora;
     }
-    const result = (dia+mes+ anio);
+    const result = (anio+'-'+mes+'-'+dia+' '+hora+':'+minutos);
     return result;
 }
 

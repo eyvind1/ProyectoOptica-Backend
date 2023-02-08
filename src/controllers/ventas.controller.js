@@ -126,9 +126,9 @@ async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
 export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
-//        const fecha_creacion_venta = await castIsoDateToDate(req.body.fecha_creacion_venta);
+        const fecha_creacion_venta = await castIsoDateToDate(req.body.fecha_creacion_venta);
         const {id_sede,nombre_cliente,list_monturas,list_lunas,list_accesorios,id_vendedor,
-               tipo_venta,observaciones,id_cliente,habilitado,fecha_creacion_venta} = (req.body);
+               tipo_venta,observaciones,id_cliente,habilitado} = (req.body);
         const datosVenta = {
             id_ventas,
             nombre_cliente,
@@ -197,7 +197,7 @@ export const updatePagoCuotasVentaById = async (req, res) => {
         const objetoJsonIngreso = {
             id_sede:id_sede,
             metodo_pago: tipo_venta[0].metodo_pago,
-            monto: tipo_venta[0].precio_total,
+            monto: tipo_venta[0].cantidad_recibida,
             descripcion: 'Ingreso por Pago de cuota',
             encargado: id_vendedor,
             habilitado: true,
@@ -295,17 +295,17 @@ export const getAllVentasByDate = async (req, res) => {
         let fechaFin = req.params.fechaFin;
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
+        console.log(fechaFin,'fechaFin');
         //fechaIni     = await castIsoDateToDate(fechaIni);
         //fechaFin     = await castIsoDateToDate(fechaFin); 
-        console.log(fechaIni, fechaFin);
         const params = {
             TableName: TABLE_NAME_VENTAS,
             //FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
             FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
-                ":val1" : '2023-02-07T03:09:00.000Z',
-                ":val2" : '2023-02-07T03:09:00.000Z'
+                ":val1" : fechaIni,
+                ":val2" : fechaFin
             },
             ExpressionAttributeNames:{
                 "#fecha_venta": "fecha_creacion_venta",

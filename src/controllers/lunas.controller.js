@@ -2,7 +2,6 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 
 import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
-import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_LUNA  = "Lunas";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
