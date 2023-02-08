@@ -17,12 +17,12 @@ async function sortArrayJsonByDate(arrayJson){
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
     try {
-        const {id_sede,metodo_pago,monto,tipo,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
+        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
             metodo_pago,
-            tipo,
+            //tipo,
             monto,
             egreso,
             descripcion,

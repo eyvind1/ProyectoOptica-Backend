@@ -5,6 +5,7 @@ import {codeForTables} from '../utils/codigosTablas.js';
 import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_VENTAS = "Ventas";
+const TABLE_NAME_CAJA   = "Caja";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 /* Funciones que se utilizan en el archivo */ 
@@ -16,6 +17,36 @@ async function sortArrayJsonByDate(arrayJson){
       return arrayJson
 }
 /* End funciones que se utilizan en el archivo */ 
+
+/* Insertar un nuevo ingreso */
+
+async function createNewIngreso(objetoJson){
+    const id_caja = v4() + codeForTables.tablaCaja;
+    try {
+        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (objetoJson);
+        const datosCaja = {
+            id_caja,
+            id_sede,
+            metodo_pago,
+            monto,
+            egreso,
+            descripcion,
+            encargado,
+            habilitado,
+            fecha_creacion_caja,
+        }
+        const newCaja = await dynamoClient.put({
+            TableName: TABLE_NAME_CAJA,
+            Item: datosCaja
+        }).promise()
+        return json(newCaja);       
+    } catch (error) {
+        return error;
+    }
+};
+
+/* Fin Insertar un nuevo ingreso */
+
 
 async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
     const tableName = ['Monturas','Lunas','Accesorios']
@@ -116,10 +147,27 @@ export const createNewVenta = async (req, res) => {
             TableName: TABLE_NAME_VENTAS,
             Item: datosVenta
         }).promise()
+        
         //Una vez que se realiza la venta restamos del STOCK
-        const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
+        //const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
+        /* Agregamos la venta como un ingreso mas */
+        const objetoJsonIngreso = {
+            id_sede:id_sede,
+            metodo_pago: tipo_venta[0].metodo_pago,
+            monto: tipo_venta[0].cantidad_recibida,
+            descripcion: 'Ingreso por Venta',
+            encargado: id_vendedor,
+            habilitado: true,
+            egreso: false, //False porque es un ingreso
+            fecha_creacion_caja: fecha_creacion_venta
+        }
+        const newIngreso = await createNewIngreso(objetoJsonIngreso);
+        /* Fin Agregamos la venta como un ingreso mas */
+        console.log('resultado ingreso', newIngreso);
         return res.json(newVenta);       
+
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ 
             message:error
         })
@@ -143,7 +191,21 @@ export const updatePagoCuotasVentaById = async (req, res) => {
                 ":id_venta": id_venta,
                 ":tipo_venta": tipo_venta            }
         }
-        const venta = await dynamoClient.update(paramsVenta).promise();      
+        const venta = await dynamoClient.update(paramsVenta).promise();     
+        
+        /* Agregamos la venta como un ingreso mas */
+        const objetoJsonIngreso = {
+            id_sede:id_sede,
+            metodo_pago: tipo_venta[0].metodo_pago,
+            monto: tipo_venta[0].cantidad_recibida,
+            descripcion: 'Ingreso por Pago de cuota',
+            encargado: id_vendedor,
+            habilitado: true,
+            egreso: false, //False porque es un ingreso
+            fecha_creacion_caja: fecha_creacion_venta
+        }
+        const newIngreso = await createNewIngreso(objetoJsonIngreso); 
+        /* Fin Agregamos la venta como un ingreso mas */
         return res.json(venta);
     } catch (error) {
         console.log(error)
@@ -233,13 +295,17 @@ export const getAllVentasByDate = async (req, res) => {
         let fechaFin = req.params.fechaFin;
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
+        //fechaIni     = await castIsoDateToDate(fechaIni);
+        //fechaFin     = await castIsoDateToDate(fechaFin); 
+        console.log(fechaIni, fechaFin);
         const params = {
             TableName: TABLE_NAME_VENTAS,
+            //FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
             FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
-                ":val1" : fechaIni,
-                ":val2" : fechaFin
+                ":val1" : '2023-02-07T03:09:00.000Z',
+                ":val2" : '2023-02-07T03:09:00.000Z'
             },
             ExpressionAttributeNames:{
                 "#fecha_venta": "fecha_creacion_venta",

@@ -9,12 +9,12 @@ import {createNewVenta, getAllVentas,getAllVentasByDate,updatePagoCuotasVentaByI
 
 const router = Router();
 
-router.post('/createNewVenta',passport.authenticate('jwt',{session:false}),createNewVenta);
+router.post('/createNewVenta',createNewVenta);
 router.put('/updatePagoCuotasVentaById/:idVenta',updatePagoCuotasVentaById);
 router.get('/getAllVentasBySede/:idsede',passport.authenticate('jwt',{session:false}),getAllVentasBySede);
 router.get('/getAllVentasBySeller/:idvendedor',passport.authenticate('jwt',{session:false}),getAllVentasBySeller);
 router.get('/getAllVentas',getAllVentas);
-router.get('/getAllVentasByDate/:fechaIni/:fechaFin',passport.authenticate('jwt',{session:false}),getAllVentasByDate);
+router.get('/getAllVentasByDate/:fechaIni/:fechaFin',getAllVentasByDate);
 router.put('/unsubscribeVentasById/:idVenta',passport.authenticate('jwt',{session:false}),unsubscribeVentasById);
 //router.get('/getAllVentasByDate',getAllVentasByDate);
 export default router;
