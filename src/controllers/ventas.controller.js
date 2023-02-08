@@ -152,7 +152,7 @@ export const createNewVenta = async (req, res) => {
         //const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
         /* Agregamos la venta como un ingreso mas */
         let monto = 0;
-        if(tipo_venta[0].forma_pago ==='Credito'){
+        if(tipo_venta[0].forma_pago === 'credito'){
             monto = tipo_venta[0].cantidad_recibida;
         }
         else{

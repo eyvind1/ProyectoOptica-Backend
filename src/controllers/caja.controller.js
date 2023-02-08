@@ -135,10 +135,10 @@ export const getAllIngresosByDate = async (req, res) => {
         let fechaFin = req.params.fechaFin;
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
-
+        console.log(fechaIni,fechaFin,' fechas')
         const params = {
             TableName: TABLE_NAME_CAJA,
-            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_venta  between :val1 and :val2",
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_creacion_caja  between :val1 and :val2",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
                 ":valueEgreso": false,
@@ -146,7 +146,7 @@ export const getAllIngresosByDate = async (req, res) => {
                 ":val2" : fechaFin
             },
             ExpressionAttributeNames:{
-                "#fecha_venta": "fecha_creacion_venta",
+                "#fecha_creacion_caja": "fecha_creacion_caja",
                 "#habilitado" : "habilitado"
             }
         };
