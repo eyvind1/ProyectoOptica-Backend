@@ -154,7 +154,7 @@ export const createNewVenta = async (req, res) => {
         const objetoJsonIngreso = {
             id_sede:id_sede,
             metodo_pago: tipo_venta[0].metodo_pago,
-            monto: tipo_venta[0].cantidad_recibida,
+            monto: tipo_venta[0].precio_total,
             descripcion: 'Ingreso por Venta',
             encargado: id_vendedor,
             habilitado: true,
@@ -197,7 +197,7 @@ export const updatePagoCuotasVentaById = async (req, res) => {
         const objetoJsonIngreso = {
             id_sede:id_sede,
             metodo_pago: tipo_venta[0].metodo_pago,
-            monto: tipo_venta[0].cantidad_recibida,
+            monto: tipo_venta[0].precio_total,
             descripcion: 'Ingreso por Pago de cuota',
             encargado: id_vendedor,
             habilitado: true,
