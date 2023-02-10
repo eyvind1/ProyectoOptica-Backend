@@ -134,21 +134,25 @@ export const getAllIngresosByDate = async (req, res) => {
     try {
         let fechaIni = req.params.fechaIni;
         let fechaFin = req.params.fechaFin;
+        let id_sede  = req.params.idSede;
+
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
         console.log(fechaIni,fechaFin,' fechas')
         const params = {
             TableName: TABLE_NAME_CAJA,
-            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_creacion_caja  between :val1 and :val2",
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_creacion_caja  between :val1 and :val2 and #id_sede = :id_sede ",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
                 ":valueEgreso": false,
                 ":val1" : fechaIni,
-                ":val2" : fechaFin
+                ":val2" : fechaFin,
+                ":id_sede" : id_sede,
             },
             ExpressionAttributeNames:{
                 "#fecha_creacion_caja": "fecha_creacion_caja",
-                "#habilitado" : "habilitado"
+                "#habilitado" : "habilitado",
+                "#id_sede" : "id_sede",
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();        
@@ -166,21 +170,24 @@ export const getAllEgresosByDate = async (req, res) => {
     try {
         let fechaIni = req.params.fechaIni;
         let fechaFin = req.params.fechaFin;
+        let id_sede  = req.params.idSede;
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
 
         const params = {
             TableName: TABLE_NAME_CAJA,
-            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_venta  between :val1 and :val2",
+            FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_creacion_caja  between :val1 and :val2 and #id_sede = :id_sede",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
                 ":valueEgreso": true,
                 ":val1" : fechaIni,
-                ":val2" : fechaFin
+                ":val2" : fechaFin,
+                ":id_sede" : id_sede,
             },
             ExpressionAttributeNames:{
                 "#fecha_venta": "fecha_creacion_venta",
-                "#habilitado" : "habilitado"
+                "#habilitado" : "habilitado",
+                "#id_sede" : "id_sede"
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();        
