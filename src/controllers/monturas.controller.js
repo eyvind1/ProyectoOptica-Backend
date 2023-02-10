@@ -39,7 +39,7 @@ export const getAllMonturasForVenta = async (req, res) => {
         };
         const monturas = await dynamoClient.scan(params).promise();
         const rpta     = await sortArrayJsonByDate(monturas.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         console.log(error)
@@ -65,7 +65,7 @@ export const getAllMonturas = async (req, res) => {
         };
         const monturas = await dynamoClient.scan(params).promise();
         const rpta  = await sortArrayJsonByDate(monturas.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         console.log(error)

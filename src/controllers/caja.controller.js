@@ -58,7 +58,7 @@ export const getAllEgresos = async (req, res) => {
             }
         };
         const egresos = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(egresos.Items); 
+        const rpta    = await sortArrayJsonByDate(egresos.Items); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -87,7 +87,7 @@ export const getAllIngresos = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(ingresos.Items); 
+        const rpta     = await sortArrayJsonByDate(ingresos.Items); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -157,7 +157,7 @@ export const getAllIngresosByDate = async (req, res) => {
         };
         const ingresos = await dynamoClient.scan(params).promise();        
         const rpta     = await sortArrayJsonByDate(ingresos.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -191,8 +191,8 @@ export const getAllEgresosByDate = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();        
-        const rpta  = await sortArrayJsonByDate(ingresos.Items); 
-        res.json(rpta);
+        const rpta     = await sortArrayJsonByDate(ingresos.Items); 
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({

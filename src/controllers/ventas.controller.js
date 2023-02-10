@@ -150,7 +150,7 @@ export const createNewVenta = async (req, res) => {
         }).promise()
         
         //Una vez que se realiza la venta restamos del STOCK
-        //const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
+        const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
         /* Agregamos la venta como un ingreso mas */
         let monto = 0;
         if(tipo_venta[0].forma_pago === 'credito'){
@@ -237,7 +237,7 @@ export const getAllVentasBySede = async (req, res) => {
             }
         };
         const ventasBySede = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(ventasBySede.Items); 
+        const rpta         = await sortArrayJsonByDate(ventasBySede.Items); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -286,7 +286,7 @@ export const getAllVentasBySeller = async (req, res) => {
             }
         };
         const ventasBySeller = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(ventasBySeller.Items); 
+        const rpta           = await sortArrayJsonByDate(ventasBySeller.Items); 
         res.json(rpta);
     } 
      catch(error) {
@@ -321,7 +321,7 @@ export const getAllVentasByDate = async (req, res) => {
             }
         };
         const ventasBySeller = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(ventasBySeller.Items); 
+        const rpta           = await sortArrayJsonByDate(ventasBySeller.Items); 
         res.json(rpta);
     } 
      catch(error) {

@@ -17,6 +17,9 @@ const TABLE_NAME_MONTURAS  = "Monturas";
     es decir en minuscula y en singular
 */
 
+
+
+
 export const getProductBySede = async (req, res) => {
     let id_sede       = req.params.idSede;
     let product_name  = req.params.productName;

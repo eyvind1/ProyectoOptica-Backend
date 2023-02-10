@@ -36,7 +36,7 @@ export const getAllAccesoriosForVenta = async (req, res) => {
             }
         };
         const accesorios = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(accesorios.Items); 
+        const rpta       = await sortArrayJsonByDate(accesorios.Items); 
         res.json(rpta);
         
         

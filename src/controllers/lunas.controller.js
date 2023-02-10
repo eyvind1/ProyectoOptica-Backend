@@ -35,7 +35,7 @@ export const getAllLunasForVenta = async (req, res) => {
         };
         const lunas = await dynamoClient.scan(params).promise();
         const rpta  = await sortArrayJsonByDate(lunas.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -58,7 +58,7 @@ export const getAllLunas = async (req, res) => {
         };
         const lunas = await dynamoClient.scan(params).promise();
         const rpta  = await sortArrayJsonByDate(lunas.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
