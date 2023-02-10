@@ -16,8 +16,9 @@ async function sortArrayJsonByDate(arrayJson){
 }
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
+    const fecha_creacion_caja = await castIsoDateToDate(req.body.fecha_creacion_caja);
     try {
-        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso,fecha_creacion_caja} = (req.body);
+        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
