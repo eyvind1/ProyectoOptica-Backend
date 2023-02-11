@@ -135,7 +135,7 @@ export const unsubscribeLunasById = async (req, res) => {
             const paramsLuna = {
                 TableName: TABLE_NAME_LUNA,
                 Key: {
-                    "id_producto":id_producto,
+                    "id_producto":id_luna,
                 },
                 UpdateExpression: "SET habilitado = :habilitado",
                 ExpressionAttributeValues: {
