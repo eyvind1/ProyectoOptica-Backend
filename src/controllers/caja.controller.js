@@ -2,18 +2,29 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 
 import {codeForTables} from '../utils/codigosTablas.js';
-import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
+import {castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_CAJA  = "Caja";
-const dynamoClient = new AWS.DynamoDB.DocumentClient();
+const dynamoClient     = new AWS.DynamoDB.DocumentClient();
 
-
+/* Funciones que se utilizan en el archivo */
+    /* Funcion que permite ordenar los datos al enviar al Front, segun la fecha de creacion del ingreso*/ 
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
         return new Date(b.fecha_creacion_caja) - new Date(a.fecha_creacion_caja); // descending
       })
       return arrayJson
 }
+function getIngresosEgresos(datos,fecha_especifica){
+    //Itera sobre cada registro de la bd
+    let newArray = datos.filter(function (el) {
+        //Recorto el string para solo quedarme con la fecha asi "2022-03-10" sin horas
+        return el.fecha_creacion_caja.slice(0,10) === fecha_especifica 
+    });
+    return newArray;
+}
+/* End funciones que se utilizan en el archivo */ 
+
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
     const fecha_creacion_caja = await castIsoDateToDate(req.body.fecha_creacion_caja);
@@ -67,6 +78,7 @@ export const getAllEgresos = async (req, res) => {
         })
       }
 };
+
 /* 
      Funcion Verificada
      1.-el campo egreso es falso si es un ingreso
@@ -164,25 +176,15 @@ export const getAllIngresosByDate = async (req, res) => {
 };
 
 
-function getIngresosEgresos(datos,fecha_especifica){
-    //Itera sobre cada registro de la bd
-    let newArray = datos.filter(function (el) {
-        return el.fecha_creacion_caja.slice(0,10) === fecha_especifica 
-    });
-    return newArray;
-}
+
 // Esta funcion retorna ingresos y egresos por mes, filtrando por dia
 export const getAllCajaPerMonths = async (req, res) => {
     try {
         let fechaIni = req.params.fechaIni;
         let fechaFin = req.params.fechaFin;
         let id_sede  = req.params.idSede;
-
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
-        //fechaIni     = '2023-02-10'
-        //fechaFin     = '2023-02-11'
-        
         //Array que contendra todos los dias que existe entre las fechas que envia el front
         let arr_container_days = [];
         var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=new Date(e);d.setDate(d.getDate()+1)){ a.push(new Date(d));}return a;};
@@ -191,7 +193,6 @@ export const getAllCajaPerMonths = async (req, res) => {
         
         const params = {
             TableName: TABLE_NAME_CAJA,
-            //FilterExpression : "#habilitado = :valueHabilitado and  #fecha_creacion_caja  between :val1 and :val2",
             FilterExpression : "#habilitado = :valueHabilitado and  #fecha_creacion_caja  between :val1 and :val2 and #id_sede = :id_sede",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
@@ -206,7 +207,6 @@ export const getAllCajaPerMonths = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise();        
-        
         //Itero por cada fecha
         let array_rpta = []
         for(let i=0;i<arr_container_days.length;i++){          
@@ -233,7 +233,6 @@ export const getAllEgresosByDate = async (req, res) => {
         let id_sede  = req.params.idSede;
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
-
         const params = {
             TableName: TABLE_NAME_CAJA,
             FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_creacion_caja  between :val1 and :val2 and #id_sede = :id_sede",

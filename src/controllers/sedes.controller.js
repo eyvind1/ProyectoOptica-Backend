@@ -2,7 +2,6 @@ import AWS from '../db.js'
 
 /* Libreria para poder generar ID's aleatorios*/
 import {v4} from 'uuid';
-
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import {codeForTables} from '../utils/codigosTablas.js';
 
@@ -71,7 +70,6 @@ const validateSede  = async (idSede) => {
         const sede  = await dynamoClient.query(paramsSede).promise();      
         return sede.Items;
     } catch (error) {
-        console.log(error);
         return error;
     }
 }
@@ -100,14 +98,12 @@ export const unsubscribeSedeById = async (req, res) => {
             res.json(sede);
             return sede;
         } catch (error) {
-            console.log(error)
             return res.status(500).json({
                 message:'Algo anda mal'
             })
         }
     }
     else{
-        console.log('no existe la sede')
         return res.status(500).json({
             message:'La sede no existe'
         })
@@ -136,10 +132,8 @@ export const editSedeById = async (req, res) => {
         const sede = await dynamoClient.update(paramsSede).promise();
         return res.json(sede)
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             message:'Ocurrio un error o no se encuentra la sede'
         })
     }
-   
 };

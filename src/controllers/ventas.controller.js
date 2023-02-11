@@ -148,7 +148,6 @@ export const createNewVenta = async (req, res) => {
             TableName: TABLE_NAME_VENTAS,
             Item: datosVenta
         }).promise()
-        
         //Una vez que se realiza la venta restamos del STOCK
         const restarStock  = await restarStockProductos(list_monturas,list_lunas,list_accesorios);
         /* Agregamos la venta como un ingreso mas */
@@ -171,11 +170,9 @@ export const createNewVenta = async (req, res) => {
         }
         const newIngreso = await createNewIngreso(objetoJsonIngreso);
         /* Fin Agregamos la venta como un ingreso mas */
-        console.log('resultado ingreso', newIngreso);
         return res.json(newVenta);       
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ 
             message:error
         })
@@ -216,7 +213,6 @@ export const updatePagoCuotasVentaById = async (req, res) => {
         /* Fin Agregamos la venta como un ingreso mas */
         return res.json(venta);
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             message:error
         })
@@ -304,8 +300,6 @@ export const getAllVentasByDate = async (req, res) => {
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
         console.log(fechaFin,fechaIni,'fechaFin');
-        //fechaIni     = await castIsoDateToDate(fechaIni);
-        //fechaFin     = await castIsoDateToDate(fechaFin); 
         const params = {
             TableName: TABLE_NAME_VENTAS,
             //FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
@@ -322,7 +316,7 @@ export const getAllVentasByDate = async (req, res) => {
         };
         const ventasBySeller = await dynamoClient.scan(params).promise();
         const rpta           = await sortArrayJsonByDate(ventasBySeller.Items); 
-        res.json(rpta);
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -330,9 +324,6 @@ export const getAllVentasByDate = async (req, res) => {
         })
     }
 };
-
-
-
 /* 
     1.- Esta funcion permite validar si una venta que se envia desde el front existe en la BD 
     2.- Funcion validada al 100%    
@@ -352,7 +343,6 @@ const validateVenta  = async (idVenta) => {
         const venta  = await dynamoClient.query(paramsVenta).promise();      
         return venta.Items;
     } catch (error) {
-        console.log(error);
         return error;
     }
 }
@@ -382,14 +372,12 @@ export const unsubscribeVentasById = async (req, res) => {
             res.json(venta);
             return venta;
         } catch (error) {
-            console.log(error)
             return res.status(500).json({
                 message:'Algo anda mal'
             })
         }
     }
     else{
-        console.log('la venta no existe')
         return res.status(500).json({
             message:'La venta no existe'
         })

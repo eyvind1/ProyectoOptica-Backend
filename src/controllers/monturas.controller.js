@@ -222,7 +222,6 @@ export const editMonturaById = async (req, res) => {
             res.json(montura)
             return montura;  
         } catch (error) {
-            console.log(error)
             return res.status(500).json({
                 message:'No se puede actualizar la montura'
             })

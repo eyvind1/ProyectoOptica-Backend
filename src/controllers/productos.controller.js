@@ -17,9 +17,6 @@ const TABLE_NAME_MONTURAS  = "Monturas";
     es decir en minuscula y en singular
 */
 
-
-
-
 export const getProductBySede = async (req, res) => {
     let id_sede       = req.params.idSede;
     let product_name  = req.params.productName;
@@ -41,7 +38,6 @@ export const getProductBySede = async (req, res) => {
         res.json(sedes.Items);
     } 
      catch(error) {
-        console.log(error)
         return res.status(500).json({
             message:error
         })

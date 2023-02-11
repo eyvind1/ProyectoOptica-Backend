@@ -71,18 +71,12 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_producto = v4() + codeForTables.tablaLunas;
-        //const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
-        
-        //let formatoFecha   = await castIsoDateToDate(fecha_creacion_luna);
-        //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
         const datosLuna = {
             id_producto,
             id_sede,
-            //num_orden,
             tipo,
             habilitado,
-            //codigo_interno,
             fecha_creacion_luna,
             fecha_modificacion_luna,
             material,
@@ -96,7 +90,6 @@ export const createNewLuna = async (req, res) => {
         }).promise()
         return res.json(newLuna);       
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ 
             message:error
         })
@@ -110,7 +103,7 @@ export const createNewLuna = async (req, res) => {
 
 const validateLuna  = async (idLuna) => {
     const id_producto   = idLuna;
-    const dynamoClient = new AWS.DynamoDB.DocumentClient();
+    const dynamoClient  = new AWS.DynamoDB.DocumentClient();
     try {
         const paramsLuna = {
             TableName: TABLE_NAME_LUNA,
@@ -123,19 +116,18 @@ const validateLuna  = async (idLuna) => {
         const luna  = await dynamoClient.query(paramsLuna).promise();      
         return luna.Items;
     } catch (error) {
-        console.log(error);
         return error;
     }
 }
-
 /*
     1.-  Funcion para Dar de Baja a una luna en especifico  
     2.-  Antes de dar de baja a una luna valido que exista
     3.-  Funcion Verificada al 100%
 */ 
+
 export const unsubscribeLunasById = async (req, res) => {
-    const id_luna = req.params.idLuna;
-    const existeLuna = await validateLuna(id_luna);
+    const id_luna      = req.params.idLuna;
+    const existeLuna   = await validateLuna(id_luna);
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     if(existeLuna.length > 0) {
         try {
@@ -143,7 +135,7 @@ export const unsubscribeLunasById = async (req, res) => {
             const paramsLuna = {
                 TableName: TABLE_NAME_LUNA,
                 Key: {
-                    "id_luna":id_luna,
+                    "id_producto":id_producto,
                 },
                 UpdateExpression: "SET habilitado = :habilitado",
                 ExpressionAttributeValues: {
@@ -151,17 +143,14 @@ export const unsubscribeLunasById = async (req, res) => {
                 }
             };
             const luna = await dynamoClient.update(paramsLuna).promise();      
-            res.json(luna);
-            return luna;
+            return res.json(luna);
         } catch (error) {
-            console.log(error)
             return res.status(500).json({
                 message:'Algo anda mal'
             })
         }
     }
     else{
-        console.log('no existe la luna')
         return res.status(500).json({
             message:'La luna no existe'
         })
@@ -199,14 +188,12 @@ export const editLunaById = async (req, res) => {
             res.json(luna)
             return luna;  
         } catch (error) {
-            console.log(error)
             return res.status(500).json({
                 message:'No se puede actualizar la luna'
             })
         }
     }
     else{
-        console.log('no existe la Luna')
         return res.status(500).json({
             message:'La luna no existe'
         })

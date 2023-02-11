@@ -26,8 +26,6 @@ async function sortArrayJsonByDate(arrayJson){
       })
       return arrayJson;
 }
-
-
 /* 
     Funcion que permite crear un nuevo usuario 
     
@@ -83,7 +81,6 @@ export const createNewUser = async (req, res) => {
         })
     }
 };
-
 /*
     1.-  Funcion para Dar de Baja a un usuario en especifico  
     2.-  Antes de dar de baja al usuario valido que exista
@@ -112,7 +109,6 @@ export const darBajaUsuarioById = async (req, res) => {
         })
     }
 };
-
 
 export const editUserById = async (req, res) => {
     const id_usuario = req.params.idUsuario;

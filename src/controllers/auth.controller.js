@@ -43,9 +43,6 @@ export const editContraseniaUserById = async (req, res) => {
         })
     }
     //Si paso ambos filtros de contrasenia y usuario, recien actualizo su contrasenia
-
-    ////////////////////////
-    
     try {
         let contraseniaEncriptada = await encriptarPassword(newPassword);
         const paramsUsuario = {
@@ -61,7 +58,6 @@ export const editContraseniaUserById = async (req, res) => {
         const usuario = await dynamoClient.update(paramsUsuario).promise();
         return res.json(usuario.Items);
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             message:'No se pudo actualizar la contrasenia'
         })

@@ -7,14 +7,12 @@ const TABLE_NAME_CLIENTE  = "Clientes";
 const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 
 /* Funciones que se utilizan en el archivo */ 
-
 async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
         return new Date(b.fecha_creacion) - new Date(a.fecha_creacion); // descending
       })
       return arrayJson;
 }
-
 /* End funciones que se utilizan en el archivo */ 
 
 export const getAllClientsMinified = async (req, res) => {
@@ -26,6 +24,7 @@ export const getAllClientsMinified = async (req, res) => {
             ExpressionAttributeValues: {
                 ":valueHabilitado":true
             },
+            //Envio solamente ciertos campos
             "ProjectionExpression": "id_cliente, apellidos ,nombres,dni,email,telefono,fecha_nacimiento,direccion",
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
@@ -61,10 +60,8 @@ export const getClientById = async (req, res) => {
         };
         const cliente = await dynamoClient.scan(params).promise();
         return res.json(cliente.Items);
-
     } 
     catch(error) {
-        console.log(error);
         return res.status(500).json({
             message:error
         })
@@ -114,7 +111,6 @@ export const darBajaClienteById = async (req, res) => {
         const usuario = await dynamoClient.update(paramsUsuario).promise();        
         return res.json(usuario);
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             message:'Algo anda mal'
         })
@@ -132,11 +128,12 @@ export const editClientById = async (req, res) => {
                 "id_cliente":id_cliente,
             },
             UpdateExpression: `SET medidas = :medidas, antecedentes = :antecedentes, apellidos = :apellidos, nombres = :nombres,
-                                    telefono = :telefono,fecha_nacimiento=:fecha_nacimiento,
+                                    telefono = :telefono,fecha_nacimiento=:fecha_nacimiento,direccion=:direccion,
                                     email=:email `,
             ExpressionAttributeValues: {
                 ":medidas": medidas,
                 ":antecedentes": antecedentes,
+                ":direccion": direccion,
                 ":apellidos": apellidos,
                 ":nombres"   : nombres,
                 ":telefono"  : telefono,
@@ -147,7 +144,6 @@ export const editClientById = async (req, res) => {
         const cliente = await dynamoClient.update(paramsCliente).promise();
         return res.json(cliente)
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             message:'Algo anda mal'
         })
@@ -162,7 +158,6 @@ export const createNewClient = async (req, res) => {
     //estado bool
     try {
         const id_cliente = v4() + codeForTables.tablaClients;
-
         const {nombres,apellidos,direccion,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
         const dniValidado = await validarDni(dni,TABLE_NAME_CLIENTE);
         if(dniValidado>0){
