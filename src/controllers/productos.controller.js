@@ -12,6 +12,21 @@ const TABLE_NAME_LUNA      = "Lunas";
 const TABLE_NAME_MONTURAS  = "Monturas";
 
 
+async function sortArrayJsonByDate(arrayJson,nameOfTable){
+    arrayJson.sort((a, b) => {
+        if(nameOfTable==='Lunas'){
+            return new Date(b.fecha_creacion_luna) - new Date(a.fecha_creacion_luna); // descending order
+        }
+        if(nameOfTable==='Monturas'){
+            return new Date(b.fecha_creacion_monturas) - new Date(a.fecha_creacion_monturas); // descending order
+        }
+        if(nameOfTable==='Accesorios'){
+            return new Date(b.fecha_creacion_accesorio) - new Date(a.fecha_creacion_accesorio); // descending order
+        }
+      })
+      return arrayJson;
+}
+
 /* Esta funcion lista todas las sedes que se encuentran con "estado = Habikitado" 
     Cabe recalcar que el product name que viene por parametro debe ser [luna, accesorio,montura] 
     es decir en minuscula y en singular
@@ -35,7 +50,8 @@ export const getProductBySede = async (req, res) => {
             }
         };
         const sedes = await dynamoClient.scan(params).promise();
-        res.json(sedes.Items);
+        const rpta  = await sortArrayJsonByDate(sedes.Items,nameOfTable); 
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({
@@ -239,7 +255,6 @@ export const createListOfProducts=async(req,res)=>{
             })
         }
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             message:error
         })
