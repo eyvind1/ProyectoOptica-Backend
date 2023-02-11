@@ -166,6 +166,71 @@ export const getAllIngresosByDate = async (req, res) => {
       }
 };
 
+
+function getIngresosEgresos(datos,fecha_especifica){
+    //Itera sobre cada registro de la bd
+    let newArray = datos.filter(function (el) {
+        return el.fecha_creacion_caja.slice(0,10) === fecha_especifica 
+    });
+    return newArray;
+}
+// Esta funcion retorna ingresos y egresos por mes, filtrando por dia
+export const getAllCajaPerMonths = async (req, res) => {
+    try {
+        let fechaIni = req.params.fechaIni;
+        let fechaFin = req.params.fechaFin;
+        let id_sede  = req.params.idSede;
+
+        fechaIni     = await castIsoDateToDate(fechaIni);
+        fechaFin     = await castIsoDateToDate(fechaFin); 
+        //fechaIni     = '2023-02-10'
+        //fechaFin     = '2023-02-11'
+        
+        //Array que contendra todos los dias que existe entre las fechas que envia el front
+        let arr_container_days = [];
+        var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=new Date(e);d.setDate(d.getDate()+1)){ a.push(new Date(d));}return a;};
+        var daylist = getDaysArray(new Date(fechaIni),new Date(fechaFin));
+        daylist.map((v)=> arr_container_days.push(v.toISOString().slice(0,10)))
+        
+        const params = {
+            TableName: TABLE_NAME_CAJA,
+            //FilterExpression : "#habilitado = :valueHabilitado and  #fecha_creacion_caja  between :val1 and :val2",
+            FilterExpression : "#habilitado = :valueHabilitado and  #fecha_creacion_caja  between :val1 and :val2 and #id_sede = :id_sede",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":val1" : fechaIni,
+                ":val2" : fechaFin,
+                ":id_sede" : id_sede,
+            },
+            ExpressionAttributeNames:{
+                "#fecha_creacion_caja": "fecha_creacion_caja",
+                "#habilitado" : "habilitado",
+                "#id_sede" : "id_sede"
+            }
+        };
+        const ingresos = await dynamoClient.scan(params).promise();        
+        
+        //Itero por cada fecha
+        let array_rpta = []
+        for(let i=0;i<arr_container_days.length;i++){          
+            //Envio los datos y la posicion donde debe buscar
+            const array_temp = getIngresosEgresos(ingresos.Items,arr_container_days[i])
+            array_rpta.push(array_temp);
+        }
+        console.log('result',array_rpta);
+
+        return res.json(array_rpta);
+
+        
+    } 
+     catch(error) {
+        console.log(error)
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
+
 export const getAllEgresosByDate = async (req, res) => {
     try {
         let fechaIni = req.params.fechaIni;
