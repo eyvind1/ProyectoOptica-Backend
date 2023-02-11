@@ -62,7 +62,6 @@ export const getAllEgresos = async (req, res) => {
         return res.json(rpta);
     } 
      catch(error) {
-        console.log(error)
         return res.status(500).json({
             message:error
         })
@@ -91,7 +90,6 @@ export const getAllIngresos = async (req, res) => {
         return res.json(rpta);
     } 
      catch(error) {
-        console.log(error)
         return res.status(500).json({
             message:error
         })
@@ -138,7 +136,6 @@ export const getAllIngresosByDate = async (req, res) => {
 
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
-        console.log(fechaIni,fechaFin,' fechas')
         const params = {
             TableName: TABLE_NAME_CAJA,
             FilterExpression : "#habilitado = :valueHabilitado and egreso = :valueEgreso and  #fecha_creacion_caja  between :val1 and :val2 and #id_sede = :id_sede ",
@@ -217,17 +214,12 @@ export const getAllCajaPerMonths = async (req, res) => {
             const array_temp = getIngresosEgresos(ingresos.Items,arr_container_days[i])
             //Solo devuelvo los dias
             if(array_temp.length > 0){
-                array_rpta.push(array_temp);
+                array_rpta.push(array_temp[0]);
             }
         }
-        console.log('result',array_rpta);
-
         return res.json(array_rpta);
-
-        
     } 
      catch(error) {
-        console.log(error)
         return res.status(500).json({
             message:error
         })
@@ -253,7 +245,7 @@ export const getAllEgresosByDate = async (req, res) => {
                 ":id_sede" : id_sede,
             },
             ExpressionAttributeNames:{
-                "#fecha_venta": "fecha_creacion_venta",
+                "#fecha_creacion_caja": "fecha_creacion_caja",
                 "#habilitado" : "habilitado",
                 "#id_sede" : "id_sede"
             }
