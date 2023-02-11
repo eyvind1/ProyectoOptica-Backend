@@ -119,7 +119,7 @@ export const darBajaClienteById = async (req, res) => {
 
 export const editClientById = async (req, res) => {
     const id_cliente = req.params.idCliente;
-    const {medidas, apellidos,nombres,telefono,dni,email,fecha_nacimiento,antecedentes} = req.body;
+    const {medidas, direccion,apellidos,nombres,telefono,email,fecha_nacimiento,antecedentes} = req.body;
     try {
         //Primero actualizo datos de la tabla cliente
         const paramsCliente = {
@@ -144,9 +144,8 @@ export const editClientById = async (req, res) => {
         const cliente = await dynamoClient.update(paramsCliente).promise();
         return res.json(cliente)
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
-            message:'Algo anda mal'
+            message:error
         })
     }
 };
