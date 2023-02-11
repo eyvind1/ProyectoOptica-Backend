@@ -124,8 +124,6 @@ export const createNewAccesorio = async (req, res) => {
         })
     }
 };
-
-
 /*
     1.-  Funcion para Dar de Baja a un accesorio en especifico  
     2.-  Antes de dar de baja a un accesorio valido que exista

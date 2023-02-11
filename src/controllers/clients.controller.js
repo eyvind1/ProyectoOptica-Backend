@@ -144,6 +144,7 @@ export const editClientById = async (req, res) => {
         const cliente = await dynamoClient.update(paramsCliente).promise();
         return res.json(cliente)
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message:'Algo anda mal'
         })

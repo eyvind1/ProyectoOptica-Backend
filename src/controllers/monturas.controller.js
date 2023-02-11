@@ -14,7 +14,7 @@ async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
         return new Date(b.fecha_creacion_monturas) - new Date(a.fecha_creacion_monturas); // ascending order
       })
-      return arrayJson
+      return arrayJson;
 }
 
 /* End funciones que se utilizan en el archivo */ 
@@ -42,7 +42,6 @@ export const getAllMonturasForVenta = async (req, res) => {
         return res.json(rpta);
     } 
      catch(error) {
-        console.log(error)
         return res.status(500).json({
             message:error
         })
@@ -64,7 +63,7 @@ export const getAllMonturas = async (req, res) => {
             }
         };
         const monturas = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(monturas.Items); 
+        const rpta     = await sortArrayJsonByDate(monturas.Items); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -83,22 +82,16 @@ export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
         const id_producto = v4() + codeForTables.tablaMonturas;
-        //const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         //Genero el codigo interno para el codigo de barras
-        //let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
-        //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
-        
         const datosMontura = {
             id_producto,
             tipo,
-            //num_orden,
             color,
             cantidad,
             habilitado,
             codigo,
             id_sede,
-            //codigo_interno,
             fecha_creacion_monturas,
             fecha_modificacion_monturas,
             marca,
@@ -114,7 +107,6 @@ export const createNewMontura = async (req, res) => {
         }).promise()
         res.json(newMontura);       
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ 
             message:error
         })
