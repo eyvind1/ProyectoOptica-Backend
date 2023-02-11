@@ -215,7 +215,10 @@ export const getAllCajaPerMonths = async (req, res) => {
         for(let i=0;i<arr_container_days.length;i++){          
             //Envio los datos y la posicion donde debe buscar
             const array_temp = getIngresosEgresos(ingresos.Items,arr_container_days[i])
-            array_rpta.push(array_temp);
+            //Solo devuelvo los dias
+            if(array_temp.length > 0){
+                array_rpta.push(array_temp);
+            }
         }
         console.log('result',array_rpta);
 
