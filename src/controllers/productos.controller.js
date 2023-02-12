@@ -327,7 +327,7 @@ export const updateListOfProducts=async(req,res)=>{
         }
         else if(tipo ==='luna'){
             let validarErrorLuna  = false;
-            array_productos.map(async(row,i,arr)=>{
+            array_productos.forEach(async(row,i) => {
                 const params= {
                     TableName: 'Lunas',
                     Key: {
@@ -359,7 +359,8 @@ export const updateListOfProducts=async(req,res)=>{
                         message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
                     })
                 }
-            })
+            });
+
         }
         else if(tipo === 'accesorio'){
             let validarErrorAccesorio  = false;
