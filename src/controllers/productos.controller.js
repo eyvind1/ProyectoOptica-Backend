@@ -353,7 +353,7 @@ export const updateListOfProducts=async(req,res)=>{
                     }           
                 } catch (error) {
                     validarErrorLuna  = true;
-                    console.log(i, arr[i], 'SSS')
+                    console.log(i, array_productos[i], 'SSS')
                     let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
                     return res.status(400).json({
                         message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
