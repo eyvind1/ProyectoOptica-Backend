@@ -320,7 +320,7 @@ export const updateListOfProducts=async(req,res)=>{
                     validarErrorMontura  = true;
                     let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
                     return res.status(400).json({
-                        message:'Productos actualizados correctamente, excepto el producto en la posicion: '+ errorPosicion
+                        message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
                     })
                 }
             });
@@ -355,7 +355,7 @@ export const updateListOfProducts=async(req,res)=>{
                     validarErrorLuna  = true;
                     let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
                     return res.status(400).json({
-                        message:'Productos actualizados correctamente, excepto el producto en la posicion: '+ errorPosicion
+                        message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
                     })
                 }
             })
@@ -391,15 +391,14 @@ export const updateListOfProducts=async(req,res)=>{
                     validarErrorAccesorio  = true;
                     let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
                     return res.status(400).json({
-                        message:'Productos actualizados correctamente, excepto el producto en la posicion: '+ errorPosicion
+                        message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion+' del excel'
                     })
                 }
             })
         }
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
-            message:'Algo anda mal'
+            message:error
         })
     }
 }
