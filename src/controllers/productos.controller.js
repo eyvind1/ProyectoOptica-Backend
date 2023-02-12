@@ -12,7 +12,18 @@ const TABLE_NAME_LUNA      = "Lunas";
 const TABLE_NAME_SEDE      = "Sedes";
 const TABLE_NAME_MONTURAS  = "Monturas";
 
+async function validarSedes(idSede){
+    const params = {    
+        TableName: TABLE_NAME_SEDE,
+        FilterExpression: 'id_sede = :id_sede',
+        ExpressionAttributeValues: {
+            ":id_sede": idSede
+        }
+    }
+    let result= await  dynamoClient.scan(params).promise(); 
+    return result.Count
 
+}
 async function sortArrayJsonByDate(arrayJson,nameOfTable){
     arrayJson.sort((a, b) => {
         if(nameOfTable==='Lunas'){
@@ -99,18 +110,7 @@ export const getProductBySede = async (req, res) => {
     return duplicados;
 }
 */
-async function validarSede(idSede){
-    const params = {    
-        TableName: TABLE_NAME_SEDE,
-        FilterExpression: 'id_sede = :id_sede',
-        ExpressionAttributeValues: {
-            ":id_sede": idSede
-        }
-    }
-    let result= await  dynamoClient.scan(params).promise(); 
-    return result.Count
 
-}
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
@@ -118,8 +118,8 @@ export const createListOfProducts=async(req,res)=>{
     //const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
 
     //Valido que no haya "Nro_Orden" repetidos en el excel
-    let validarSede = await validarSede(array_productos[0].id_sede);
-    if(validarSede=== 0){
+    let validarSede = await validarSedes(array_productos[0].id_sede);
+    if(validarSede===0){
         return res.status(400).json({
             message:'La sede no existe'
         })
