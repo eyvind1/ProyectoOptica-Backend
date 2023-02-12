@@ -33,6 +33,11 @@ async function sortArrayJsonByDate(arrayJson){
     ----------------------------------------------------------------
     1.- No debe existir un usuario habilitado con el mismo DNI 
 */
+function funcionHashUser(num1,num2){
+    let x = Math.floor(Math.random()*(num2-num1+1)+num1);
+    return x;
+
+}
 export const createNewUser = async (req, res) => {
     try {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
@@ -50,7 +55,8 @@ export const createNewUser = async (req, res) => {
         // Encriptando la contrasenia recibida desde el front utilizando Bcrypt
         contrasenia = await encriptarPassword(contrasenia);
         // Creo un usuario basandome en los primeros digitos del nombre, apellido, dni
-        const usuario = apellidos.substr(0,3) + nombres.substr(0,2)+dni.substr(0,2);
+        const numeroId = funcionHashUser(parseInt(dni.substr(0,2)),parseInt(dni.substr(6,8)) );
+        const usuario  = apellidos.substr(0,3) + nombres.substr(0,2)+dni.substr(0,2) + numeroId.toString();
       
         const newUser = {
             id_usuario,
@@ -74,10 +80,10 @@ export const createNewUser = async (req, res) => {
             TableName: TABLE_NAME_USUARIO,
             Item: newUser
         }).promise()
-        return res.json(createdUser);       
+        return res.json(createdUser);    
     } catch (error) {
         return res.status(500).json({ 
-            message:'Algo anda mal al crear un Usuario'
+            message:error
         })
     }
 };

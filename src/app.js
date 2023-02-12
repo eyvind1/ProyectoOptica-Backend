@@ -5,6 +5,9 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 /* Fin Librerias propias de Node */
 
+/* Libreria para el deploy, permite comprimir archivos y reducir carga*/
+import compression from 'compression';
+
 /* Importando las rutas creadas */
 import clientsRoutes from './routes/clients.routes.js';
 import usersRoutes from   './routes/users.router.js';
@@ -43,6 +46,8 @@ app.use(function (req, res, next) {
     next();
 });
 
+/*Utilizando la compresion*/
+app.use(compression);
 
 /* Inicializando la libreria passport para autenticacion */
 passport.use(JwtStrategy);
