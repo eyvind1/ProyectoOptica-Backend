@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 });
 
 /*Utilizando la compresion*/
-app.use(compression);
+//app.use(compression);
 
 /* Inicializando la libreria passport para autenticacion */
 passport.use(JwtStrategy);
