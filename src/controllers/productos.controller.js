@@ -144,13 +144,11 @@ export const createListOfProducts=async(req,res)=>{
                 const datosMontura = {
                     id_producto,
                     tipo,
-                    //num_orden,
                     color,
                     cantidad,
                     habilitado,
                     codigo,
                     id_sede,
-                    //codigo_interno,
                     fecha_creacion_monturas,
                     fecha_modificacion_monturas,
                     marca,
@@ -341,7 +339,7 @@ export const updateListOfProducts=async(req,res)=>{
                     ExpressionAttributeValues: {
                         ":id_luna" : row.id_producto,
                         ":cantidad" : row.cantidad,
-                        ":fecha_modificacion_luna": fecha_modificacion_luna,
+                        ":fecha_modificacion_luna": row.fecha_modificacion_luna,
                         ":precio_luna_c"   : row.precio_luna_c,
                         ":precio_luna_v"   : row.precio_luna_v
                     }
