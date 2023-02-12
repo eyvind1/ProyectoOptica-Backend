@@ -347,13 +347,13 @@ export const updateListOfProducts=async(req,res)=>{
                 //Intento actualizar
                 try {
                     const product = await dynamoClient.update(params).promise();  
-                    if(arr.length-1 === i && validarErrorLuna===false){
+                    if(array_productos.length-1 === i && validarErrorLuna===false){
                         console.log(i,' llego a mandar json')
                         return res.json(product); 
                     }           
                 } catch (error) {
                     validarErrorLuna  = true;
-                    console.log(i, arr[i], ' noJSON')
+                    console.log(i, arr[i], 'SSS')
                     let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
                     return res.status(400).json({
                         message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
