@@ -9,6 +9,7 @@ import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
 const dynamoClient         = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_ACCESORIO = "Accesorios";
 const TABLE_NAME_LUNA      = "Lunas";
+const TABLE_NAME_SEDE      = "Sedes";
 const TABLE_NAME_MONTURAS  = "Monturas";
 
 
@@ -98,7 +99,18 @@ export const getProductBySede = async (req, res) => {
     return duplicados;
 }
 */
+async function validarSede(idSede){
+    const params = {    
+        TableName: TABLE_NAME_SEDE,
+        FilterExpression: 'id_sede = :id_sede',
+        ExpressionAttributeValues: {
+            ":id_sede": idSede
+        }
+    }
+    let result= await  dynamoClient.scan(params).promise(); 
+    return result.Count
 
+}
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
@@ -106,25 +118,13 @@ export const createListOfProducts=async(req,res)=>{
     //const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
 
     //Valido que no haya "Nro_Orden" repetidos en el excel
-    /*let validarExcel = await validarNroOrdenExcel(array_productos);
-    if(validarExcel.length > 0){
+    let validarSede = await validarSede(array_productos[0].id_sede);
+    if(validarSede=== 0){
         return res.status(400).json({
-            message:'En el excel hay numeros de orden repetidos'
+            message:'La sede no existe'
         })
     }
-    const validarNro = await Promise.all(
-                array_productos.map(async(row,i)=>{   
-                    const params = {    
-                        TableName: nameOfTable,
-                        FilterExpression: 'num_orden = :num_orden',
-                        ExpressionAttributeValues: {
-                            ":num_orden": parseInt(row.num_orden)
-                        }
-                    };
-                    let result= await  dynamoClient.scan(params).promise(); 
-                    return result.Count
-                })
-    )*/
+    
     //Valido que no se repitan numeros de ordon con la BD
     /*if(validarNro.includes(1) === true ){
         return res.status(400).json({
