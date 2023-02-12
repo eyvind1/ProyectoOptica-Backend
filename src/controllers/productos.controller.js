@@ -347,9 +347,8 @@ export const updateListOfProducts=async(req,res)=>{
                 //Intento actualizar
                 try {
                     const product = await dynamoClient.update(params).promise();  
-                    console.log(product);    
                     if(arr.length-1 === i && validarErrorLuna===false){
-                        res.json(product); 
+                        return res.json(product); 
                     }           
                 } catch (error) {
                     validarErrorLuna  = true;
