@@ -72,33 +72,9 @@ export const getProductBySede = async (req, res) => {
     }
 };
 
-/* Funcion que guarda productos en la base de datos a partir de un excel en el front o un JSON 
 
-*/
 
-/* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
-/*function castIsoDateToDate(fecha){
-    const date = new Date(fecha);
-    //const timestamp = date
-    let mes     = (date.getMonth()+1).toString();
-    let anio    = date.getFullYear();
-    let dia     = date.getDate().toString();
-    let hora    = date.getHours().toString();
-    if (mes.length < 2) {
-        mes = '0' + mes;
-    }
-    if (dia.length < 2) {
-        dia = '0' + dia;
-    }
-    if (hora.length < 2) {
-        hora = '0' + hora;
-    }
-    const result = (dia+mes+ anio);
-    return result;
-}
-*/
 /* Esta funcion valida al inicio que el array que contiene todos los productos(Excel) no tenga numero de orden repetido */ 
-/* Falta Validar esta funcion ojo */  
 /*async function validarNroOrdenExcel(arrayProductos){
     const busqueda = arrayProductos.reduce((acc, element) => {
         acc[element.num_orden] = ++acc[element.num_orden] || 0;
@@ -114,10 +90,7 @@ export const getProductBySede = async (req, res) => {
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
-    // Le damos formato al string =>  luna = Lunas, accesorio = Acecesorio, montura = Monturas
-    //const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
-
-    //Valido que no haya "Nro_Orden" repetidos en el excel
+    //Valido que la sede exista en el primer elemento, porque en el front se valida el resto
     let validarSede = await validarSedes(array_productos[0].id_sede);
     if(validarSede===0){
         return res.status(400).json({
@@ -136,11 +109,7 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_producto  = v4() + codeForTables.tablaMonturas;
-                //const {id_sede,num_orden,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
-                //Para generar el codigo interno
-                //let formatoFecha   = castIsoDateToDate(fecha_creacion_monturas);
-                //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdMontura; 
                 const datosMontura = {
                     id_producto,
                     tipo,
@@ -164,7 +133,7 @@ export const createListOfProducts=async(req,res)=>{
                         Item: datosMontura  
                     }).promise()
                     if(arr.length-1 === i){
-                        res.json(monturas);
+                        return res.json(monturas);
                     }           
                 } catch (error) {
                     return res.status(500).json({
@@ -176,17 +145,11 @@ export const createListOfProducts=async(req,res)=>{
         else if(tipo === 'luna'){
             array_productos.map(async(row,i,arr)=>{
                 const id_producto = v4() + codeForTables.tablaLunas;
-                //const {id_sede,num_orden,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
                 const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = row;
-                //let formatoFecha   = castIsoDateToDate(fecha_creacion_luna);
-                //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdLuna; 
-
                 const datosLuna = {
                     id_producto,
-                    //num_orden,
                     id_sede,
                     tipo,
-                    //codigo_interno,
                     habilitado,
                     fecha_creacion_luna,
                     fecha_modificacion_luna,
@@ -202,14 +165,12 @@ export const createListOfProducts=async(req,res)=>{
                         Item: datosLuna
                     }).promise()
                     if(arr.length-1 === i){
-                        res.json(lunas); 
+                        return res.json(lunas); 
                     }           
                 } 
                 catch (error) {
-                    console.log(error);
-                    delete array_productos[0];
                     return res.status(500).json({
-                        message:'Algo anda mal',
+                        message:error,
                     })
                 }
             })
@@ -217,10 +178,7 @@ export const createListOfProducts=async(req,res)=>{
         else if(tipo === 'accesorio'){
             array_productos.map(async(row,i,arr)=>{
                 const id_producto  = v4() + codeForTables.tablaAccesorios;
-                //const {habilitado,num_orden,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
                 const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = row;
-                //let formatoFecha   = castIsoDateToDate(fecha_creacion_accesorio);
-                //let codigo_interno = num_orden.toString()+ formatoFecha+prefixesForProducts.ProdAccesorio; 
                 const datosAccesorio = {
                     id_producto,
                     tipo,
@@ -242,12 +200,11 @@ export const createListOfProducts=async(req,res)=>{
                         Item     : datosAccesorio
                     }).promise()    
                     if(arr.length-1 === i){
-                        res.json(accesorios);
+                        return res.json(accesorios);
                     }           
                 } catch (error) {
-                    console.log(error)
                     return res.status(500).json({
-                        message:'Algo anda mal'
+                        message:error
                     })
                 }
             })
@@ -314,14 +271,16 @@ export const updateListOfProducts=async(req,res)=>{
                     const product = await dynamoClient.update(params).promise();  
                     console.log(product);    
                     if(arr.length-1 === i && validarErrorMontura===false){
-                        res.json(product);
+                        return res.json(product);
                     }           
                 } catch (error) {
-                    validarErrorMontura  = true;
-                    let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
-                    return res.status(400).json({
-                        message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
-                    })
+                    if(validarErrorMontura===false){
+                        validarErrorMontura  = true;
+                        let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
+                        return res.status(400).json({
+                            message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
+                        })
+                    }
                 }
             });
         }
@@ -352,7 +311,6 @@ export const updateListOfProducts=async(req,res)=>{
                         return res.json(product); 
                     }           
                 } catch (error) {
-                    console.log(i, array_productos[i], 'SSS')
                     let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
                     if(validarErrorLuna===false){
                         validarErrorLuna  = true;
@@ -362,7 +320,6 @@ export const updateListOfProducts=async(req,res)=>{
                     }
                 }
             });
-
         }
         else if(tipo === 'accesorio'){
             let validarErrorAccesorio  = false;
@@ -392,11 +349,13 @@ export const updateListOfProducts=async(req,res)=>{
                         return res.json(product);
                     }           
                 } catch (error) {
-                    validarErrorAccesorio  = true;
-                    let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
-                    return res.status(400).json({
-                        message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion+' del excel'
-                    })
+                    if(validarErrorAccesorio===false){
+                        validarErrorAccesorio  = true;
+                        let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
+                        return res.status(400).json({
+                            message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion+' del excel'
+                        })
+                    }
                 }
             })
         }

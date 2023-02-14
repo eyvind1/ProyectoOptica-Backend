@@ -156,7 +156,7 @@ export const getAllIngresosByDate = async (req, res) => {
                 ":valueEgreso": false,
                 ":val1" : fechaIni,
                 ":val2" : fechaFin,
-                ":id_sede" : id_sede,
+                ":id_sede" : id_sede
             },
             ExpressionAttributeNames:{
                 "#fecha_creacion_caja": "fecha_creacion_caja",
@@ -209,7 +209,6 @@ export const getAllCajaPerMonths = async (req, res) => {
         const ingresos = await dynamoClient.scan(params).promise();        
         //Itero por cada fecha
         let array_rpta = []
-        console.log(arr_container_days, ' array')
         for(let i=0;i<arr_container_days.length;i++){          
             //Envio los datos y la posicion donde debe buscar
             const array_temp = getIngresosEgresos(ingresos.Items,arr_container_days[i])
