@@ -207,9 +207,8 @@ export const getAllCajaPerMonths = async (req, res) => {
             }
         };
         const ingresos = await dynamoClient.scan(params).promise(); 
-        //console.log(ingresos.Items.length)       
         //Itero por cada fecha
-        let array_rpta = []
+        /*let array_rpta = []
         for(let i=0;i<arr_container_days.length;i++){          
             //Envio los datos y la posicion donde debe buscar
             const array_temp = await getIngresosEgresos(ingresos.Items,arr_container_days[i])
@@ -218,9 +217,10 @@ export const getAllCajaPerMonths = async (req, res) => {
             if(array_temp.length > 0){
                 array_rpta.push(array_temp);
             }
-        }
+        }*/
         //console.log(array_rpta);
-        return res.json(array_rpta);
+        //return res.json(array_rpta);
+        return res.json(ingresos.Items);
     } 
      catch(error) {
         return res.status(500).json({

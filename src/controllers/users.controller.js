@@ -80,6 +80,8 @@ export const createNewUser = async (req, res) => {
             TableName: TABLE_NAME_USUARIO,
             Item: newUser
         }).promise()
+        return res.json({user:usuario});
+
         return res.json(createdUser);    
     } catch (error) {
         return res.status(500).json({ 
