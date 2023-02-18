@@ -299,12 +299,14 @@ export const getAllVentasBySede = async (req, res) => {
         let id_sede = req.params.idsede;
         const params = {
             TableName: TABLE_NAME_VENTAS,
-            FilterExpression : "#idsede = :valueSede",
+            FilterExpression : "#idsede = :valueSede and #habilitado = :valueHabilitado ",
             ExpressionAttributeValues: {
-                ":valueSede": id_sede
+                ":valueSede": id_sede,
+                ":valueHabilitado":true
             },
             ExpressionAttributeNames:{
-                "#idsede": "id_sede"
+                "#idsede": "id_sede",
+                "#habilitado": "habilitado"
             }
         };
         const ventasBySede = await dynamoClient.scan(params).promise();
@@ -372,9 +374,10 @@ export const getAllVentasByDate = async (req, res) => {
     try{
         let fechaIni = req.params.fechaIni;
         let fechaFin = req.params.fechaFin;
+        let id_sede  = req.params.idSede;
+
         fechaIni     = await castIsoDateToDate(fechaIni);
         fechaFin     = await castIsoDateToDate(fechaFin); 
-        console.log(fechaFin,fechaIni,'fechaFin');
         const params = {
             TableName: TABLE_NAME_VENTAS,
             //FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
