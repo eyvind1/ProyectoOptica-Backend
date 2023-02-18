@@ -29,7 +29,7 @@ export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
     const fecha_creacion_caja = await castIsoDateToDate(req.body.fecha_creacion_caja);
     try {
-        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso} = (req.body);
+        const {id_sede,metodo_pago,monto,descripcion,id_encargado,nombre_encargado,habilitado,egreso} = (req.body);
         const datosCaja = {
             id_caja,
             id_sede,
@@ -38,7 +38,8 @@ export const createNewIngreso = async (req, res) => {
             monto,
             egreso,
             descripcion,
-            encargado,
+            id_encargado,
+            nombre_encargado,
             habilitado,
             fecha_creacion_caja,
         }

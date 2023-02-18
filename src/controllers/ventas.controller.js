@@ -19,12 +19,11 @@ async function sortArrayJsonByDate(arrayJson){
 /* End funciones que se utilizan en el archivo */ 
 
 /* Insertar un nuevo ingreso */
-
 async function createNewIngreso(objetoJson){
     const id_caja     = v4() + codeForTables.tablaCaja;
     const fecha_creacion_caja = await castIsoDateToDate(objetoJson.fecha_creacion_caja);
     try {
-        const {id_sede,metodo_pago,monto,descripcion,encargado,habilitado,egreso} = (objetoJson);
+        const {id_sede,metodo_pago,monto,descripcion,id_encargado,nombre_encargado,habilitado,egreso} = (objetoJson);
         const datosCaja = {
             id_caja,
             id_sede,
@@ -32,9 +31,10 @@ async function createNewIngreso(objetoJson){
             monto,
             egreso,
             descripcion,
-            encargado,
+            id_encargado,
+            nombre_encargado,
             habilitado,
-            fecha_creacion_caja,
+            fecha_creacion_caja
         }
         const newCaja = await dynamoClient.put({
             TableName: TABLE_NAME_CAJA,
@@ -203,10 +203,11 @@ export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
         const fecha_creacion_venta = await castIsoDateToDate(req.body.fecha_creacion_venta);
-        const {id_sede,nombre_cliente,list_monturas,list_lunas,list_accesorios,id_vendedor,
+        const {id_sede,nombre_cliente,nombre_vendedor,list_monturas,list_lunas,list_accesorios,id_vendedor,
                tipo_venta,observaciones,id_cliente,habilitado} = (req.body);
         const datosVenta = {
             id_ventas,
+            nombre_vendedor,
             nombre_cliente,
             list_monturas,
             list_lunas,
@@ -238,7 +239,8 @@ export const createNewVenta = async (req, res) => {
             metodo_pago: tipo_venta[0].metodo_pago,
             monto: monto,
             descripcion: 'Ingreso por Venta',
-            encargado: id_vendedor,
+            id_encargado: id_vendedor,
+            nombre_encargado: nombre_vendedor,
             habilitado: true,
             egreso: false, //False porque es un ingreso
             fecha_creacion_caja: fecha_creacion_venta
@@ -381,7 +383,7 @@ export const getAllVentasByDate = async (req, res) => {
         const params = {
             TableName: TABLE_NAME_VENTAS,
             //FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
-            FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2 #id_sede = :id_sede",
+            FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2 and #id_sede = :id_sede",
             ExpressionAttributeValues: {
                 ":valueHabilitado":true,
                 ":val1" : fechaIni,
@@ -434,16 +436,14 @@ const validateVenta  = async (idVenta) => {
     4.-  Funcion Verificada al 100%
 */ 
 export const unsubscribeVentasById = async (req, res) => {
-    const id_venta = req.params.idVenta;
+    const id_venta     = req.params.idVenta;
     const existeVenta  = await validateVenta(id_venta);
     //console.log(existeVenta[0].list_accesorios)
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     if(existeVenta.length > 0) {
-
         try {
             //Antes de darle baja a una venta, aumentamos al stock los productos que no se vendieron
             const aumentarStock  = await aumentarStockProductos(existeVenta[0].list_monturas,existeVenta[0].list_lunas,existeVenta[0].list_accesorios);
-            console.log(aumentarStock, 'aumentar stock')
             const paramsVenta = {
                 TableName: TABLE_NAME_VENTAS,
                 Key: {
@@ -454,7 +454,19 @@ export const unsubscribeVentasById = async (req, res) => {
                     ":habilitado": false
                 }
             };
-            const venta = await dynamoClient.update(paramsVenta).promise();      
+            const venta = await dynamoClient.update(paramsVenta).promise();   
+            const objetoJsonIngreso = {
+                id_sede:existeVenta[0].id_sede,
+                metodo_pago: tipo_venta[0].metodo_pago,
+                monto: monto,
+                descripcion: 'Egreso por baja de una venta',
+                encargado: id_vendedor,
+                habilitado: true,
+                egreso: false, //False porque es un ingreso
+                fecha_creacion_caja: fecha_creacion_venta
+            }
+            const newIngreso = await createNewIngreso(objetoJsonIngreso);
+
             res.json(venta);
             return venta;
         } catch (error) {
