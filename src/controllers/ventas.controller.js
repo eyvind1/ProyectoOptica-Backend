@@ -457,7 +457,7 @@ export const unsubscribeVentasById = async (req, res) => {
             };
             const venta      = await dynamoClient.update(paramsVenta).promise();   
             //Obtengo el tipo de venta desde la venta
-            const tipo_venta = existeVenta[0].tipo_venta; 
+            const tipo_venta = existeVenta[0].tipo_venta[0]; 
             let monto = 0;
             if(tipo_venta.forma_pago === 'credito'){
                 monto = tipo_venta.cantidad_recibida;
@@ -465,6 +465,7 @@ export const unsubscribeVentasById = async (req, res) => {
             else{
                 monto = tipo_venta.precio_total;
             }
+
             //Al eliminar la venta tengo que generar un egreso de devolucion
             const objetoJsonIngreso = {
                 id_sede:existeVenta[0].id_sede,
@@ -478,7 +479,6 @@ export const unsubscribeVentasById = async (req, res) => {
                 fecha_creacion_caja: existeVenta[0].fecha_creacion_venta
             }
             const newIngreso = await createNewIngreso(objetoJsonIngreso);
-
             return res.json(venta);
         } catch (error) {
             return res.status(500).json({
