@@ -15,7 +15,7 @@ async function sortArrayJsonByDate(arrayJson){
       })
       return arrayJson
 }
-function getIngresosEgresos(datos,fecha_especifica){
+async function getIngresosEgresos(datos,fecha_especifica){
     //Itera sobre cada registro de la bd
     let newArray = datos.filter(function (el) {
         //Recorto el string para solo quedarme con la fecha asi "2022-03-10" sin horas
@@ -206,17 +206,20 @@ export const getAllCajaPerMonths = async (req, res) => {
                 "#id_sede" : "id_sede"
             }
         };
-        const ingresos = await dynamoClient.scan(params).promise();        
+        const ingresos = await dynamoClient.scan(params).promise(); 
+        //console.log(ingresos.Items.length)       
         //Itero por cada fecha
         let array_rpta = []
         for(let i=0;i<arr_container_days.length;i++){          
             //Envio los datos y la posicion donde debe buscar
-            const array_temp = getIngresosEgresos(ingresos.Items,arr_container_days[i])
+            const array_temp = await getIngresosEgresos(ingresos.Items,arr_container_days[i])
             //Solo devuelvo los dias
+            //console.log(array_temp[0], 'print')
             if(array_temp.length > 0){
-                array_rpta.push(array_temp[0]);
+                array_rpta.push(array_temp);
             }
         }
+        //console.log(array_rpta);
         return res.json(array_rpta);
     } 
      catch(error) {
