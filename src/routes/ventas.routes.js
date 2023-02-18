@@ -15,6 +15,7 @@ router.get('/getAllVentasBySede/:idsede',passport.authenticate('jwt',{session:fa
 router.get('/getAllVentasBySeller/:idvendedor',passport.authenticate('jwt',{session:false}),getAllVentasBySeller);
 router.get('/getAllVentas',getAllVentas);
 router.get('/getAllVentasByDate/:fechaIni/:fechaFin',getAllVentasByDate);
-router.put('/unsubscribeVentasById/:idVenta',passport.authenticate('jwt',{session:false}),unsubscribeVentasById);
+router.put('/unsubscribeVentasById/:idVenta',unsubscribeVentasById);
 //router.get('/getAllVentasByDate',getAllVentasByDate);
 export default router;
+    

@@ -48,6 +48,81 @@ async function createNewIngreso(objetoJson){
 
 /* Fin Insertar un nuevo ingreso */
 
+async function aumentarStockProductos(list_monturas, list_lunas,list_accesorios){
+    const tableName = ['Monturas','Lunas','Accesorios']
+    
+    if(list_monturas.length>0){
+        list_monturas.map(async(row,i)=>{   
+            try {
+                // Hago la resta de lo que hay en stock menos lo vendido
+                const params = {
+                    TableName: tableName[0],
+                    Key: {
+                        "id_producto": row.id_producto,
+                    },
+                    UpdateExpression: "SET cantidad = cantidad + :cant_vendida",
+                    ExpressionAttributeValues: {
+                        ":cant_vendida": row.cant_vendida
+                    }
+                };
+                const montura = await dynamoClient.update(params).promise();      
+                return montura;
+            } catch (error) {
+                return res.status(500).json({
+                    message:'Algo anda mal'
+                })
+            }
+        })
+    }
+    if(list_lunas.length>0){
+        list_lunas.map(async(row,i)=>{   
+            try {
+                // Hago la resta de lo que hay en stock menos lo vendido
+                const params = {
+                    TableName: tableName[1],
+                    Key: {
+                        "id_producto": row.id_producto,
+                    },
+                    UpdateExpression: "SET cantidad = cantidad + :cant_vendida",
+                    ExpressionAttributeValues: {
+                        ":cant_vendida": row.cant_vendida
+                    }
+                };
+                const luna = await dynamoClient.update(params).promise();      
+                return luna;
+            } catch (error) {
+                return res.status(500).json({
+                    message:'Algo anda mal'
+                })
+            }
+        })
+    }
+    if(list_accesorios.length>0){
+        list_accesorios.map(async(row,i)=>{   
+            try {
+                // Hago la resta de lo que hay en stock menos lo vendido
+                const params = {
+                    TableName: tableName[2],
+                    Key: {
+                        "id_producto": row.id_producto,
+                    },
+                    UpdateExpression: "SET cantidad = cantidad + :cant_vendida",
+                    ExpressionAttributeValues: {
+                        ":cant_vendida": row.cant_vendida
+                    }
+                };
+                const accesorio = await dynamoClient.update(params).promise();      
+                return accesorio;
+            } catch (error) {
+                return res.status(500).json({
+                    message:'Algo anda mal'
+                })
+            }
+        })
+    }
+
+}
+
 
 async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
     const tableName = ['Monturas','Lunas','Accesorios']
@@ -340,7 +415,7 @@ const validateVenta  = async (idVenta) => {
                 ":id_venta": id_venta,
             }
         };              
-        const venta  = await dynamoClient.query(paramsVenta).promise();      
+        const venta  = await dynamoClient.query(paramsVenta).promise();  
         return venta.Items;
     } catch (error) {
         return error;
@@ -350,14 +425,20 @@ const validateVenta  = async (idVenta) => {
 /*
     1.-  Funcion para Dar de Baja a una venta en especifico  
     2.-  Antes de dar de baja a una venta, valido que exista
-    3.-  Funcion Verificada al 100%
+    3.-  Descuento del stock al dar de baja
+    4.-  Funcion Verificada al 100%
 */ 
 export const unsubscribeVentasById = async (req, res) => {
     const id_venta = req.params.idVenta;
-    const existeVenta = await validateVenta(id_venta);
+    const existeVenta  = await validateVenta(id_venta);
+    //console.log(existeVenta[0].list_accesorios)
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     if(existeVenta.length > 0) {
+
         try {
+            //Antes de darle baja a una venta, aumentamos al stock los productos que no se vendieron
+            const aumentarStock  = await aumentarStockProductos(existeVenta[0].list_monturas,existeVenta[0].list_lunas,existeVenta[0].list_accesorios);
+            console.log(aumentarStock, 'aumentar stock')
             const paramsVenta = {
                 TableName: TABLE_NAME_VENTAS,
                 Key: {
