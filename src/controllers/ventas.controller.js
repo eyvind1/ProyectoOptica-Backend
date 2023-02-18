@@ -433,6 +433,7 @@ const validateVenta  = async (idVenta) => {
     1.-  Funcion para Dar de Baja a una venta en especifico  
     2.-  Antes de dar de baja a una venta, valido que exista
     3.-  Descuento del stock al dar de baja
+    5.-  OJO cuando se devuelve el dinero, tiene que ser por el mismo metodo
     4.-  Funcion Verificada al 100%
 */ 
 export const unsubscribeVentasById = async (req, res) => {
@@ -454,21 +455,31 @@ export const unsubscribeVentasById = async (req, res) => {
                     ":habilitado": false
                 }
             };
-            const venta = await dynamoClient.update(paramsVenta).promise();   
+            const venta      = await dynamoClient.update(paramsVenta).promise();   
+            //Obtengo el tipo de venta desde la venta
+            const tipo_venta = existeVenta[0].tipo_venta; 
+            let monto = 0;
+            if(tipo_venta.forma_pago === 'credito'){
+                monto = tipo_venta.cantidad_recibida;
+            }
+            else{
+                monto = tipo_venta.precio_total;
+            }
+            //Al eliminar la venta tengo que generar un egreso de devolucion
             const objetoJsonIngreso = {
                 id_sede:existeVenta[0].id_sede,
-                metodo_pago: tipo_venta[0].metodo_pago,
+                metodo_pago: tipo_venta.metodo_pago,
                 monto: monto,
                 descripcion: 'Egreso por baja de una venta',
-                encargado: id_vendedor,
+                id_encargado: existeVenta[0].id_vendedor,
+                nombre_encargado: existeVenta[0].nombre_vendedor,
                 habilitado: true,
-                egreso: false, //False porque es un ingreso
-                fecha_creacion_caja: fecha_creacion_venta
+                egreso: true, //True porque es un egreso
+                fecha_creacion_caja: existeVenta[0].fecha_creacion_venta
             }
             const newIngreso = await createNewIngreso(objetoJsonIngreso);
 
-            res.json(venta);
-            return venta;
+            return res.json(venta);
         } catch (error) {
             return res.status(500).json({
                 message:'Algo anda mal'
