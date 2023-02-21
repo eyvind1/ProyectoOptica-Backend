@@ -15,6 +15,35 @@ async function sortArrayJsonByDate(arrayJson){
 }
 /* End funciones que se utilizan en el archivo */ 
 
+export const getAllClientsBySedeMinified = async (req, res) => {
+    try {
+        const id_sede = req.params.idSede;
+        /*Primero obtengo el json con todos los clientes */ 
+        const params = {
+            TableName: TABLE_NAME_CLIENTE,
+            FilterExpression : "#habilitado = :valueHabilitado and  #id_sede = :valueSede",
+            ExpressionAttributeValues: {
+                ":valueHabilitado":true,
+                ":valueSede": id_sede
+            },
+            //Envio solamente ciertos campos
+            "ProjectionExpression": "id_cliente, apellidos ,nombres,dni,email,telefono,fecha_nacimiento,direccion",
+            ExpressionAttributeNames:{
+                "#habilitado": "habilitado",
+                "#id_sede":    "id_sede"
+            },
+        };
+        const clientes = await dynamoClient.scan(params).promise();
+        const rpta     = await sortArrayJsonByDate(clientes.Items); 
+        return res.json(rpta);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+      }
+};
+
 export const getAllClientsMinified = async (req, res) => {
     try {
         /*Primero obtengo el json con todos los clientes */ 
