@@ -13,7 +13,7 @@ async function sortArrayJsonByDate(arrayJson){
     arrayJson.sort((a, b) => {
         return new Date(b.fecha_creacion_caja) - new Date(a.fecha_creacion_caja); // descending
       })
-      return arrayJson
+      return arrayJson;
 }
 async function getIngresosEgresos(datos,fecha_especifica){
     //Itera sobre cada registro de la bd
@@ -221,7 +221,8 @@ export const getAllCajaPerMonths = async (req, res) => {
         }*/
         //console.log(array_rpta);
         //return res.json(array_rpta);
-        return res.json(ingresos.Items);
+        const rpta     = await sortArrayJsonByDate(ingresos.Items); 
+        return res.json(rpta);
     } 
      catch(error) {
         return res.status(500).json({

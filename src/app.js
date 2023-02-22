@@ -45,6 +45,8 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+app.set('Access-Control-Allow-Origin', '*');
+
 
 /*Utilizando la compresion*/
 //app.use(compression);
