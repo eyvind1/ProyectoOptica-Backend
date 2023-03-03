@@ -1,6 +1,4 @@
 
-import passport from "passport";
-import AWS from '../db.js'
 
 //Estrategia para poder autenticar
 import {Strategy,ExtractJwt} from 'passport-jwt';

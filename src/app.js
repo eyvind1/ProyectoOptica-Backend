@@ -1,7 +1,6 @@
 /* Librerias propias de Node */
 import express from 'express';
 import cors from 'cors'
-import bodyParser from 'body-parser';
 import passport from 'passport';
 /* Fin Librerias propias de Node */
 
@@ -22,7 +21,6 @@ import authRoutes from './routes/auth.routes.js';
 /* Fin Importando rutas creadas */
 
 /* Inicializociones para login */
-import flash from "flash";
 import { JwtStrategy } from './config/passport.js';
 
 const app = express();

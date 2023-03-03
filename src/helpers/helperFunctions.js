@@ -7,6 +7,8 @@ const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 /* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
 
 export async function castIsoDateToDate(fecha){
+    //Convierto a la zona horaria de Lima
+    fecha = fecha.toLocaleString('PET',{timeZone:'America/Lima'});
     const date = new Date(fecha);
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
@@ -15,7 +17,7 @@ export async function castIsoDateToDate(fecha){
     let hora    = date.getHours().toString();
     let minutos = date.getMinutes().toString();
     if (mes.length < 2) {
-        mes = '0' + mes;
+        mes = '0' + mes;    
     }
     if (dia.length < 2) {
         dia = '0' + dia;
