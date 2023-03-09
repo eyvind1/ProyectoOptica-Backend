@@ -202,7 +202,8 @@ async function restarStockProductos(list_monturas, list_lunas,list_accesorios){
 export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
-        const fecha_creacion_venta = await castIsoDateToDate(req.body.fecha_creacion_venta);
+        const fecha     = new Date();
+        const fecha_creacion_venta = await castIsoDateToDate(fecha);
         const {id_sede,nombre_cliente,nombre_vendedor,list_monturas,list_lunas,list_accesorios,id_vendedor,
                tipo_venta,observaciones,id_cliente,habilitado} = (req.body);
         const datosVenta = {

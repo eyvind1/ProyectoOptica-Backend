@@ -73,20 +73,6 @@ export const getProductBySede = async (req, res) => {
 };
 
 
-
-/* Esta funcion valida al inicio que el array que contiene todos los productos(Excel) no tenga numero de orden repetido */ 
-/*async function validarNroOrdenExcel(arrayProductos){
-    const busqueda = arrayProductos.reduce((acc, element) => {
-        acc[element.num_orden] = ++acc[element.num_orden] || 0;
-        return acc;
-      }, {});
-      const duplicados = arrayProductos.filter( (element) => {
-          return busqueda[element.num_orden];
-      });
-    return duplicados;
-}
-*/
-
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
@@ -97,13 +83,6 @@ export const createListOfProducts=async(req,res)=>{
             message:'La sede no existe'
         })
     }
-    
-    //Valido que no se repitan numeros de ordon con la BD
-    /*if(validarNro.includes(1) === true ){
-        return res.status(400).json({
-            message:'Los numeros de orden ya existen en la BD'
-        })
-    }*/
     //Si paso los 2 filtros de arriba recien inserto
     try {
         if(tipo === 'montura'){
@@ -182,10 +161,8 @@ export const createListOfProducts=async(req,res)=>{
                 const datosAccesorio = {
                     id_producto,
                     tipo,
-                    //num_orden,
                     cantidad,
                     id_sede,
-                    //codigo_interno,
                     habilitado,
                     nombre_accesorio,
                     fecha_creacion_accesorio,
@@ -224,28 +201,6 @@ export const updateListOfProducts=async(req,res)=>{
         const array_productos = req.body;
         const tipo = array_productos[0].tipo;
         const fecha_actual    = new Date();
-        // const nameOfTable     = tipo.replace(tipo[0],tipo[0].toUpperCase())+'s';
-
-        // //Validamos que todos los productos existan en la base de datos antes de editarlos
-        // const validarProducto = await Promise.all(
-        //     array_productos.map(async(row,i)=>{   
-        //         const params = {    
-        //             TableName: nameOfTable,
-        //             FilterExpression: 'num_orden = :num_orden',
-        //             ExpressionAttributeValues: {
-        //                 ":num_orden": parseInt(row.num_orden)
-        //             }
-        //         };
-        //         let result= await  dynamoClient.scan(params).promise(); 
-        //         return result.Count
-        //     })
-        // )
-        // //Valido que no se repitan numeros de ordon con la BD
-        // if(validarProducto.includes(1) === true ){
-        //     return res.status(400).json({
-        //         message:'Los numeros de orden ya existen en la BD'
-        //     })
-        // }
 
         if(tipo ==='montura'){
             let validarErrorMontura  = false;
