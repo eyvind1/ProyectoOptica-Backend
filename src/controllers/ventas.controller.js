@@ -324,6 +324,33 @@ export const getAllVentasBySede = async (req, res) => {
     }
 };
 
+/* Esta funcion devuelve todas las ventas que fueron dadas de baja */
+export const getAllVentasEliminadasByDate = async (req, res) => {
+    try{
+        let id_sede = req.params.idsede;
+        const params = {
+            TableName: TABLE_NAME_VENTAS,
+            FilterExpression : "#idsede = :valueSede and #habilitado = :valueHabilitado ",
+            ExpressionAttributeValues: {
+                ":valueSede": id_sede,
+                ":valueHabilitado": false
+            },
+            ExpressionAttributeNames:{
+                "#idsede": "id_sede",
+                "#habilitado": "habilitado"
+            }
+        };
+        const ventasBySede = await dynamoClient.scan(params).promise();
+        const rpta         = await sortArrayJsonByDate(ventasBySede.Items); 
+        return res.json(rpta);
+    } 
+     catch(error) {
+        return res.status(500).json({
+            message:error
+        })
+    }
+};
+
 /* Esta funcion lista todas las ventas */
 export  const getAllVentas = async (req, res) => {
     try{

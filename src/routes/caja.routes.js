@@ -7,11 +7,11 @@ import {createNewIngreso,getAllIngresosByDate,getAllEgresosByDate,unsubscribeEgr
 const router = Router();
 
 router.post('/createNewIngreso', passport.authenticate('jwt',{session:false}),createNewIngreso);
-router.put('/unsubscribeEgresoById/:idCaja', unsubscribeEgresoById);
+router.put('/unsubscribeEgresoById/:idCaja', passport.authenticate('jwt',{session:false}),unsubscribeEgresoById);
 router.get('/getAllEgresosByDate/:fechaIni/:fechaFin/:idSede',passport.authenticate('jwt',{session:false}),getAllEgresosByDate);
-router.get('/getAllIngresosByDate/:fechaIni/:fechaFin/:idSede',getAllIngresosByDate);
+router.get('/getAllIngresosByDate/:fechaIni/:fechaFin/:idSede',passport.authenticate('jwt',{session:false}),getAllIngresosByDate);
 router.get('/getAllIngresos',passport.authenticate('jwt',{session:false}),getAllIngresos);
 router.get('/getAllEgresos',passport.authenticate('jwt',{session:false}),getAllEgresos);
-router.get('/getAllCajaPerMonths/:fechaIni/:fechaFin/:idSede',getAllCajaPerMonths);
+router.get('/getAllCajaPerMonths/:fechaIni/:fechaFin/:idSede',passport.authenticate('jwt',{session:false}),getAllCajaPerMonths);
 
 export default router;  

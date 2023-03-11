@@ -9,9 +9,9 @@ const router = Router();
 
 
 //Defino nombres de las rutas, 
-router.get('/getAllClients',getAllClients);
+router.get('/getAllClients',passport.authenticate('jwt',{session:false}),getAllClients);
 //router.get('/getAllClientsById/:id',passport.authenticate('jwt',{session:false}),getAllClientsById);
-router.get('/getClientById/:idCliente',getClientById);
+router.get('/getClientById/:idCliente',passport.authenticate('jwt',{session:false}),getClientById);
 router.post('/createNewClient',passport.authenticate('jwt',{session:false}),createNewClient);
 router.get('/getAllClientsBySedeMinified/:idSede',passport.authenticate('jwt',{session:false}),getAllClientsBySedeMinified);
 router.get('/getAllClientsMinified',passport.authenticate('jwt',{session:false}),getAllClientsMinified);
