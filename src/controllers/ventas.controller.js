@@ -325,7 +325,7 @@ export const getAllVentasBySede = async (req, res) => {
 };
 
 /* Esta funcion devuelve todas las ventas que fueron dadas de baja */
-export const getAllVentasEliminadasByDate = async (req, res) => {
+export const getAllVentasEliminadasBySede = async (req, res) => {
     try{
         let id_sede = req.params.idsede;
         const params = {
