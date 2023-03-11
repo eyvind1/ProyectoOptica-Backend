@@ -261,7 +261,7 @@ export const createNewVenta = async (req, res) => {
 */
 export const updatePagoCuotasVentaById = async (req, res) => {
     let id_venta = req.params.idVenta;
-    const {tipo_venta,id_sede,id_vendedor} = req.body;  
+    const {tipo_venta,id_sede,id_vendedor,nombre_vendedor} = req.body;  
     try {
         const paramsVenta = {
             TableName: TABLE_NAME_VENTAS,
@@ -283,6 +283,7 @@ export const updatePagoCuotasVentaById = async (req, res) => {
             monto: tipo_venta[0].cantidad_recibida,
             descripcion: 'Ingreso por Pago de cuota',
             encargado: id_vendedor,
+            nombre_encargado: nombre_vendedor,
             habilitado: true,
             egreso: false, //False porque es un ingreso
             fecha_creacion_caja: tipo_venta[0].fecha_pago
