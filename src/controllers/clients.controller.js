@@ -187,7 +187,9 @@ export const createNewClient = async (req, res) => {
     //estado bool
     try {
         const id_cliente = v4() + codeForTables.tablaClients;
-        const {nombres,apellidos,direccion,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_creacion,fecha_modificacion,telefono,habilitado} = (req.body);
+        const fecha     = new Date();
+        const fecha_creacion = await castIsoDateToDate(fecha);
+        const {nombres,apellidos,direccion,antecedentes,medidas,dni,fecha_nacimiento,email,fecha_modificacion,telefono,habilitado} = (req.body);
         const dniValidado = await validarDni(dni,TABLE_NAME_CLIENTE);
         if(dniValidado>0){
             return res.status(400).json({ 

@@ -27,7 +27,8 @@ async function getIngresosEgresos(datos,fecha_especifica){
 
 export const createNewIngreso = async (req, res) => {
     const id_caja = v4() + codeForTables.tablaCaja;
-    const fecha_creacion_caja = await castIsoDateToDate(req.body.fecha_creacion_caja);
+            const fecha     = new Date();
+            const fecha_creacion_caja = await castIsoDateToDate(fecha);
     try {
         const {id_sede,metodo_pago,monto,descripcion,id_encargado,nombre_encargado,habilitado,egreso} = (req.body);
         const datosCaja = {

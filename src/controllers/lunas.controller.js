@@ -71,7 +71,9 @@ export const getAllLunas = async (req, res) => {
 export const createNewLuna = async (req, res) => {
     try {
         const id_producto = v4() + codeForTables.tablaLunas;
-        const {id_sede,tipo,cantidad,habilitado,fecha_creacion_luna,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
+        const fecha     = new Date();
+        const fecha_creacion_luna = await castIsoDateToDate(fecha);
+        const {id_sede,tipo,cantidad,habilitado,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = (req.body);
         const datosLuna = {
             id_producto,
             id_sede,
@@ -163,6 +165,7 @@ export const unsubscribeLunasById = async (req, res) => {
 */ 
 export const editLunaById = async (req, res) => {
     const id_producto = req.params.idLuna;
+    
     const {cantidad,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeLuna = await validateLuna(id_producto);

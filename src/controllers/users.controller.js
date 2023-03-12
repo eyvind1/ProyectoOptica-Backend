@@ -43,8 +43,10 @@ export const createNewUser = async (req, res) => {
         // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"
         const id_usuario = v4() + codeForTables.tablaUsers;
         //Obtengo los campos que se envia por POST desde el Front
+        const fecha     = new Date();
+        const fecha_creacion= await castIsoDateToDate(fecha);
         let {nombres,apellidos,dni,rol,habilitado,observaciones,email,
-            fecha_creacion,fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
+            fecha_nacimiento,fecha_modificacion,telefono,id_sede,contrasenia} = (req.body);
         // Validamos que el DNI no sea repetido
         const dniValidado = await validarDni(dni, TABLE_NAME_USUARIO);
         if(dniValidado>0){

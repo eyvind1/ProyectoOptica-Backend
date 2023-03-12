@@ -95,7 +95,9 @@ export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
         const id_producto = v4() + codeForTables.tablaAccesorios;
-        const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_creacion_accesorio,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
+        const fecha     = new Date();
+        const fecha_creacion_accesorio = await castIsoDateToDate(fecha);
+        const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         const datosAccesorio = {
             id_producto,
             tipo,
