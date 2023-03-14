@@ -5,6 +5,8 @@ import {v4} from 'uuid';
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import {codeForTables} from '../utils/codigosTablas.js';
 
+import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
+
 /* Constantes Globales que utilizan las funciones de este archivo */
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME_SEDE  = "Sedes";

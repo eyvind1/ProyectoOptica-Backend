@@ -2,6 +2,7 @@ import AWS from '../db.js'
 import {v4} from 'uuid';
 import {codeForTables} from '../utils/codigosTablas.js';
 import { validarDni }  from '../helpers/helperFunctions.js';
+import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 const TABLE_NAME_CLIENTE  = "Clientes";
 const dynamoClient        = new AWS.DynamoDB.DocumentClient();

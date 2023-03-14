@@ -1,6 +1,7 @@
 import AWS from '../db.js'
 import {v4} from 'uuid';
 import bcrypt from 'bcrypt';
+import { castIsoDateToDate}  from '../helpers/helperFunctions.js';
 
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import {codeForTables} from '../utils/codigosTablas.js';
