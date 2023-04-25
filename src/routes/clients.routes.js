@@ -14,7 +14,7 @@ router.get('/getAllClients',passport.authenticate('jwt',{session:false}),getAllC
 router.get('/getClientById/:idCliente',passport.authenticate('jwt',{session:false}),getClientById);
 router.post('/createNewClient',passport.authenticate('jwt',{session:false}),createNewClient);
 router.get('/getAllClientsBySedeMinified/:idSede',passport.authenticate('jwt',{session:false}),getAllClientsBySedeMinified);
-router.get('/getAllClientsMinified',passport.authenticate('jwt',{session:false}),getAllClientsMinified);
+router.get('/getAllClientsMinified',getAllClientsMinified);
 router.put('/editClientById/:idCliente',passport.authenticate('jwt',{session:false}),editClientById);
 router.put('/darBajaClienteById/:idCliente',passport.authenticate('jwt',{session:false}),darBajaClienteById);
 

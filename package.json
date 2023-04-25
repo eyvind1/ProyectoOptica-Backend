@@ -35,7 +35,6 @@
     "passport-jwt": "^4.0.1",
     "unique-hash": "^2.6.0",
     "nodemon": "^2.0.20"
-
   },
   "devDependencies": {
     "jest": "^29.4.1",

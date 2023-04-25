@@ -205,7 +205,7 @@ export const createNewVenta = async (req, res) => {
         const fecha     = new Date();
         const fecha_creacion_venta = await castIsoDateToDate(fecha);
         const {id_sede,nombre_cliente,nombre_vendedor,list_monturas,list_lunas,list_accesorios,id_vendedor,
-               tipo_venta,observaciones,id_cliente,habilitado} = (req.body);
+               tipo_venta,observaciones,id_cliente,habilitado,nombre_jalador} = (req.body);
         const datosVenta = {
             id_ventas,
             nombre_vendedor,
@@ -214,6 +214,7 @@ export const createNewVenta = async (req, res) => {
             list_lunas,
             list_accesorios,
             id_vendedor,
+            nombre_jalador,
             observaciones,
             habilitado,
             fecha_creacion_venta,
