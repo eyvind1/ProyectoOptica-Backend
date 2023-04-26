@@ -8,8 +8,10 @@ const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 
 export async function castIsoDateToDate(fecha){
     //Convierto a la zona horaria de Lima
-    fecha = fecha.toLocaleString('PET',{timeZone:'America/Lima'});
-    const date = new Date(fecha);
+    const fechas     = new Date();
+
+    fechas = fecha.toLocaleString('PET',{timeZone:'America/Lima'});
+    const date = new Date(fechas);
     console.log(date);
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
