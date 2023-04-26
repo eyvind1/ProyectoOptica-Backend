@@ -28,7 +28,7 @@ export const getAllClientsBySedeMinified = async (req, res) => {
                 ":valueSede": id_sede
             },
             //Envio solamente ciertos campos
-            "ProjectionExpression": "id_cliente, apellidos ,nombres,dni,email,telefono,fecha_nacimiento,direccion",
+            "ProjectionExpression": "id_cliente, apellidos ,nombres,dni,email,telefono,fecha_nacimiento,direccion,medidas",
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
                 "#id_sede":    "id_sede"
@@ -55,7 +55,7 @@ export const getAllClientsMinified = async (req, res) => {
                 ":valueHabilitado":true
             },
             //Envio solamente ciertos campos
-            "ProjectionExpression": "id_cliente, apellidos ,nombres,dni,email,telefono,fecha_nacimiento,direccion",
+            "ProjectionExpression": "id_cliente, apellidos ,nombres,dni,email,telefono,fecha_nacimiento,direccion,medidas",
             ExpressionAttributeNames:{
                 "#habilitado": "habilitado",
             },
