@@ -203,7 +203,10 @@ export const createNewVenta = async (req, res) => {
     try {
         const id_ventas = v4() + codeForTables.tablaVentas;
         const fecha     = new Date();
+        console.log(fecha, ' fecha')
         const fecha_creacion_venta = await castIsoDateToDate(fecha);
+        console.log(fecha_ccreacion, ' fecha creacion cast')
+
         const {id_sede,nombre_cliente,nombre_vendedor,list_monturas,list_lunas,list_accesorios,id_vendedor,
                tipo_venta,observaciones,id_cliente,habilitado,nombre_jalador,encargado_medicion} = (req.body);
         const datosVenta = {
