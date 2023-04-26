@@ -99,7 +99,7 @@ export const createNewAccesorio = async (req, res) => {
         const fecha     = new Date();
         const fecha_creacion_accesorio = await castIsoDateToDate(fecha);
         console.log(fecha, ' fecha')
-        console.log(fecha_creacion_venta, ' fecha creacion cast')
+        console.log(fecha_creacion_accesorio, ' fecha creacion cast')
         const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         const datosAccesorio = {
             id_producto,
