@@ -8,7 +8,7 @@ const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 
 export async function castIsoDateToDate(fecha){
     //Convierto a la zona horaria de Lima
-    const fechas     = new Date();
+    let fechas     = new Date();
 
     fechas = fecha.toLocaleString('PET',{timeZone:'America/Lima'});
     const date = new Date(fechas);
