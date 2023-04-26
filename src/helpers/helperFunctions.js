@@ -10,6 +10,7 @@ export async function castIsoDateToDate(fecha){
     //Convierto a la zona horaria de Lima
     fecha = fecha.toLocaleString('PET',{timeZone:'America/Lima'});
     const date = new Date(fecha);
+    console.log(date);
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
     let anio    = date.getFullYear();
@@ -28,6 +29,7 @@ export async function castIsoDateToDate(fecha){
     if (minutos.length < 2) {
         minutos = '0' + minutos;
     }
+    console.log(anio,mes,dia,hora,minutos, ' todo');
     const result = (anio+'-'+mes+'-'+dia+' '+hora+':'+minutos);
     return result;
 }
