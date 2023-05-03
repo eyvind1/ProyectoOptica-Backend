@@ -91,15 +91,28 @@ export const getAllAccesorios = async (req, res) => {
         })
       }
 };
+
+export const cr= async (req, res) => {
+    try {
+        const fecha     = new Date();
+        console.log(fecha)
+        const fecha_creacion_accesorio = await castIsoDateToDate(fecha);
+       
+        return res.json(fecha_creacion_accesorio);       
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ 
+            message:error
+        })
+    }
+};
 /* Esta funcion falta terminar, queda en stand by  */
 export const createNewAccesorio = async (req, res) => {
     try {
         //Concatenar con la letra de la tabla
         const id_producto = v4() + codeForTables.tablaAccesorios;
-        const fecha     = new Date();
+        const fecha       = new Date();
         const fecha_creacion_accesorio = await castIsoDateToDate(fecha);
-        console.log(fecha, ' fecha')
-        console.log(fecha_creacion_accesorio, ' fecha creacion cast')
         const {habilitado,tipo,nombre_accesorio,id_sede,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = (req.body);
         const datosAccesorio = {
             id_producto,
@@ -111,7 +124,7 @@ export const createNewAccesorio = async (req, res) => {
             fecha_creacion_accesorio,
             fecha_modificacion_accesorio,
             precio_accesorio_c,
-            precio_accesorio_v,
+            precio_accesorio_v
         }
         const newAccesorio = await dynamoClient.put({
             TableName: TABLE_NAME_ACCESORIO,
