@@ -38,11 +38,19 @@ export const getAllMonturasForVenta = async (req, res) => {
                 "#id_sede":    "id_sede"
             }
         };
-        const monturas = await dynamoClient.scan(params).promise();
-        const rpta     = await sortArrayJsonByDate(monturas.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        console.log(scanResults.length)
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {
+        console.log(error)
         return res.status(500).json({
             message:error
         })
