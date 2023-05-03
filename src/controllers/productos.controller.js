@@ -61,9 +61,19 @@ export const getProductBySede = async (req, res) => {
                 "#idsede": "id_sede"
             }
         };
-        const sedes = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(sedes.Items,nameOfTable); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        console.log(scanResults.length)
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
+
+
+     
     } 
      catch(error) {
         return res.status(500).json({
