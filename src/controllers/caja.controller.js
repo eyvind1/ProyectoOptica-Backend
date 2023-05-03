@@ -166,6 +166,7 @@ export const getAllIngresosByDate = async (req, res) => {
                 "#id_sede" : "id_sede",
             }
         };
+        console.log(fechaIni,' '. fechaFin)
         const ingresos = await dynamoClient.scan(params).promise();        
         const rpta     = await sortArrayJsonByDate(ingresos.Items); 
         return res.json(rpta);
