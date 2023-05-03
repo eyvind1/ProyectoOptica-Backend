@@ -83,7 +83,7 @@ export const createListOfProducts=async(req,res)=>{
             message:'La sede no existe'
         })
     }
-    //Si paso los 2 filtros de arriba recien inserto
+    //Si paso los  filtros de arriba recien inserto
     try {
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
@@ -114,7 +114,9 @@ export const createListOfProducts=async(req,res)=>{
                     if(arr.length-1 === i){
                         return res.json(monturas);
                     }           
+                    console.log('en el IF ',material)
                 } catch (error) {
+                    console.log('ERROR *********** ', error)
                     return res.status(500).json({
                         message:error
                     })
