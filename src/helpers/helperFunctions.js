@@ -1,18 +1,19 @@
 import AWS from '../db.js'
+import setTZ from 'set-tz';
+
+//Seteando la configuracion de zona horaria
+setTZ('America/Lima')
 
 const TABLE_NAME_CLIENTE  = "Clientes";
 const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 
 
 /* Funcion para darle formato de dos digitos al mes, dia y 4 digito al anio ... 01-02-2022*/ 
-
 export async function castIsoDateToDate(fecha){
     //Convierto a la zona horaria de Lima
-    let fechas     = new Date();
 
-    fechas = fecha.toLocaleString('PET',{timeZone:'America/Lima'});
-    const date = new Date(fechas);
-    console.log(date);
+    let date = new Date()
+
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
     let anio    = date.getFullYear();
@@ -31,11 +32,9 @@ export async function castIsoDateToDate(fecha){
     if (minutos.length < 2) {
         minutos = '0' + minutos;
     }
-    console.log(anio,mes,dia,hora,minutos, ' todo');
     const result = (anio+'-'+mes+'-'+dia+' '+hora+':'+minutos);
     return result;
 }
-
 /*  Funcion que permite validar Dni solo al momento de crear ya sea un usuario o un cliente
     1.- Obligatoriamente tiene que verificar solamente sobre usuarios habilitados porque los dados de baja 
         podrian haber tenido el mismo DNI
