@@ -3,6 +3,10 @@ import express from 'express';
 import cors from 'cors'
 import passport from 'passport';
 /* Fin Librerias propias de Node */
+import setTZ from 'set-tz';
+
+//Seteando la configuracion de zona horaria
+setTZ('America/Lima')
 
 /* Libreria para el deploy, permite comprimir archivos y reducir carga*/
 import compression from 'compression';

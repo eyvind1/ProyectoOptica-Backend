@@ -68,12 +68,8 @@ export const getProductBySede = async (req, res) => {
             items.Items.forEach((item) => scanResults.push(item));
             params.ExclusiveStartKey = items.LastEvaluatedKey;
         }while(typeof items.LastEvaluatedKey !== "undefined");
-        console.log(scanResults.length)
         const rpta     = await sortArrayJsonByDate(scanResults); 
-        return res.json(rpta);
-
-
-     
+        return res.json(rpta);     
     } 
      catch(error) {
         return res.status(500).json({

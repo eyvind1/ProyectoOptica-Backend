@@ -1,8 +1,5 @@
 import AWS from '../db.js'
-import setTZ from 'set-tz';
 
-//Seteando la configuracion de zona horaria
-setTZ('America/Lima')
 
 const TABLE_NAME_CLIENTE  = "Clientes";
 const dynamoClient        = new AWS.DynamoDB.DocumentClient();
@@ -12,7 +9,7 @@ const dynamoClient        = new AWS.DynamoDB.DocumentClient();
 export async function castIsoDateToDate(fecha){
     //Convierto a la zona horaria de Lima
 
-    let date = new Date()
+    let date = new Date(fecha)
 
     //const timestamp = date
     let mes     = (date.getMonth()+1).toString();
