@@ -68,7 +68,7 @@ export const getProductBySede = async (req, res) => {
             items.Items.forEach((item) => scanResults.push(item));
             params.ExclusiveStartKey = items.LastEvaluatedKey;
         }while(typeof items.LastEvaluatedKey !== "undefined");
-        const rpta     = await sortArrayJsonByDate(scanResults,product_name); 
+        const rpta     = await sortArrayJsonByDate(scanResults,nameOfTable); 
         return res.json(rpta);     
     } 
      catch(error) {

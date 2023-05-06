@@ -33,10 +33,10 @@ export const getAllSedes = async (req, res) => {
             items.Items.forEach((item) => scanResults.push(item));
             params.ExclusiveStartKey = items.LastEvaluatedKey;
         }while(typeof items.LastEvaluatedKey !== "undefined");
-        const rpta     = await sortArrayJsonByDate(scanResults); 
-        return res.json(rpta);
+        return res.json(scanResults);
     } 
      catch(error) {
+        console.log(error);
         return res.status(500).json({
             message:error
         })
