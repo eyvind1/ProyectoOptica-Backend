@@ -36,7 +36,6 @@ export const getAllSedes = async (req, res) => {
         return res.json(scanResults);
     } 
      catch(error) {
-        console.log(error);
         return res.status(500).json({
             message:error
         })

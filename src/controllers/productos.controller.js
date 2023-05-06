@@ -82,7 +82,6 @@ export const getProductBySede = async (req, res) => {
 export const createListOfProducts=async(req,res)=>{
     const array_productos = req.body;
     const tipo            = array_productos[0].tipo;
-    console.log(array_productos, 'LONGITUD: ', array_productos.length)
     //Valido que la sede exista en el primer elemento, porque en el front se valida el resto
     let validarSede = await validarSedes(array_productos[0].id_sede);
     if(validarSede===0){
@@ -121,7 +120,6 @@ export const createListOfProducts=async(req,res)=>{
                     if(arr.length-1 === i){
                         return res.json(monturas);
                     }           
-                    console.log('en el IF ',marca, ' ',material)
                 } catch (error) {
                     console.log('ERROR *********** ', error)
                     return res.status(500).json({
@@ -233,7 +231,6 @@ export const updateListOfProducts=async(req,res)=>{
                 //Intento actualizar
                 try {
                     const product = await dynamoClient.update(params).promise();  
-                    console.log(product);    
                     if(arr.length-1 === i && validarErrorMontura===false){
                         return res.json(product);
                     }           
@@ -271,7 +268,6 @@ export const updateListOfProducts=async(req,res)=>{
                 try {
                     const product = await dynamoClient.update(params).promise();  
                     if(array_productos.length-1 === i && validarErrorLuna===false){
-                        console.log(i,' llego a mandar json')
                         return res.json(product); 
                     }           
                 } catch (error) {
