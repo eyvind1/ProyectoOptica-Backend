@@ -233,7 +233,6 @@ export const updateListOfProducts=async(req,res)=>{
                 //Intento actualizar
                 try {
                     const product = await dynamoClient.update(params).promise();  
-                    console.log(product);    
                     if(arr.length-1 === i && validarErrorMontura===false){
                         return res.json(product);
                     }           

@@ -33,8 +33,14 @@ export const getAllLunasForVenta = async (req, res) => {
                 "#id_sede":    "id_sede"
             }
         };
-        const lunas = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(lunas.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -56,8 +62,14 @@ export const getAllLunas = async (req, res) => {
                 "#habilitado": "habilitado"
             }
         };
-        const lunas = await dynamoClient.scan(params).promise();
-        const rpta  = await sortArrayJsonByDate(lunas.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {

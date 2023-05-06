@@ -45,7 +45,6 @@ export const getAllMonturasForVenta = async (req, res) => {
             items.Items.forEach((item) => scanResults.push(item));
             params.ExclusiveStartKey = items.LastEvaluatedKey;
         }while(typeof items.LastEvaluatedKey !== "undefined");
-        console.log(scanResults.length)
         const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
@@ -71,8 +70,14 @@ export const getAllMonturas = async (req, res) => {
                 "#habilitado": "habilitado"
             }
         };
-        const monturas = await dynamoClient.scan(params).promise();
-        const rpta     = await sortArrayJsonByDate(monturas.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {

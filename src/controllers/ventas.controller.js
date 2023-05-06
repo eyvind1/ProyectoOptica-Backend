@@ -321,8 +321,14 @@ export const getAllVentasBySede = async (req, res) => {
                 "#habilitado": "habilitado"
             }
         };
-        const ventasBySede = await dynamoClient.scan(params).promise();
-        const rpta         = await sortArrayJsonByDate(ventasBySede.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -348,8 +354,14 @@ export const getAllVentasEliminadasBySede = async (req, res) => {
                 "#habilitado": "habilitado"
             }
         };
-        const ventasBySede = await dynamoClient.scan(params).promise();
-        const rpta         = await sortArrayJsonByDate(ventasBySede.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {
@@ -372,9 +384,14 @@ export  const getAllVentas = async (req, res) => {
                 "#habilitado": "habilitado"
             }
         };
-        const sedes = await dynamoClient.scan(params).promise();
-        //Ordeno los datos en forma descendente antes de enviar al Front
-        const rpta  = await sortArrayJsonByDate(sedes.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         res.json(rpta);
     } 
      catch(error) {
@@ -397,8 +414,14 @@ export const getAllVentasBySeller = async (req, res) => {
                 "#idVendedor": "id_vendedor"
             }
         };
-        const ventasBySeller = await dynamoClient.scan(params).promise();
-        const rpta           = await sortArrayJsonByDate(ventasBySeller.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         res.json(rpta);
     } 
      catch(error) {
@@ -433,8 +456,14 @@ export const getAllVentasByDate = async (req, res) => {
                 "#id_sede" : "id_sede"
             }
         };
-        const ventasBySeller = await dynamoClient.scan(params).promise();
-        const rpta           = await sortArrayJsonByDate(ventasBySeller.Items); 
+        const scanResults = [];
+        let items;
+        do{
+            items = await dynamoClient.scan(params).promise();
+            items.Items.forEach((item) => scanResults.push(item));
+            params.ExclusiveStartKey = items.LastEvaluatedKey;
+        }while(typeof items.LastEvaluatedKey !== "undefined");
+        const rpta     = await sortArrayJsonByDate(scanResults); 
         return res.json(rpta);
     } 
      catch(error) {
