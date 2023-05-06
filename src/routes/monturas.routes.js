@@ -8,7 +8,7 @@ const router = Router();
 
 
 /* Defino y protejo las rutas */ 
-router.get('/getAllMonturas', getAllMonturas);
+router.get('/getAllMonturas',passport.authenticate('jwt',{session:false}), getAllMonturas);
 router.get('/getAllMonturasForVenta/:idSede',passport.authenticate('jwt',{session:false}), getAllMonturasForVenta);
 router.post('/createNewMontura',passport.authenticate('jwt',{session:false}),createNewMontura);
 router.put('/unsubscribeMonturasById/:idMontura',passport.authenticate('jwt',{session:false}), unsubscribeMonturasById);

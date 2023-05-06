@@ -68,7 +68,7 @@ export const getProductBySede = async (req, res) => {
             items.Items.forEach((item) => scanResults.push(item));
             params.ExclusiveStartKey = items.LastEvaluatedKey;
         }while(typeof items.LastEvaluatedKey !== "undefined");
-        const rpta     = await sortArrayJsonByDate(scanResults); 
+        const rpta     = await sortArrayJsonByDate(scanResults,product_name); 
         return res.json(rpta);     
     } 
      catch(error) {
@@ -233,6 +233,7 @@ export const updateListOfProducts=async(req,res)=>{
                 //Intento actualizar
                 try {
                     const product = await dynamoClient.update(params).promise();  
+                    console.log(product);    
                     if(arr.length-1 === i && validarErrorMontura===false){
                         return res.json(product);
                     }           
