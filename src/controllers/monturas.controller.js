@@ -96,7 +96,7 @@ export const createNewMontura = async (req, res) => {
         const fecha     = new Date();
         const fecha_creacion_monturas = await castIsoDateToDate(fecha);
         const id_producto = v4() + codeForTables.tablaMonturas;
-        const {id_sede,tipo,habilitado,color,codigo_montura,cantidad,codigo,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
+        const {id_sede,tipo,habilitado,traslado,color,codigo_montura,cantidad,codigo,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = (req.body);
         //Genero el codigo interno para el codigo de barras
         const datosMontura = {
             id_producto,
@@ -105,6 +105,7 @@ export const createNewMontura = async (req, res) => {
             codigo_montura,
             cantidad,
             habilitado,
+            traslado,
             codigo,
             id_sede,
             fecha_creacion_monturas,
