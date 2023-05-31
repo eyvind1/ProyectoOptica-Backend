@@ -366,7 +366,7 @@ export const updateSedeOfProducts=async(req,res)=>{
                     ExpressionAttributeValues: {
                         ":id_montura" : row.id_producto,
                         ":id_sede" : row.id_sede,
-                        ":traslado"     : newTraslado
+                        ":traslado"     : traslado
                     }
                 };
                 //Intento actualizar
