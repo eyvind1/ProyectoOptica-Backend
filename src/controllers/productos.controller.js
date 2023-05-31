@@ -94,6 +94,7 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_producto  = v4() + codeForTables.tablaMonturas;
+                const traslado = [];
                 const {id_sede,tipo,habilitado,color,codigo_montura,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 const datosMontura = {
                     id_producto,
@@ -102,6 +103,7 @@ export const createListOfProducts=async(req,res)=>{
                     codigo_montura,
                     cantidad,
                     habilitado,
+                    traslado,
                     codigo,
                     id_sede,
                     fecha_creacion_monturas,
@@ -336,6 +338,9 @@ export const updateListOfProducts=async(req,res)=>{
 export const updateSedeOfProducts=async(req,res)=>{
     try {
         const array_productos = req.body;
+        const nueva_sede      = req.params.idSede;
+        const nombre_usuario  = req.params.nombreUsuario;
+
         const tipo = array_productos[0].tipo;
         const fecha_actual    = new Date();
 
@@ -344,7 +349,12 @@ export const updateSedeOfProducts=async(req,res)=>{
             array_productos.map(async(row,i,arr)=>{
                 // Hare un If, si tiene traslado push, sino agregar uno nuevo
                 // Aqui debo obtener el objeto anterior y pushearle nueva data
-                const newTraslado = [];
+                let traslado = row.traslado;
+                let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
+                /*if(row.traslado.length>0){
+                    traslado.push()
+                }*/
+                console.log("traslado ",traslado)
                 const params = {
                     TableName: 'Monturas',
                     Key: {
@@ -361,10 +371,10 @@ export const updateSedeOfProducts=async(req,res)=>{
                 };
                 //Intento actualizar
                 try {
-                    const product = await dynamoClient.update(params).promise();  
-                    if(arr.length-1 === i && validarErrorMontura===false){
-                        return res.json(product);
-                    }           
+                    // const product = await dynamoClient.update(params).promise();  
+                    // if(arr.length-1 === i && validarErrorMontura===false){
+                    //     return res.json(product);
+                    // }           
                 } catch (error) {
                     if(validarErrorMontura===false){
                         validarErrorMontura  = true;

@@ -93,7 +93,7 @@ export const getAllMonturas = async (req, res) => {
 export const createNewMontura = async (req, res) => {
     const dynamoClient = new AWS.DynamoDB.DocumentClient();
     try {
-        const fecha     = new Date();
+        const fecha    = new Date();
         const traslado = [];
         const fecha_creacion_monturas = await castIsoDateToDate(fecha);
         const id_producto = v4() + codeForTables.tablaMonturas;
