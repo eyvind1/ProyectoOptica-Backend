@@ -331,8 +331,7 @@ export const updateListOfProducts=async(req,res)=>{
 }
 
 
-/* Esta funcion queda pendiente cuadno se envian 2 o mas productos y uno falla en su ID se salta al otro y al retornar
-sale cannot set headers before ..... entonces al encontrar al menos un id fallido debe retornar error defrente */
+/* Funcion en la que estoy trabajando ahora 30/05 */
 
 export const updateSedeOfProducts=async(req,res)=>{
     try {
@@ -343,20 +342,21 @@ export const updateSedeOfProducts=async(req,res)=>{
         if(tipo ==='montura'){
             let validarErrorMontura  = false;
             array_productos.map(async(row,i,arr)=>{
+                // Hare un If, si tiene traslado push, sino agregar uno nuevo
+                // Aqui debo obtener el objeto anterior y pushearle nueva data
+                const newTraslado = [];
                 const params = {
                     TableName: 'Monturas',
                     Key: {
                         "id_producto":row.id_producto,
                     },
-                    UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_monturas = :fecha_modificacion_monturas,
-                                            precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v`,
+                    UpdateExpression: `SET  id_sede = :id_sede, 
+                                        traslado =:traslado`,
                     ConditionExpression: "id_producto = :id_montura", 
                     ExpressionAttributeValues: {
                         ":id_montura" : row.id_producto,
-                        ":cantidad" : row.cantidad,
-                        ":fecha_modificacion_monturas": fecha_actual,
-                        ":precio_montura_c"   : row.precio_montura_c,
-                        ":precio_montura_v"   : row.precio_montura_v,
+                        ":id_sede" : row.id_sede,
+                        ":traslado"     : newTraslado
                     }
                 };
                 //Intento actualizar
