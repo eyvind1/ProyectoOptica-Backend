@@ -355,6 +355,8 @@ export const updateSedeOfProducts=async(req,res)=>{
                     traslado.push()
                 }*/
                 console.log("traslado ",traslado)
+                traslado.push(objeto)
+                console.log("traslado ",traslado)
                 const params = {
                     TableName: 'Monturas',
                     Key: {
