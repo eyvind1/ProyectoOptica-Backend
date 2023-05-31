@@ -102,6 +102,7 @@ export const createNewMontura = async (req, res) => {
             id_producto,
             tipo,
             color,
+            codigo_montura,
             cantidad,
             habilitado,
             codigo,

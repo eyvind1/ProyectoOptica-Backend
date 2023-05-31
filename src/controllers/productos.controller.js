@@ -20,7 +20,7 @@ async function validarSedes(idSede){
             ":id_sede": idSede
         }
     }
-    let result= await  dynamoClient.scan(params).promise(); 
+    let result = await dynamoClient.scan(params).promise(); 
     return result.Count
 
 }
@@ -99,6 +99,7 @@ export const createListOfProducts=async(req,res)=>{
                     id_producto,
                     tipo,
                     color,
+                    codigo_montura,
                     cantidad,
                     habilitado,
                     codigo,
@@ -109,7 +110,8 @@ export const createListOfProducts=async(req,res)=>{
                     material,
                     precio_montura_c,
                     precio_montura_v,
-                    talla
+                    talla,
+                    traslado
                 }
                 //Intento crear las monturas
                 try {
@@ -143,6 +145,7 @@ export const createListOfProducts=async(req,res)=>{
                     cantidad,
                     precio_luna_c,
                     precio_luna_v,
+                    traslado
                 }
                 //Intento crear lunas
                 try {
@@ -176,6 +179,7 @@ export const createListOfProducts=async(req,res)=>{
                     fecha_modificacion_accesorio,
                     precio_accesorio_c,
                     precio_accesorio_v,
+                    traslado
                 }
                 //Intento crear los accesorios
                 try {
