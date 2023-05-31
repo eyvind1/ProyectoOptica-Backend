@@ -94,7 +94,7 @@ export const createListOfProducts=async(req,res)=>{
         if(tipo === 'montura'){
             array_productos.map(async(row,i,arr)=>{    
                 const id_producto  = v4() + codeForTables.tablaMonturas;
-                const {id_sede,tipo,habilitado,color,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
+                const {id_sede,tipo,habilitado,color,codigo_montura,cantidad,codigo,fecha_creacion_monturas,fecha_modificacion_monturas, marca, material, precio_montura_c,precio_montura_v, talla} = row;
                 const datosMontura = {
                     id_producto,
                     tipo,
