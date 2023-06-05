@@ -177,10 +177,19 @@ export const unsubscribeLunasById = async (req, res) => {
 */ 
 export const editLunaById = async (req, res) => {
     const id_producto = req.params.idLuna;
-    
-    const {cantidad,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v} = req.body;
+    let id_sede = req.body.id_sede;
+
+    const {cantidad,fecha_modificacion_luna, material, precio_luna_c,precio_luna_v,
+            idSedeDestino,traslado,nombreUsuario} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeLuna = await validateLuna(id_producto);
+    const fecha_actual    = await castIsoDateToDate(new Date());
+    // Si cambian el campo sede en el front creo mi objeto
+    if(idSedeDestino!==id_sede){
+        const objeto = {"nombre_usuario":nombreUsuario,"sede_anterior":id_sede,"sede_nueva":idSedeDestino,"fecha_traslado":fecha_actual}
+        traslado.push(objeto) 
+        id_sede = idSedeDestino   
+    }
     // Primero valido si la montura a editar existe en la BD 
     if(existeLuna.length > 0) {
         try {
@@ -190,13 +199,16 @@ export const editLunaById = async (req, res) => {
                     "id_producto":id_producto,
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_luna = :fecha_modificacion_luna,
-                                        material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
+                                        material=:material, precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v,
+                                        traslado =:traslado, id_sede = :id_sede`,
                 ExpressionAttributeValues: {
                     ":cantidad" : cantidad,
                     ":fecha_modificacion_luna": fecha_modificacion_luna,
                     ":material" : material,
                     ":precio_luna_c"   : precio_luna_c,
-                    ":precio_luna_v"   : precio_luna_v
+                    ":precio_luna_v"   : precio_luna_v,
+                    ":traslado"     : traslado,
+                    ":id_sede"     : id_sede
                 }
             };
             const luna = await dynamoClient.update(paramsLuna).promise();

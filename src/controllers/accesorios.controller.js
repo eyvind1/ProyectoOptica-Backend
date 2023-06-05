@@ -197,8 +197,16 @@ export const unsubscribeAccesoriosById = async (req, res) => {
 */ 
 export const editAccesorioById = async (req, res) => {
     const id_accesorio = req.params.idAccesorio;
-    const {nombre_accesorio,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v} = req.body;
+    let id_sede = req.body.id_sede;
+    const {nombre_accesorio,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v,
+            idSedeDestino,traslado,nombreUsuario} = req.body;
     const existeAccesorio = await validateAccesorio(id_accesorio);
+    const fecha_actual    = await castIsoDateToDate(new Date());
+    if(idSedeDestino!==id_sede){
+        const objeto = {"nombre_usuario":nombreUsuario,"sede_anterior":id_sede,"sede_nueva":idSedeDestino,"fecha_traslado":fecha_actual}
+        traslado.push(objeto) 
+        id_sede = idSedeDestino   
+    }
     try {
         const paramsAccesorio = {
             TableName: TABLE_NAME_ACCESORIO,
@@ -208,14 +216,16 @@ export const editAccesorioById = async (req, res) => {
             UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_accesorio = :fecha_modificacion_accesorio,
                                     nombre_accesorio=:nombre_accesorio,
                                     precio_accesorio_c=:precio_accesorio_c,precio_accesorio_v=:precio_accesorio_v`,
-            ConditionExpression: "id_producto = :id_accesorio", 
+            ConditionExpression: "id_producto = :id_accesorio, traslado =:traslado, id_sede = :id_sede", 
             ExpressionAttributeValues: {
                 ":id_accesorio" :id_accesorio, 
                 ":cantidad" : cantidad,
                 ":nombre_accesorio" : nombre_accesorio,
                 ":fecha_modificacion_accesorio": fecha_modificacion_accesorio,
                 ":precio_accesorio_c"   : precio_accesorio_c,
-                ":precio_accesorio_v"   : precio_accesorio_v
+                ":precio_accesorio_v"   : precio_accesorio_v,
+                ":traslado"     : traslado,
+                ":id_sede"     : id_sede
             }
         };
         const accesorio = await dynamoClient.update(paramsAccesorio).promise();
