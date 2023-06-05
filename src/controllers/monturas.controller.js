@@ -245,48 +245,37 @@ export const editMonturaById = async (req, res) => {
 };
 /* EndPoint que permite actualizar un producto a una nueva sede*/
 export const updateSedeMontura=async(req,res)=>{
+    const id_montura      = req.params.idMontura;
+    const nueva_sede      = req.body.idSede;
+    const nombre_usuario  = req.body.nombreUsuario;
+    console.log(req.body, ' ***** ', id_montura);
+    const fecha_actual    = await castIsoDateToDate(new Date());
+
+    // Aqui debo obtener el objeto anterior y pushearle nueva data
+    let traslado = row.traslado;
+    let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
+    traslado.push(objeto)
+    const params = {
+        TableName: 'Monturas',
+        Key: {
+            "id_producto":id_montura,
+        },
+        UpdateExpression: `SET  id_sede = :id_sede, 
+                            traslado =:traslado`,
+        ConditionExpression: "id_producto = :id_montura", 
+        ExpressionAttributeValues: {
+            ":id_montura" : id_montura,
+            ":id_sede" : nueva_sede,
+            ":traslado"     : traslado
+        }
+    };
+    //Intento actualizar
     try {
-        const id_montura = req.params.idMontura;
-        // const nueva_sede      = req.params.idSede;
-        // const nombre_usuario  = req.params.nombreUsuario;
-        console.log(req.body);
-
-        const fecha_actual    = await castIsoDateToDate(new Date());
-
-        let validarErrorMontura  = false;
-        array_productos.map(async(row,i,arr)=>{
-            // Aqui debo obtener el objeto anterior y pushearle nueva data
-            let traslado = row.traslado;
-            let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
-            traslado.push(objeto)
-            const params = {
-                TableName: 'Monturas',
-                Key: {
-                    "id_producto":id_montura,
-                },
-                UpdateExpression: `SET  id_sede = :id_sede, 
-                                    traslado =:traslado`,
-                ConditionExpression: "id_producto = :id_montura", 
-                ExpressionAttributeValues: {
-                    ":id_montura" : row.id_producto,
-                    ":id_sede" : nueva_sede,
-                    ":traslado"     : traslado
-                }
-            };
-            //Intento actualizar
-            try {
-                const product = await dynamoClient.update(params).promise();  
-                if(arr.length-1 === i && validarErrorMontura===false){
-                    return res.json(product);
-                }           
-            } catch (error) {
-                if(validarErrorMontura===false){
-                    validarErrorMontura  = true;
-                    let errorPosicion      = i+2 // Le sumo dos por la cabecera del excel y por la pos del array
-                    return res.status(400).json({
-                        message:'Productos actualizados correctamente, excepto el producto en la fila: '+ errorPosicion +' del excel'
-                    })
-                }
-            }
-        });
-    
+        const product = await dynamoClient.update(params).promise();  
+        return res.json(product);
+    } catch (error) {
+        return res.status(400).json({
+            message: 'No se pudo actualizar la sede'
+        })
+    }
+}
