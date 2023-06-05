@@ -207,7 +207,7 @@ export const editMonturaById = async (req, res) => {
     const existeMontura = await validateMontura(id_montura);
     const fecha_actual    = await castIsoDateToDate(new Date());
     // Si en el front cambian la sede de la montura debo actualizar y agregar un traslado
-    if(idSedeDestino===id_sede){
+    if(idSedeDestino!==id_sede){
         const objeto = {"nombre_usuario":nombreUsuario,"sede_anterior":id_sede,"sede_nueva":idSedeDestino,"fecha_traslado":fecha_actual}
         traslado.push(objeto)    
     }
