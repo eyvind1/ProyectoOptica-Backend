@@ -209,7 +209,8 @@ export const editMonturaById = async (req, res) => {
     // Si en el front cambian la sede de la montura debo actualizar y agregar un traslado
     if(idSedeDestino!==id_sede){
         const objeto = {"nombre_usuario":nombreUsuario,"sede_anterior":id_sede,"sede_nueva":idSedeDestino,"fecha_traslado":fecha_actual}
-        traslado.push(objeto)    
+        traslado.push(objeto) 
+        id_sede = idSedeDestino   
     }
     // Primero valido si la montura a editar existe en la BD 
     if(existeMontura.length > 0) {
@@ -221,7 +222,7 @@ export const editMonturaById = async (req, res) => {
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, color= :color,codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                         marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
-                                        talla=:talla,traslado =:traslado`,
+                                        talla=:talla,traslado =:traslado, id_sede = :id_sede`,
                 ExpressionAttributeValues: {
                     ":cantidad" : cantidad,
                     ":codigo"   : codigo,
@@ -232,7 +233,8 @@ export const editMonturaById = async (req, res) => {
                     ":precio_montura_c"   : precio_montura_c,
                     ":precio_montura_v"   : precio_montura_v,
                     ":talla"   : talla,
-                    ":traslado"     : traslado
+                    ":traslado"     : traslado,
+                    ":id_sede"     : id_sede
                 }
             };
             const montura = await dynamoClient.update(paramsMontura).promise();
