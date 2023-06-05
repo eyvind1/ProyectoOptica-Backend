@@ -363,7 +363,7 @@ export const updateSedeOfProducts=async(req,res)=>{
                     ConditionExpression: "id_producto = :id_montura", 
                     ExpressionAttributeValues: {
                         ":id_montura" : row.id_producto,
-                        ":id_sede" : row.id_sede,
+                        ":id_sede" : nueva_sede,
                         ":traslado"     : traslado
                     }
                 };
