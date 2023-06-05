@@ -343,7 +343,7 @@ export const updateSedeOfProducts=async(req,res)=>{
         const nombre_usuario  = req.params.nombreUsuario;
 
         const tipo = array_productos[0].tipo;
-        const fecha_actual    = castIsoDateToDate(new Date());
+        const fecha_actual    = await castIsoDateToDate(new Date());
 
         if(tipo ==='montura'){
             let validarErrorMontura  = false;
@@ -352,7 +352,6 @@ export const updateSedeOfProducts=async(req,res)=>{
                 let traslado = row.traslado;
                 let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
                 traslado.push(objeto)
-                console.log("traslado ",traslado)
                 const params = {
                     TableName: 'Monturas',
                     Key: {
@@ -387,20 +386,21 @@ export const updateSedeOfProducts=async(req,res)=>{
         else if(tipo ==='luna'){
             let validarErrorLuna  = false;
             array_productos.forEach(async(row,i) => {
+                let traslado_luna = row.traslado;
+                let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
+                traslado_luna.push(objeto)
                 const params= {
                     TableName: 'Lunas',
                     Key: {
                         "id_producto":row.id_producto,
                     },
-                    UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_luna=:fecha_modificacion_luna
-                                                        ,precio_luna_c=:precio_luna_c,precio_luna_v=:precio_luna_v`,
+                    UpdateExpression: `SET  id_sede = :id_sede, 
+                                        traslado =:traslado`,
                     ConditionExpression: "id_producto = :id_luna", 
                     ExpressionAttributeValues: {
                         ":id_luna" : row.id_producto,
-                        ":cantidad" : row.cantidad,
-                        ":fecha_modificacion_luna": row.fecha_modificacion_luna,
-                        ":precio_luna_c"   : row.precio_luna_c,
-                        ":precio_luna_v"   : row.precio_luna_v
+                        ":id_sede" : nueva_sede,
+                        ":traslado"     : traslado_luna
                     }
                 };     
                 //Intento actualizar
@@ -423,22 +423,21 @@ export const updateSedeOfProducts=async(req,res)=>{
         else if(tipo === 'accesorio'){
             let validarErrorAccesorio  = false;
             array_productos.map(async(row,i,arr)=>{
+                let traslado_acce = row.traslado;
+                let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
+                traslado_acce.push(objeto)
                 const params = {
                     TableName: 'Accesorios',
                     Key: {
                         "id_producto":row.id_producto,
                     },
-                    UpdateExpression: `SET  cantidad= :cantidad, 
-                                            fecha_modificacion_accesorio = :fecha_modificacion_accesorio,
-                                            precio_accesorio_c=:precio_accesorio_c,
-                                            precio_accesorio_v=:precio_accesorio_v`,
+                    UpdateExpression: `SET  id_sede = :id_sede, 
+                    traslado =:traslado`,
                     ConditionExpression: "id_producto = :id_accesorio", 
                     ExpressionAttributeValues: {
-                        ":id_accesorio" :row.id_producto, 
-                        ":cantidad"     : row.cantidad,
-                        ":fecha_modificacion_accesorio" : row.fecha_modificacion_accesorio,
-                        ":precio_accesorio_c"   : row.precio_accesorio_c,
-                        ":precio_accesorio_v"   : row.precio_accesorio_v
+                    ":id_accesorio" : row.id_producto,
+                    ":id_sede" : nueva_sede,
+                    ":traslado"     : traslado_acce
                     }
                 };
                 //Intento actualizar
