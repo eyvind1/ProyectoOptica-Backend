@@ -200,9 +200,10 @@ export const unsubscribeMonturasById = async (req, res) => {
 */ 
 export const editMonturaById = async (req, res) => {
     const id_montura = req.params.idMontura;
+    let id_sede = req.body.id_sede;
     const {cantidad,codigo,fecha_modificacion_monturas,
             marca, material, color,precio_montura_c,precio_montura_v, talla,
-            idSedeDestino,traslado,nombreUsuario,id_sede} = req.body;
+            idSedeDestino,traslado,nombreUsuario} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeMontura = await validateMontura(id_montura);
     const fecha_actual    = await castIsoDateToDate(new Date());
