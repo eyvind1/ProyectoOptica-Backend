@@ -245,14 +245,14 @@ export const editMonturaById = async (req, res) => {
 };
 /* EndPoint que permite actualizar un producto a una nueva sede*/
 export const updateSedeMontura=async(req,res)=>{
-    const id_montura      = req.params.idMontura;
-    const nueva_sede      = req.body.idSede;
+    const id_montura      = req.params.id_producto  ;
+    const nueva_sede      = req.body.idSedeDestino;
     const nombre_usuario  = req.body.nombreUsuario;
+    let traslado          = req.body.traslado;
     console.log(req.body, ' ***** ', id_montura);
     const fecha_actual    = await castIsoDateToDate(new Date());
 
     // Aqui debo obtener el objeto anterior y pushearle nueva data
-    let traslado = row.traslado;
     let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
     traslado.push(objeto)
     const params = {
