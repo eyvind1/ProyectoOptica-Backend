@@ -3,6 +3,7 @@ import AWS from '../db.js'
 /* Libreria para poder generar ID's aleatorios*/
 import {v4} from 'uuid';
 import {codeForTables,prefixesForProducts} from '../utils/codigosTablas.js';
+import { castIsoDateToDate } from '../helpers/helperFunctions.js';
 
 
 /* Constantes Globales que utilizan las funciones de este archivo */
@@ -342,19 +343,14 @@ export const updateSedeOfProducts=async(req,res)=>{
         const nombre_usuario  = req.params.nombreUsuario;
 
         const tipo = array_productos[0].tipo;
-        const fecha_actual    = new Date();
+        const fecha_actual    = castIsoDateToDate(new Date());
 
         if(tipo ==='montura'){
             let validarErrorMontura  = false;
             array_productos.map(async(row,i,arr)=>{
-                // Hare un If, si tiene traslado push, sino agregar uno nuevo
                 // Aqui debo obtener el objeto anterior y pushearle nueva data
                 let traslado = row.traslado;
                 let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
-                /*if(row.traslado.length>0){
-                    traslado.push()
-                }*/
-                console.log("traslado ",traslado)
                 traslado.push(objeto)
                 console.log("traslado ",traslado)
                 const params = {
@@ -373,10 +369,10 @@ export const updateSedeOfProducts=async(req,res)=>{
                 };
                 //Intento actualizar
                 try {
-                    // const product = await dynamoClient.update(params).promise();  
-                    // if(arr.length-1 === i && validarErrorMontura===false){
-                    //     return res.json(product);
-                    // }           
+                    const product = await dynamoClient.update(params).promise();  
+                    if(arr.length-1 === i && validarErrorMontura===false){
+                        return res.json(product);
+                    }           
                 } catch (error) {
                     if(validarErrorMontura===false){
                         validarErrorMontura  = true;
