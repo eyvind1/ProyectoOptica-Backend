@@ -201,9 +201,16 @@ export const unsubscribeMonturasById = async (req, res) => {
 export const editMonturaById = async (req, res) => {
     const id_montura = req.params.idMontura;
     const {cantidad,codigo,fecha_modificacion_monturas,
-            marca, material, color,precio_montura_c,precio_montura_v, talla} = req.body;
+            marca, material, color,precio_montura_c,precio_montura_v, talla,
+            idSedeDestino,traslado,nombreUsuario,id_sede} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeMontura = await validateMontura(id_montura);
+    const fecha_actual    = await castIsoDateToDate(new Date());
+    // Si en el front cambian la sede de la montura debo actualizar y agregar un traslado
+    if(idSedeDestino===id_sede){
+        const objeto = {"nombre_usuario":nombreUsuario,"sede_anterior":id_sede,"sede_nueva":idSedeDestino,"fecha_traslado":fecha_actual}
+        traslado.push(objeto)    
+    }
     // Primero valido si la montura a editar existe en la BD 
     if(existeMontura.length > 0) {
         try {
@@ -214,7 +221,7 @@ export const editMonturaById = async (req, res) => {
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, color= :color,codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                         marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
-                                        talla=:talla`,
+                                        talla=:talla,traslado =:traslado`,
                 ExpressionAttributeValues: {
                     ":cantidad" : cantidad,
                     ":codigo"   : codigo,
@@ -224,7 +231,8 @@ export const editMonturaById = async (req, res) => {
                     ":color"    : color,
                     ":precio_montura_c"   : precio_montura_c,
                     ":precio_montura_v"   : precio_montura_v,
-                    ":talla"   : talla
+                    ":talla"   : talla,
+                    ":traslado"     : traslado
                 }
             };
             const montura = await dynamoClient.update(paramsMontura).promise();
@@ -243,39 +251,3 @@ export const editMonturaById = async (req, res) => {
         })
     }
 };
-/* EndPoint que permite actualizar un producto a una nueva sede*/
-export const updateSedeMontura=async(req,res)=>{
-    const id_montura      = req.params.id_producto  ;
-    const nueva_sede      = req.body.idSedeDestino;
-    const nombre_usuario  = req.body.nombreUsuario;
-    let traslado          = req.body.traslado;
-    console.log(req.body, ' ***** ', id_montura);
-    const fecha_actual    = await castIsoDateToDate(new Date());
-
-    // Aqui debo obtener el objeto anterior y pushearle nueva data
-    let objeto = {"nombre_usuario":nombre_usuario,"sede_anterior":row.id_sede,"sede_nueva":nueva_sede,"fecha_traslado":fecha_actual}
-    traslado.push(objeto)
-    const params = {
-        TableName: 'Monturas',
-        Key: {
-            "id_producto":id_montura,
-        },
-        UpdateExpression: `SET  id_sede = :id_sede, 
-                            traslado =:traslado`,
-        ConditionExpression: "id_producto = :id_montura", 
-        ExpressionAttributeValues: {
-            ":id_montura" : id_montura,
-            ":id_sede" : nueva_sede,
-            ":traslado"     : traslado
-        }
-    };
-    //Intento actualizar
-    try {
-        const product = await dynamoClient.update(params).promise();  
-        return res.json(product);
-    } catch (error) {
-        return res.status(400).json({
-            message: 'No se pudo actualizar la sede'
-        })
-    }
-}
