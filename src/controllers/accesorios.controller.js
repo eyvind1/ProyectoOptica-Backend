@@ -200,7 +200,6 @@ export const editAccesorioById = async (req, res) => {
     let id_sede = req.body.id_sede;
     const {nombre_accesorio,cantidad,fecha_modificacion_accesorio,precio_accesorio_c,precio_accesorio_v,
             idSedeDestino,traslado,nombreUsuario} = req.body;
-    const existeAccesorio = await validateAccesorio(id_accesorio);
     const fecha_actual    = await castIsoDateToDate(new Date());
     if(idSedeDestino!==id_sede){
         const objeto = {"nombre_usuario":nombreUsuario,"sede_anterior":id_sede,"sede_nueva":idSedeDestino,"fecha_traslado":fecha_actual}

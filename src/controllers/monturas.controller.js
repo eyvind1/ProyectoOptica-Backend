@@ -203,7 +203,7 @@ export const editMonturaById = async (req, res) => {
     let id_sede = req.body.id_sede;
     const {cantidad,codigo,fecha_modificacion_monturas,
             marca, material, color,precio_montura_c,precio_montura_v, talla,
-            idSedeDestino,traslado,nombreUsuario} = req.body;
+            idSedeDestino,traslado,nombreUsuario, codigo_montura} = req.body;
     // Valido si existe en la BD el idmontura enviado desde el front
     const existeMontura = await validateMontura(id_montura);
     const fecha_actual    = await castIsoDateToDate(new Date());
@@ -223,7 +223,7 @@ export const editMonturaById = async (req, res) => {
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, color= :color,codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                         marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
-                                        talla=:talla,traslado =:traslado, id_sede = :id_sede`,
+                                        talla=:talla,traslado =:traslado, id_sede = :id_sede, codigo_montura = :codigo_montura,`,
                 ExpressionAttributeValues: {
                     ":cantidad" : cantidad,
                     ":codigo"   : codigo,
@@ -235,7 +235,8 @@ export const editMonturaById = async (req, res) => {
                     ":precio_montura_v"   : precio_montura_v,
                     ":talla"   : talla,
                     ":traslado"     : traslado,
-                    ":id_sede"     : id_sede
+                    ":id_sede"     : id_sede,
+                    ":codigo_montura" : codigo_montura
                 }
             };
             const montura = await dynamoClient.update(paramsMontura).promise();
