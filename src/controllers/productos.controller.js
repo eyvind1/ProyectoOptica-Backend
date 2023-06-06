@@ -223,9 +223,9 @@ export const updateListOfProducts=async(req,res)=>{
                     TableName: 'Monturas',
                     Key: {
                         "id_producto":row.id_producto,
-                    },
+                        },
                     UpdateExpression: `SET  cantidad= :cantidad, fecha_modificacion_monturas = :fecha_modificacion_monturas,
-                                            precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v`,
+                                            precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v, codigo_montura = :codigo_montura`,
                     ConditionExpression: "id_producto = :id_montura", 
                     ExpressionAttributeValues: {
                         ":id_montura" : row.id_producto,
@@ -233,6 +233,7 @@ export const updateListOfProducts=async(req,res)=>{
                         ":fecha_modificacion_monturas": fecha_actual,
                         ":precio_montura_c"   : row.precio_montura_c,
                         ":precio_montura_v"   : row.precio_montura_v,
+                        ":codigo_montura" : row.codigo_montura
                     }
                 };
                 //Intento actualizar

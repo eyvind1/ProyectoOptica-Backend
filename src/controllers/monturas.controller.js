@@ -223,7 +223,7 @@ export const editMonturaById = async (req, res) => {
                 },
                 UpdateExpression: `SET  cantidad= :cantidad, color= :color,codigo=:codigo, fecha_modificacion_monturas = :fecha_modificacion_monturas,
                                         marca=:marca, material=:material, precio_montura_c=:precio_montura_c,precio_montura_v=:precio_montura_v,
-                                        talla=:talla,traslado =:traslado, id_sede = :id_sede, codigo_montura = :codigo_montura,`,
+                                        talla=:talla,traslado =:traslado, id_sede = :id_sede, codigo_montura = :codigo_montura`,
                 ExpressionAttributeValues: {
                     ":cantidad" : cantidad,
                     ":codigo"   : codigo,
