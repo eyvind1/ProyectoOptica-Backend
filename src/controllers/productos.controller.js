@@ -126,7 +126,6 @@ export const createListOfProducts=async(req,res)=>{
                         return res.json(monturas);
                     }           
                 } catch (error) {
-                    console.log('ERROR *********** ', error)
                     return res.status(500).json({
                         message:error
                     })
