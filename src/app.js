@@ -1,5 +1,6 @@
 /* Librerias propias de Node */
 import express from "express";
+import multer from "multer";
 import cors from "cors";
 import passport from "passport";
 /* Fin Librerias propias de Node */
@@ -29,6 +30,7 @@ import googleDriveApi from "./routes/googleDriveApi.routes.js";
 import { JwtStrategy } from "./config/passport.js";
 
 const app = express();
+
 app.use(cors());
 //Paso esta funcion para que express entienda cuando se le envia un Json, limit sirve para evitar el error too large (413)
 app.use(express.json({ limit: "50mb" }));

@@ -53,9 +53,9 @@ const uploadToGoogleDrive = async (
 };
 
 export const uploadFile = async (req, res) => {
-  const { photo } = req.body;
-  console.log(" file", req.body, photo);
-  res.send(req.body);
+  //   const { photo } = req.body;
+  console.log(" file", req.file);
+  res.send(req.file);
   //   const tmp = new Duplex();
   //   tmp.push(photo.buffer);
   //   tmp.push(null);
