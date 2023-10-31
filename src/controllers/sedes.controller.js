@@ -4,6 +4,7 @@ import AWS from "../db.js";
 import { v4 } from "uuid";
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import { codeForTables } from "../utils/codigosTablas.js";
+import { DEFAULT_LOGO_URL } from "../utils/constants.js";
 
 import { castIsoDateToDate } from "../helpers/helperFunctions.js";
 
@@ -46,6 +47,11 @@ export const createNewSede = async (req, res) => {
     const id_sede = v4() + codeForTables.tablaSedes;
     const fecha = new Date();
     const fecha_creacion_sede = await castIsoDateToDate(fecha);
+    let logoURL = req.body.logoURL;
+
+    if (!logoURL) {
+      logoURL = DEFAULT_LOGO_URL;
+    }
     const {
       habilitado,
       direccion,
@@ -54,8 +60,8 @@ export const createNewSede = async (req, res) => {
       color,
       telefono,
       ruc,
-      logoURL,
     } = req.body;
+
     const datosSede = {
       id_sede,
       habilitado,

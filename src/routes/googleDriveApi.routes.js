@@ -9,11 +9,10 @@ import { uploadFile } from "../controllers/googleDriveApi.controller.js";
 
 const router = Router();
 
-//Defino nombres de las rutas,
 router.post(
   "/uploadFile",
   upload.single("photo"),
-  //   passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   uploadFile
 );
 
