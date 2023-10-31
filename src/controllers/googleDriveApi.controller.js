@@ -40,7 +40,6 @@ const uploadToGoogleDrive = async (
     const media = {
       mimeType: mimeType,
       body: bufferStream,
-      // body: bufferStream(),
     };
     const response = await driveService.files.create({
       requestBody,
@@ -52,12 +51,32 @@ const uploadToGoogleDrive = async (
   }
 };
 
+//* Function to create a public Url for specific realId
+const generatePublicUrl = async (realId) => {
+  try {
+    await driveService.permissions.create({
+      fileId: realId,
+      requestBody: {
+        role: "reader",
+        type: "anyone",
+      },
+    });
+    const result = await driveService.files.get({
+      fileId: realId,
+      fields: "webViewLink, webContentLink",
+    });
+    return result.data.webContentLink;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const uploadFile = async (req, res) => {
   const file = req.file;
   const tmp = new Duplex();
   tmp.push(file.buffer);
-
   tmp.push(null);
+
   const realId = await uploadToGoogleDrive(
     tmp,
     file.originalname,
@@ -65,32 +84,10 @@ export const uploadFile = async (req, res) => {
     file.mimetype
   );
 
-  res.send(realId);
+  const logoURL = await generatePublicUrl(realId);
+  res.json(logoURL); //Response From google Drive
 };
 
-//   //* Function to create a public Url for specific realId
-//   async generatePublicUrl(realId: string) {
-//     try {
-//       await this.driveService.permissions.create({
-//         fileId: realId,
-//         requestBody: {
-//           role: 'reader',
-//           type: 'anyone',
-//         },
-//       });
-//       /*
-//        * webViewLink: View the file in browser
-//        * webContentLink: Direct download link
-//        */
-//       const result = await this.driveService.files.get({
-//         fileId: realId,
-//         fields: 'webViewLink, webContentLink',
-//       });
-//       return result.data.webContentLink;
-//     } catch (error) {
-//       return error;
-//     }
-//   }
 //   export const deleteFileDrive=async(realId)=> {
 //     try {
 //       const response = await this.driveService.files.delete({
