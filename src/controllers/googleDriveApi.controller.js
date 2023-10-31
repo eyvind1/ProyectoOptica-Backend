@@ -53,20 +53,19 @@ const uploadToGoogleDrive = async (
 };
 
 export const uploadFile = async (req, res) => {
-  //   const { photo } = req.body;
-  console.log(" file", req.file);
-  res.send(req.file);
-  //   const tmp = new Duplex();
-  //   tmp.push(photo.buffer);
-  //   tmp.push(null);
-  //   console.log(file.buffer, " file", photo);
-  //   const realId = await uploadToGoogleDrive(
-  //     tmp,
-  //     file.originalname,
-  //     GOOGLE_FOLDER_SEDES,
-  //     file.mimetype
-  //   );
-  //   console.log(realId, " REAL ID");
+  const file = req.file;
+  const tmp = new Duplex();
+  tmp.push(file.buffer);
+
+  tmp.push(null);
+  const realId = await uploadToGoogleDrive(
+    tmp,
+    file.originalname,
+    GOOGLE_FOLDER_SEDES,
+    file.mimetype
+  );
+
+  res.send(realId);
 };
 
 //   //* Function to create a public Url for specific realId
