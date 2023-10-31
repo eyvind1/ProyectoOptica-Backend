@@ -151,7 +151,8 @@ export const editSedeById = async (req, res) => {
       Key: {
         id_sede: id_sede,
       },
-      UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, fecha_modificacion_sede = :fecha_modificacion_sede`,
+      UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, 
+                              fecha_modificacion_sede = :fecha_modificacion_sede, logoURL=:logoURL`,
       ConditionExpression: "id_sede = :id_sede",
       ExpressionAttributeValues: {
         ":id_sede": id_sede,
