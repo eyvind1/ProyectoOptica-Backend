@@ -84,8 +84,12 @@ export const uploadFile = async (req, res) => {
     file.mimetype
   );
 
+<<<<<<< Updated upstream
   const logoURL = await generatePublicUrl(realId);
   res.json(logoURL); //Response From google Drive
+=======
+  res.json(realId);
+>>>>>>> Stashed changes
 };
 
 //   export const deleteFileDrive=async(realId)=> {
