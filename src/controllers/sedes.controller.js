@@ -141,7 +141,7 @@ export const unsubscribeSedeById = async (req, res) => {
 
 export const editSedeById = async (req, res) => {
   const id_sede = req.params.idSede;
-  const logoURL = req.params.logoURL || " ";
+  const logoURL = req.params.logoURL || "";
   const {
     direccion,
     nombre_sede,
@@ -157,7 +157,8 @@ export const editSedeById = async (req, res) => {
         id_sede: id_sede,
       },
       UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, 
-                              fecha_modificacion_sede = :fecha_modificacion_sede, logoURL = :logoURL`,
+                              fecha_modificacion_sede = :fecha_modificacion_sede, logoURL = :logoURL
+                              , ruc = :ruc, telefono = :telefono`,
       ConditionExpression: "id_sede = :id_sede",
       ExpressionAttributeValues: {
         ":id_sede": id_sede,
@@ -165,8 +166,8 @@ export const editSedeById = async (req, res) => {
         ":nombre_sede": nombre_sede,
         ":fecha_modificacion_sede": fecha_modificacion_sede,
         // ":color": color,
-        // ":telefono": telefono,
-        // ":ruc": ruc,
+        ":telefono": telefono,
+        ":ruc": ruc,
         ":logoURL": logoURL,
       },
     };
