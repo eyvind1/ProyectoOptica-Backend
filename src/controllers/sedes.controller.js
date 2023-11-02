@@ -141,6 +141,7 @@ export const unsubscribeSedeById = async (req, res) => {
 
 export const editSedeById = async (req, res) => {
   const id_sede = req.params.idSede;
+  const logoURL = req.params.logoURL || "";
   const {
     direccion,
     nombre_sede,
@@ -148,7 +149,6 @@ export const editSedeById = async (req, res) => {
     color,
     telefono,
     ruc,
-    logoURL,
   } = req.body;
   try {
     const paramsSede = {
@@ -173,6 +173,7 @@ export const editSedeById = async (req, res) => {
     const sede = await dynamoClient.update(paramsSede).promise();
     return res.json(sede);
   } catch (error) {
+    console.log(error);
     return error.message;
     // return res.status(500).json({
     //   message: "Ocurrio un error o no se encuentra la sede",
