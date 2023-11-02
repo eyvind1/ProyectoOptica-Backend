@@ -48,7 +48,6 @@ export const createNewSede = async (req, res) => {
     const fecha = new Date();
     const fecha_creacion_sede = await castIsoDateToDate(fecha);
     let logoURL = req.body.logoURL;
-
     if (!logoURL) {
       logoURL = DEFAULT_LOGO_URL;
     }
@@ -158,7 +157,7 @@ export const editSedeById = async (req, res) => {
         id_sede: id_sede,
       },
       UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, 
-                              fecha_modificacion_sede = :fecha_modificacion_sede, logoURL=:logoURL`,
+                              fecha_modificacion_sede = :fecha_modificacion_sede, logoURL = :logoURL`,
       ConditionExpression: "id_sede = :id_sede",
       ExpressionAttributeValues: {
         ":id_sede": id_sede,
@@ -174,8 +173,9 @@ export const editSedeById = async (req, res) => {
     const sede = await dynamoClient.update(paramsSede).promise();
     return res.json(sede);
   } catch (error) {
-    return res.status(500).json({
-      message: "Ocurrio un error o no se encuentra la sede",
-    });
+    return error.message;
+    // return res.status(500).json({
+    //   message: "Ocurrio un error o no se encuentra la sede",
+    // });
   }
 };
