@@ -141,7 +141,7 @@ export const unsubscribeSedeById = async (req, res) => {
 
 export const editSedeById = async (req, res) => {
   const id_sede = req.params.idSede;
-  const logoURL = req.params.logoURL || "";
+  const logoURL = req.body.logoURL || "";
   const {
     direccion,
     nombre_sede,
