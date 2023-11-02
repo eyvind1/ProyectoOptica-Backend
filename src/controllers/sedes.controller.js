@@ -164,9 +164,9 @@ export const editSedeById = async (req, res) => {
         ":direccion": direccion,
         ":nombre_sede": nombre_sede,
         ":fecha_modificacion_sede": fecha_modificacion_sede,
-        ":color": color,
-        ":telefono": telefono,
-        ":ruc": ruc,
+        // ":color": color,
+        // ":telefono": telefono,
+        // ":ruc": ruc,
         ":logoURL": logoURL,
       },
     };
