@@ -59,8 +59,8 @@ const generatePublicUrl = async (realId) => {
     await driveService.permissions.create({
       fileId: realId,
       requestBody: {
-        // role: "reader",
-        role: "owner",
+        role: "reader",
+        // role: "owner",
         type: "anyone",
       },
     });
@@ -69,7 +69,7 @@ const generatePublicUrl = async (realId) => {
       fields: "webViewLink, webContentLink",
       mimeType: "image/jpeg",
     });
-    console.log(result.data.webViewLink);
+    console.log(result.data.webViewLink, " :aaaaaaaaaaaaaaaaaaaaaaa");
     return result.data.webContentLink;
   } catch (error) {
     return error;
