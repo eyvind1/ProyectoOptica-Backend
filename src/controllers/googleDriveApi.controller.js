@@ -1,5 +1,7 @@
 import { google } from "googleapis";
 import { Duplex } from "stream";
+import imageToBase64 from "image-to-base64";
+import fetch from "node-fetch";
 
 const auth = new google.auth.GoogleAuth({
   //   scopes: process.env.GOOGLE_SCOPES,
@@ -57,7 +59,8 @@ const generatePublicUrl = async (realId) => {
     await driveService.permissions.create({
       fileId: realId,
       requestBody: {
-        role: "reader",
+        // role: "reader",
+        role: "owner",
         type: "anyone",
       },
     });
@@ -87,6 +90,56 @@ export const uploadFile = async (req, res) => {
 
   const logoURL = await generatePublicUrl(realId);
   res.json(logoURL); //Response From google Drive
+};
+
+export const prueba = async (req, res) => {
+  // const imageToBase64 = require("image-to-base64");
+  //or
+  //import imageToBase64 from 'image-to-base64/browser';
+
+  // imageToBase64(
+  //   "https://drive.google.com/file/d/1rwMnd5MraeZoBD7cie1vQM3D7jAKK1ur/view?usp=drivesdk"
+  // ) // Path to the image
+  //   .then((response) => {
+  //     res.json(response.data);
+  //     console.log(response); // "cGF0aC90by9maWxlLmpwZw=="
+  //   })
+  //   .catch((error) => {
+  //     console.log(error); // Logs an error if there was one
+  //   });
+
+  const rest = await fetch(
+    "https://drive.google.com/file/d/1rwMnd5MraeZoBD7cie1vQM3D7jAKK1ur/view?usp=drivesdk"
+  );
+  const blob = await rest.blob();
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+  // res.json(blob);
+
+  // const result = await new Promise((resolve, reject) => {
+  //   // var reader = window.FileReader;
+  //   let fileReader = new global.FileReader();
+
+  //   reader.addEventListener(
+  //     "load",
+  //     function () {
+  //       resolve(reader.result);
+  //     },
+  //     false
+  //   );
+
+  //   reader.onerror = () => {
+  //     return reject(this);
+  //   };
+  //   reader.readAsDataURL(blob);
+  // });
+  // console.log(result);
+  return blob;
+
+  // res.json(logoURL); //Response From google Drive
 };
 
 //   export const deleteFileDrive=async(realId)=> {

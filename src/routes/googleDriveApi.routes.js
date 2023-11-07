@@ -5,7 +5,10 @@ import multer from "multer";
 const upload = multer();
 
 //Obtengo las funciones del controlador
-import { uploadFile } from "../controllers/googleDriveApi.controller.js";
+import {
+  uploadFile,
+  prueba,
+} from "../controllers/googleDriveApi.controller.js";
 
 const router = Router();
 
@@ -14,6 +17,12 @@ router.post(
   upload.single("photo"),
   // passport.authenticate("jwt", { session: false }),
   uploadFile
+);
+
+router.post(
+  "/nel",
+  prueba
+  // passport.authenticate("jwt", { session: false }),
 );
 
 export default router;
