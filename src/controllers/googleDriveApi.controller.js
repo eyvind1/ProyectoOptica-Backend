@@ -67,6 +67,7 @@ const generatePublicUrl = async (realId) => {
     const result = await driveService.files.get({
       fileId: realId,
       fields: "webViewLink, webContentLink",
+      mimeType: "image/jpeg",
     });
     console.log(result.data.webViewLink);
     return result.data.webContentLink;
