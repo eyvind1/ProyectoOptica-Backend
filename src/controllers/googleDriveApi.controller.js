@@ -65,6 +65,7 @@ const generatePublicUrl = async (realId) => {
       fileId: realId,
       fields: "webViewLink, webContentLink",
     });
+    console.log(result.data.webViewLink);
     return result.data.webContentLink;
   } catch (error) {
     return error;
