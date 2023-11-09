@@ -30,8 +30,15 @@ export const getAllSedes = async (req, res) => {
     const scanResults = [];
     let items;
     do {
+      // items = await dynamoClient.scan(params).promise();
+      // items.Items.forEach((item) => scanResults.push(item));
+      // params.ExclusiveStartKey = items.LastEvaluatedKey;
+
       items = await dynamoClient.scan(params).promise();
-      items.Items.forEach((item) => scanResults.push(item));
+      items.Items.forEach(async (item) => {
+        item.logoBase64 = await getBase64(logoURL);
+        scanResults.push(item);
+      });
       params.ExclusiveStartKey = items.LastEvaluatedKey;
     } while (typeof items.LastEvaluatedKey !== "undefined");
     return res.json(scanResults);
@@ -41,6 +48,16 @@ export const getAllSedes = async (req, res) => {
     });
   }
 };
+
+// Get Base 64 from image using Axios
+const getBase64 = async (url) => {
+  let image = await axios.get(url, {
+    responseType: "arraybuffer",
+  });
+  let returnedB64 = Buffer.from(image.data).toString("base64");
+  return returnedB64;
+};
+
 export const createNewSede = async (req, res) => {
   try {
     // Concateno el id_sede + su codigo especificado en el archivo util "CodigosTablas.js"

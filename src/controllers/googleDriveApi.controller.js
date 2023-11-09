@@ -1,7 +1,6 @@
 import { google } from "googleapis";
 import { Duplex } from "stream";
-import imageToBase64 from "image-to-base64";
-import fetch from "node-fetch";
+import axios from "axios";
 
 const auth = new google.auth.GoogleAuth({
   //   scopes: process.env.GOOGLE_SCOPES,
@@ -60,16 +59,14 @@ const generatePublicUrl = async (realId) => {
       fileId: realId,
       requestBody: {
         role: "reader",
-        // role: "owner",
         type: "anyone",
       },
     });
     const result = await driveService.files.get({
       fileId: realId,
       fields: "webViewLink, webContentLink",
-      mimeType: "image/jpeg",
     });
-    console.log(result.data.webViewLink, " :aaaaaaaaaaaaaaaaaaaaaaa");
+    console.log(result.data.webViewLink);
     return result.data.webContentLink;
   } catch (error) {
     return error;
@@ -94,53 +91,14 @@ export const uploadFile = async (req, res) => {
 };
 
 export const prueba = async (req, res) => {
-  // const imageToBase64 = require("image-to-base64");
-  //or
-  //import imageToBase64 from 'image-to-base64/browser';
-
-  // imageToBase64(
-  //   "https://drive.google.com/file/d/1rwMnd5MraeZoBD7cie1vQM3D7jAKK1ur/view?usp=drivesdk"
-  // ) // Path to the image
-  //   .then((response) => {
-  //     res.json(response.data);
-  //     console.log(response); // "cGF0aC90by9maWxlLmpwZw=="
-  //   })
-  //   .catch((error) => {
-  //     console.log(error); // Logs an error if there was one
-  //   });
-
-  const rest = await fetch(
-    "https://drive.google.com/file/d/1rwMnd5MraeZoBD7cie1vQM3D7jAKK1ur/view?usp=drivesdk"
+  let image = await axios.get(
+    "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download",
+    {
+      responseType: "arraybuffer",
+    }
   );
-  const blob = await rest.blob();
-  return new Promise((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
-  });
-  // res.json(blob);
-
-  // const result = await new Promise((resolve, reject) => {
-  //   // var reader = window.FileReader;
-  //   let fileReader = new global.FileReader();
-
-  //   reader.addEventListener(
-  //     "load",
-  //     function () {
-  //       resolve(reader.result);
-  //     },
-  //     false
-  //   );
-
-  //   reader.onerror = () => {
-  //     return reject(this);
-  //   };
-  //   reader.readAsDataURL(blob);
-  // });
-  // console.log(result);
-  return blob;
-
-  // res.json(logoURL); //Response From google Drive
+  let returnedB64 = Buffer.from(image.data).toString("base64");
+  res.json(returnedB64);
 };
 
 //   export const deleteFileDrive=async(realId)=> {
