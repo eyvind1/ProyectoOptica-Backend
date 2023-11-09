@@ -36,7 +36,7 @@ export const getAllSedes = async (req, res) => {
 
       items = await dynamoClient.scan(params).promise();
       items.Items.forEach(async (item) => {
-        item.logoBase64 = await getBase64(logoURL);
+        item.logoBase64 = await getBase64(item.logoURL);
         scanResults.push(item);
       });
       params.ExclusiveStartKey = items.LastEvaluatedKey;
