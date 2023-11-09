@@ -66,7 +66,12 @@ const generatePublicUrl = async (realId) => {
       fileId: realId,
       fields: "webViewLink, webContentLink",
     });
-    return result.data.webViewLink;
+    const urlDownload = result.data.webContentLink;
+    const urlOther = result.data.webViewLink;
+    return {
+      logoURL: urlDownload,
+      logoDOWNLOAD: urlOther,
+    };
   } catch (error) {
     return error;
   }
@@ -85,8 +90,8 @@ export const uploadFile = async (req, res) => {
     file.mimetype
   );
 
-  const logoURL = await generatePublicUrl(realId);
-  res.json(logoURL); //Response From google Drive
+  const { logoDOWNLOAD, logoURL } = await generatePublicUrl(realId);
+  res.json(logoURL, logoURLDownload); //Response From google Drive
 };
 
 export const prueba = async (req, res) => {
