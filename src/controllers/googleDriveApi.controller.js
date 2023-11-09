@@ -91,7 +91,7 @@ export const uploadFile = async (req, res) => {
   );
 
   const { logoDOWNLOAD, logoURL } = await generatePublicUrl(realId);
-  res.json(logoURL, logoDOWNLOAD); //Response From google Drive
+  res.json({ logoURL, logoDOWNLOAD }); //Response From google Drive
 };
 
 export const prueba = async (req, res) => {
