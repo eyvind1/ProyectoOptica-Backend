@@ -1,12 +1,11 @@
 import AWS from "../db.js";
-
 /* Libreria para poder generar ID's aleatorios*/
 import { v4 } from "uuid";
 /* Archivo util donde se especifica el codigo que se concatenera a cada ID de cada tabla */
 import { codeForTables } from "../utils/codigosTablas.js";
 import { DEFAULT_LOGO_URL } from "../utils/constants.js";
-
 import { castIsoDateToDate } from "../helpers/helperFunctions.js";
+import axios from "axios";
 
 /* Constantes Globales que utilizan las funciones de este archivo */
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
@@ -35,12 +34,19 @@ export const getAllSedes = async (req, res) => {
       // params.ExclusiveStartKey = items.LastEvaluatedKey;
 
       items = await dynamoClient.scan(params).promise();
-      items.Items.forEach(async (item) => {
-        item.logoBase64 = await getBase64(item.logoURL);
+      items.Items.forEach((item) => {
+        // item.logoBase64 = getBase64(item.logoURL);
+        // getBase64(item.logoURL);
+        // item.logoBase64 = "hola";
         scanResults.push(item);
       });
+
       params.ExclusiveStartKey = items.LastEvaluatedKey;
     } while (typeof items.LastEvaluatedKey !== "undefined");
+    // let a = await getBase64(
+    //   "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download"
+    // );
+    // console.log(a);
     return res.json(scanResults);
   } catch (error) {
     return res.status(500).json({
@@ -51,9 +57,15 @@ export const getAllSedes = async (req, res) => {
 
 // Get Base 64 from image using Axios
 const getBase64 = async (url) => {
-  let image = await axios.get(url, {
-    responseType: "arraybuffer",
-  });
+  console.log(url, url);
+  let image = await axios.get(
+    "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download",
+    {
+      responseType: "arraybuffer",
+    }
+  );
+
+  // console.log(image.data);
   let returnedB64 = Buffer.from(image.data).toString("base64");
   return returnedB64;
 };
