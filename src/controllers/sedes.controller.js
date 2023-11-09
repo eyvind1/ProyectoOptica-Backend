@@ -176,6 +176,7 @@ export const editSedeById = async (req, res) => {
     color,
     telefono,
     ruc,
+    logoDOWNLOAD,
   } = req.body;
   try {
     const paramsSede = {
@@ -185,7 +186,7 @@ export const editSedeById = async (req, res) => {
       },
       UpdateExpression: `SET  direccion= :direccion, nombre_sede=:nombre_sede, 
                               fecha_modificacion_sede = :fecha_modificacion_sede, logoURL = :logoURL
-                              , ruc = :ruc, telefono = :telefono`,
+                              , ruc = :ruc, telefono = :telefono, logoDOWNLOAD = :logoDOWNLOAD`,
       ConditionExpression: "id_sede = :id_sede",
       ExpressionAttributeValues: {
         ":id_sede": id_sede,
@@ -196,6 +197,7 @@ export const editSedeById = async (req, res) => {
         ":telefono": telefono,
         ":ruc": ruc,
         ":logoURL": logoURL,
+        ":logoDOWNLOAD": logoDOWNLOAD,
       },
     };
     const sede = await dynamoClient.update(paramsSede).promise();
