@@ -28,25 +28,26 @@ export const getAllSedes = async (req, res) => {
     // return res.json(sedes.Items);
     const scanResults = [];
     let items;
-    do {
-      // items = await dynamoClient.scan(params).promise();
-      // items.Items.forEach((item) => scanResults.push(item));
-      // params.ExclusiveStartKey = items.LastEvaluatedKey;
+    // do {
+    // items = await dynamoClient.scan(params).promise();
+    // items.Items.forEach((item) => scanResults.push(item));
+    // params.ExclusiveStartKey = items.LastEvaluatedKey;
 
-      items = await dynamoClient.scan(params).promise();
-      items.Items.forEach((item) => {
-        // item.logoBase64 = getBase64(item.logoURL);
-        // getBase64(item.logoURL);
-        // item.logoBase64 = "hola";
-        scanResults.push(item);
-      });
+    items = await dynamoClient.scan(params).promise();
 
-      params.ExclusiveStartKey = items.LastEvaluatedKey;
-    } while (typeof items.LastEvaluatedKey !== "undefined");
-    // let a = await getBase64(
-    //   "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download"
-    // );
-    // console.log(a);
+    // console.log(typeof a, a);
+    let arr = [];
+    items.Items.forEach(async (item) => {
+      scanResults.push(item);
+    });
+
+    for (const item of scanResults) {
+      item.logoBase64 = await getBase64(item.logoURL);
+    }
+    // params.ExclusiveStartKey = items.LastEvaluatedKey;
+    // console.log(await getBase64("a"));
+    // } while (typeof items.LastEvaluatedKey !== "undefined");
+
     return res.json(scanResults);
   } catch (error) {
     return res.status(500).json({
@@ -57,14 +58,9 @@ export const getAllSedes = async (req, res) => {
 
 // Get Base 64 from image using Axios
 const getBase64 = async (url) => {
-  console.log(url, url);
-  let image = await axios.get(
-    "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download",
-    {
-      responseType: "arraybuffer",
-    }
-  );
-
+  let image = await axios.get(url, {
+    responseType: "arraybuffer",
+  });
   // console.log(image.data);
   let returnedB64 = Buffer.from(image.data).toString("base64");
   return returnedB64;

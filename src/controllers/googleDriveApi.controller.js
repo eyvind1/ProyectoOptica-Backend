@@ -66,8 +66,7 @@ const generatePublicUrl = async (realId) => {
       fileId: realId,
       fields: "webViewLink, webContentLink",
     });
-    console.log(result.data.webViewLink);
-    return result.data.webContentLink;
+    return result.data.webViewLink;
   } catch (error) {
     return error;
   }
@@ -104,7 +103,7 @@ export const prueba = async (req, res) => {
   // }
 
   let image = await axios.get(
-    "https://t4.ftcdn.net/jpg/05/21/18/03/240_F_521180377_2iAVJqBQSo3cgKaVp8vMBR8asrC61DoU.jpg",
+    "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download ",
     {
       responseType: "arraybuffer",
     }
