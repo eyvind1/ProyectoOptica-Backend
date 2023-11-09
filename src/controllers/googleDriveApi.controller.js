@@ -91,14 +91,55 @@ export const uploadFile = async (req, res) => {
 };
 
 export const prueba = async (req, res) => {
+  // const rest = await fetch(
+  //   "https://t4.ftcdn.net/jpg/05/21/18/03/240_F_521180377_2iAVJqBQSo3cgKaVp8vMBR8asrC61DoU.jpg"
+  // );
+  // const blob = await rest.blob();
+  // const buffer = await blob.arrayBuffer();
+  // var binary = "";
+  // var bytes = new Uint8Array(buffer);
+  // var len = bytes.byteLength;
+  // for (var i = 0; i < len; i++) {
+  //   binary += String.fromCharCode(bytes[i]);
+  // }
+
   let image = await axios.get(
-    "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download",
+    "https://t4.ftcdn.net/jpg/05/21/18/03/240_F_521180377_2iAVJqBQSo3cgKaVp8vMBR8asrC61DoU.jpg",
     {
       responseType: "arraybuffer",
     }
   );
   let returnedB64 = Buffer.from(image.data).toString("base64");
   res.json(returnedB64);
+  // console.log(buffer);
+  // console.log(Buffer.from(binary).toString("base64"));
+  // res.json(Buffer.from(binary).toString("base64"));
+
+  // console.log(window.btoa(binary));
+  // return window.btoa(binary);
+  // res.json(blob);
+
+  // const result = await new Promise((resolve, reject) => {
+  //   // var reader = window.FileReader;
+  //   let fileReader = new global.FileReader();
+
+  //   reader.addEventListener(
+  //     "load",
+  //     function () {
+  //       resolve(reader.result);
+  //     },
+  //     false
+  //   );
+
+  //   reader.onerror = () => {
+  //     return reject(this);
+  //   };
+  //   reader.readAsDataURL(blob);
+  // });
+  // console.log(result);
+  // return blob;
+
+  // res.json(logoURL); //Response From google Drive
 };
 
 //   export const deleteFileDrive=async(realId)=> {
