@@ -84,6 +84,7 @@ export const createNewSede = async (req, res) => {
       color,
       telefono,
       ruc,
+      logoDOWNLOAD,
     } = req.body;
 
     const datosSede = {
@@ -97,6 +98,7 @@ export const createNewSede = async (req, res) => {
       telefono,
       ruc,
       logoURL,
+      logoDOWNLOAD,
     };
     const newSede = await dynamoClient
       .put({
