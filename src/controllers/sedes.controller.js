@@ -28,25 +28,25 @@ export const getAllSedes = async (req, res) => {
     // return res.json(sedes.Items);
     const scanResults = [];
     let items;
-    // do {
-    // items = await dynamoClient.scan(params).promise();
-    // items.Items.forEach((item) => scanResults.push(item));
-    // params.ExclusiveStartKey = items.LastEvaluatedKey;
+    do {
+      items = await dynamoClient.scan(params).promise();
+      items.Items.forEach((item) => scanResults.push(item));
+      params.ExclusiveStartKey = items.LastEvaluatedKey;
 
-    items = await dynamoClient.scan(params).promise();
+      // items = await dynamoClient.scan(params).promise();
 
-    // console.log(typeof a, a);
-    let arr = [];
-    items.Items.forEach(async (item) => {
-      scanResults.push(item);
-    });
+      // console.log(typeof a, a);
+      // let arr = [];
+      // items.Items.forEach(async (item) => {
+      //   scanResults.push(item);
+      // });
 
-    for (const item of scanResults) {
-      item.logoBase64 = await getBase64(item.logoURL);
-    }
-    // params.ExclusiveStartKey = items.LastEvaluatedKey;
-    // console.log(await getBase64("a"));
-    // } while (typeof items.LastEvaluatedKey !== "undefined");
+      // for (const item of scanResults) {
+      //   item.logoBase64 = await getBase64(item.logoURL);
+      // }
+      // params.ExclusiveStartKey = items.LastEvaluatedKey;
+      // console.log(await getBase64("a"));
+    } while (typeof items.LastEvaluatedKey !== "undefined");
 
     return res.json(scanResults);
   } catch (error) {
@@ -56,15 +56,15 @@ export const getAllSedes = async (req, res) => {
   }
 };
 
-// Get Base 64 from image using Axios
-const getBase64 = async (url) => {
-  let image = await axios.get(url, {
-    responseType: "arraybuffer",
-  });
-  // console.log(image.data);
-  let returnedB64 = Buffer.from(image.data).toString("base64");
-  return returnedB64;
-};
+// // Get Base 64 from image using Axios
+// const getBase64 = async (url) => {
+//   let image = await axios.get(url, {
+//     responseType: "arraybuffer",
+//   });
+//   // console.log(image.data);
+//   let returnedB64 = Buffer.from(image.data).toString("base64");
+//   return returnedB64;
+// };
 
 export const createNewSede = async (req, res) => {
   try {
