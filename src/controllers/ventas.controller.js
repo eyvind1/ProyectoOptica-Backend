@@ -3,6 +3,8 @@ import { v4 } from "uuid";
 
 import { codeForTables } from "../utils/codigosTablas.js";
 import { castIsoDateToDate } from "../helpers/helperFunctions.js";
+import PdfPrinter from "pdfmake";
+import fs from "fs";
 
 const TABLE_NAME_VENTAS = "Ventas";
 const TABLE_NAME_CAJA = "Caja";
@@ -594,4 +596,25 @@ export const unsubscribeVentasById = async (req, res) => {
       message: "La venta no existe",
     });
   }
+};
+
+export const getPDF = async (req, res) => {
+  var fonts = {
+    Roboto: {
+      normal: "./Roboto-Regular.ttf",
+    },
+  };
+
+  // var PdfPrinter = require("../src/printer");
+  var printer = new PdfPrinter(fonts);
+
+  var docDefinition = {
+    content: [
+      "First paragraph",
+      "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
+    ],
+  };
+
+  var pdfDoc = printer.createPdfKitDocument(docDefinition);
+  pdfDoc.pipe(fs.createWriteStream("basics.pdf"));
 };
