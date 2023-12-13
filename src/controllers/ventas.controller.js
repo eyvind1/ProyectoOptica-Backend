@@ -3,8 +3,12 @@ import { v4 } from "uuid";
 
 import { codeForTables } from "../utils/codigosTablas.js";
 import { castIsoDateToDate } from "../helpers/helperFunctions.js";
-import PdfPrinter from "pdfmake";
+
+import pdfMake from "pdfmake/build/pdfmake.js";
+import pdfFonts from "pdfmake/build/vfs_fonts.js";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import fs from "fs";
+import PdfPrinter from "pdfmake";
 
 const TABLE_NAME_VENTAS = "Ventas";
 const TABLE_NAME_CAJA = "Caja";
@@ -601,7 +605,7 @@ export const unsubscribeVentasById = async (req, res) => {
 export const getPDF = async (req, res) => {
   var fonts = {
     Roboto: {
-      normal: "./Roboto-Regular.ttf",
+      normal: "src/controllers/Roboto-Regular.ttf",
     },
   };
 
@@ -616,5 +620,6 @@ export const getPDF = async (req, res) => {
   };
 
   var pdfDoc = printer.createPdfKitDocument(docDefinition);
-  pdfDoc.pipe(fs.createWriteStream("basics.pdf"));
+  pdfDoc.pipe(fs.createWriteStream("lists.pdf"));
+  pdfDoc.end();
 };
