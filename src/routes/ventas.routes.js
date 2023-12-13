@@ -57,7 +57,7 @@ router.put(
   unsubscribeVentasById
 );
 //router.get('/getAllVentasByDate',getAllVentasByDate);
-router.get(
+router.post(
   "/getPDF",
   //  passport.authenticate("jwt", { session: false }),
   getPDF
