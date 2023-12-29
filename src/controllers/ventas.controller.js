@@ -603,38 +603,71 @@ export const unsubscribeVentasById = async (req, res) => {
   }
 };
 
-// Genera PDF y envio al front
-export const getPDF = async (req, res) => {
+const createPDFBi = async () => {
   var fonts = {
     Roboto: {
       normal: "src/controllers/Roboto-Regular.ttf",
     },
   };
-
-  // var PdfPrinter = require("../src/printer");
   var printer = new PdfPrinter(fonts);
-
   var docDefinition = {
     content: [
       "First paragraph",
       "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
     ],
   };
-
-  // var pdfDoc = printer.createPdfKitDocument(docDefinition);
   var pdfDoc = pdfMake.createPdf(docDefinition);
-  try {
-    pdfDoc.getBuffer((buffer) => {
-      // console.log("blob", buffer);
-      const blob = new Blob([buffer]);
-      console.log("blob", blob);
+  pdfDoc.getDataUrl((dataUrl) => {
+    // res.send(buffer);
+    res.contentType("application/pdf");
 
-      res.send(buffer);
-      // return blob;
+    res.send(dataUrl);
+  });
+  // return  pdfDoc.getDataUrl();
+};
+// Genera PDF y envio al front
+export const getPDF = async (req, res) => {
+  // var PdfPrinter = require("../src/printer");
+  // var printer = new PdfPrinter(fonts);
+
+  // var docDefinition = {
+  //   content: [
+  //     "First paragraph",
+  //     "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
+  //   ],
+  // };
+
+  // var pdfDoc = p(rinter.createPdfKitDocument(docDefinition);
+
+  // var pdfDoc = pdfMake.createPdf(docDefinition);
+  // pdfDoc.getBuffer((buffer) => {
+  // console.log("blob", buffer);
+  // const blob = new Blob([buffer]);
+  // console.log("blob", blob);
+  try {
+    var fonts = {
+      Roboto: {
+        normal: "src/controllers/Roboto-Regular.ttf",
+      },
+    };
+    var printer = new PdfPrinter(fonts);
+    var docDefinition = {
+      content: [
+        "First paragraph",
+        "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
+      ],
+    };
+    var pdfDoc = pdfMake.createPdf(docDefinition);
+    pdfDoc.getDataUrl((dataUrl) => {
+      // res.send(buffer);
+      // res.contentType("application/pdf");
+      // console.log(dataUrl);
+      res.send(dataUrl);
     });
   } catch (error) {
-    console.log("error", error);
+    console.log(error);
   }
+  // return blob;
 
   // var blob = new Blob([pdfDoc], {
   //   type: "application/pdf",
