@@ -607,7 +607,7 @@ export const unsubscribeVentasById = async (req, res) => {
 // Genera PDF y envio al front
 export const getPDF = async (req, res) => {
   let { urlImgSede } = req.body;
-  console.log(url_sede, " SEDE ***");
+  console.log(urlImgSede, " SEDE ***");
   try {
     var fonts = {
       Roboto: {
@@ -634,7 +634,7 @@ export const getPDF = async (req, res) => {
               /* [{ image: await getBase64ImageFromURL('/assets/images/logo-dark.png'), width: 150 }, { text: 'Nº de Boleta: ' + numeroBoleta, style: 'tableHeader', rowSpan: 4, alignment: 'right' }], */
               [
                 {
-                  image: "data:image/png;base64," + (await prueba(url_sede)),
+                  image: "data:image/png;base64," + (await prueba(urlImgSede)),
                   width: 150,
                 },
                 // {
