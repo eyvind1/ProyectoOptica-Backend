@@ -641,11 +641,11 @@ export const getPDF = async (req, res) => {
       ],
     };
     var pdfDoc = pdfMake.createPdf(docDefinition);
-    pdfDoc.getBase64((dataUrl) => {
-      // res.send(buffer);
+    pdfDoc.getBase64((base64) => {
+      // res.send(base64);
       // res.contentType("application/pdf");
       // console.log(dataUrl);
-      res.send("hola");
+      res.json("hola");
     });
   } catch (error) {
     console.log(error);
