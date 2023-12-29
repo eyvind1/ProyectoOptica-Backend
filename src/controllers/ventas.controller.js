@@ -606,7 +606,7 @@ export const unsubscribeVentasById = async (req, res) => {
 
 // Genera PDF y envio al front
 export const getPDF = async (req, res) => {
-  let url_sede = req.params.urlImgSede;
+  let { urlImgSede } = req.body;
   console.log(url_sede, " SEDE ***");
   try {
     var fonts = {
