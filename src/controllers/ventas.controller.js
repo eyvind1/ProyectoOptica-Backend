@@ -621,17 +621,33 @@ export const getPDF = async (req, res) => {
     ],
   };
 
-  var pdfDoc = printer.createPdfKitDocument(docDefinition);
-  var blob = new Blob([pdfDoc], {
-    type: "application/pdf",
-  });
-  console.log(pdfDoc);
+  // var pdfDoc = printer.createPdfKitDocument(docDefinition);
+  var pdfDoc = pdfMake.createPdf(docDefinition);
+  try {
+    pdfDoc.getBuffer((buffer) => {
+      // console.log("blob", buffer);
+      const blob = new Blob([buffer]);
+      console.log("blob", blob);
 
-  // console.log(blob);
-  // res.contentType("blob");
-  res.type(blob.type);
+      res.send(buffer);
+      // return blob;
+    });
+  } catch (error) {
+    console.log("error", error);
+  }
 
-  return res.send(blob);
+  // var blob = new Blob([pdfDoc], {
+  //   type: "application/pdf",
+  // });
+  // console.log(pdfDoc.getData);
+
+  // // console.log(blob);
+  // // res.contentType("blob");
+  // res.type(blob.type);
+
+  // return res.send(blob);
+  // pdfDoc.download();
+
   // pdfDoc.pipe(fs.createWriteStream("lists.pdf"));
   // pdfDoc.end();
 };
