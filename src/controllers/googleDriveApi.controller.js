@@ -94,7 +94,7 @@ export const uploadFile = async (req, res) => {
   res.json({ logoURL, logoDOWNLOAD }); //Response From google Drive
 };
 
-export const prueba = async () => {
+export const prueba = async (url) => {
   // const rest = await fetch(
   //   "https://t4.ftcdn.net/jpg/05/21/18/03/240_F_521180377_2iAVJqBQSo3cgKaVp8vMBR8asrC61DoU.jpg"
   // );
@@ -107,12 +107,9 @@ export const prueba = async () => {
   //   binary += String.fromCharCode(bytes[i]);
   // }
 
-  let image = await axios.get(
-    "https://drive.google.com/uc?id=1UUw_qSesVIf7e1_0sAQCGYoqD3bJ0BQx&export=download",
-    {
-      responseType: "arraybuffer",
-    }
-  );
+  let image = await axios.get(url, {
+    responseType: "arraybuffer",
+  });
   let returnedB64 = Buffer.from(image.data).toString("base64");
   console.log(returnedB64);
   return returnedB64;
