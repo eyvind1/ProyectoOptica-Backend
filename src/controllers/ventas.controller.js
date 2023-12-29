@@ -635,9 +635,34 @@ export const getPDF = async (req, res) => {
     };
     var printer = new PdfPrinter(fonts);
     var docDefinition = {
+      pageSize: "A4",
+      pageOrientation: "landscape",
+      pageMargins: [40, 60, 40, 60],
       content: [
-        "First paragraph",
-        "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
+        {
+          style: "tableMargin",
+          table: {
+            widths: ["*", "*"],
+            body: [
+              /* [{ image: await getBase64ImageFromURL('/assets/images/logo-dark.png'), width: 150 }, { text: 'Nº de Boleta: ' + numeroBoleta, style: 'tableHeader', rowSpan: 4, alignment: 'right' }], */
+              [
+                {
+                  image: await getBase64ImageFromURL(
+                    "/assets/images/logo-dark.png"
+                  ),
+                  width: 150,
+                },
+                {
+                  text: "",
+                  style: "tableHeader",
+                  rowSpan: 3,
+                  alignment: "right",
+                },
+              ],
+            ],
+          },
+          layout: "noBorders",
+        },
       ],
     };
     var pdfDoc = pdfMake.createPdf(docDefinition);
