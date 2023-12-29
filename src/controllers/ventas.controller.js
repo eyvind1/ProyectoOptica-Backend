@@ -641,7 +641,7 @@ export const getPDF = async (req, res) => {
       ],
     };
     var pdfDoc = pdfMake.createPdf(docDefinition);
-    pdfDoc.getDataUrl((dataUrl) => {
+    pdfDoc.getBase64((dataUrl) => {
       // res.send(buffer);
       // res.contentType("application/pdf");
       // console.log(dataUrl);
