@@ -607,7 +607,6 @@ export const unsubscribeVentasById = async (req, res) => {
 // Genera PDF y envio al front
 export const getPDF = async (req, res) => {
   let { urlImgSede } = req.body;
-  console.log(urlImgSede, " SEDE ***");
   try {
     var fonts = {
       Roboto: {
@@ -615,12 +614,7 @@ export const getPDF = async (req, res) => {
       },
     };
     var printer = new PdfPrinter(fonts);
-    // var docDefinition = {
-    //   content: [
-    //     "First paragraph",
-    //     "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
-    //   ],
-    // };
+
     var docDefinition = {
       pageSize: "A4",
       pageOrientation: "landscape",
@@ -653,29 +647,10 @@ export const getPDF = async (req, res) => {
     var pdfDoc = pdfMake.createPdf(docDefinition);
     pdfDoc.getBase64(async (base64) => {
       res.json(base64);
-      // res.contentType("application/pdf");
-      // console.log(dataUrl);
-      // res.json("hola");
     });
   } catch (error) {
     console.log(error);
   }
-  // return blob;
-
-  // var blob = new Blob([pdfDoc], {
-  //   type: "application/pdf",
-  // });
-  // console.log(pdfDoc.getData);
-
-  // // console.log(blob);
-  // // res.contentType("blob");
-  // res.type(blob.type);
-
-  // return res.send(blob);
-  // pdfDoc.download();
-
-  // pdfDoc.pipe(fs.createWriteStream("lists.pdf"));
-  // pdfDoc.end();
 };
 
 // async createPDF(venta: VentasModel, cliente: any) {
