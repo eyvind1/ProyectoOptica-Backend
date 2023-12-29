@@ -627,23 +627,6 @@ const createPDFBi = async () => {
 };
 // Genera PDF y envio al front
 export const getPDF = async (req, res) => {
-  // var PdfPrinter = require("../src/printer");
-  // var printer = new PdfPrinter(fonts);
-
-  // var docDefinition = {
-  //   content: [
-  //     "First paragraph",
-  //     "Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines",
-  //   ],
-  // };
-
-  // var pdfDoc = p(rinter.createPdfKitDocument(docDefinition);
-
-  // var pdfDoc = pdfMake.createPdf(docDefinition);
-  // pdfDoc.getBuffer((buffer) => {
-  // console.log("blob", buffer);
-  // const blob = new Blob([buffer]);
-  // console.log("blob", blob);
   try {
     var fonts = {
       Roboto: {
@@ -662,7 +645,7 @@ export const getPDF = async (req, res) => {
       // res.send(buffer);
       // res.contentType("application/pdf");
       // console.log(dataUrl);
-      res.send(dataUrl);
+      res.send("hola");
     });
   } catch (error) {
     console.log(error);
