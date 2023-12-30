@@ -606,7 +606,262 @@ export const unsubscribeVentasById = async (req, res) => {
 
 // Genera PDF y envio al front
 export const getPDF = async (req, res) => {
-  let { urlImgSede } = req.body;
+  console.log(req.body);
+  let {
+    urlImgSede,
+    nombre_cliente,
+    medidas,
+    fecha_creacion_venta,
+    list_monturas,
+    list_lunas,
+    list_accesorios,
+  } = req.body;
+
+  var simboloNuevoSol = "S/. ";
+  var propietarioEmpresa = "Raúl J. Condori Ramos";
+  var rucEmpresa = "123456789191";
+  var numeroBoleta = "0000418";
+  var direccionEmpresa = "Calle Leticia 104, Carmen Alto, Cayma";
+  var felefonoEmpresa = "98 98 98";
+
+  var dniCliente = "12345678";
+  var direccionCliente = "Calle Leticia 104, Carmen Alto, Cayma";
+
+  var od_esf_Cliente =
+    medidas[0].od_esferico > 0
+      ? "+" + medidas[0].od_esferico.toFixed(2)
+      : medidas[0].od_esferico.toFixed(2);
+  var od_cil_Cliente =
+    medidas[0].od_cilindrico > 0
+      ? "+" + medidas[0].od_cilindrico.toFixed(2)
+      : medidas[0].od_cilindrico.toFixed(2);
+  var od_eje_Cliente = medidas[0].od_eje;
+  var oi_esf_Cliente =
+    medidas[0].oi_esferico > 0
+      ? "+" + medidas[0].oi_esferico.toFixed(2)
+      : medidas[0].oi_esferico.toFixed(2);
+  var oi_cil_Cliente =
+    medidas[0].oi_cilindrico > 0
+      ? "+" + medidas[0].oi_cilindrico.toFixed(2)
+      : medidas[0].oi_cilindrico.toFixed(2);
+  var oi_eje_Cliente = medidas[0].oi_eje;
+  var dip_Cliente = medidas[0].dip;
+  var add_Cliente =
+    medidas[0].add > 0
+      ? "+" + medidas[0].add.toFixed(2)
+      : medidas[0].add.toFixed(2);
+
+  var fecha_entrega = new Date(fecha_creacion_venta).toLocaleDateString(
+    "es-CL",
+    {
+      weekday: "long", // narrow, short
+      year: "numeric", // 2-digit
+      month: "long", // numeric, 2-digit, narrow, long
+      day: "numeric", // 2-digit
+    }
+  );
+  var hora_entrega = new Date(fecha_creacion_venta).toLocaleTimeString(
+    "es-CL",
+    {
+      timeZone: "America/Bogota",
+      hour12: true, // false
+      hour: "numeric", // 2-digit
+      minute: "2-digit", // numeric
+      second: "2-digit", // numeric
+    }
+  );
+
+  var primeraNota = "Todo trabajo se efectuara con un adelanto del 50%.";
+  var segundaNota =
+    "La empresa no se responsabiliza de los pedidos no recogidos después de un mes.";
+
+  var externalDataRetrievedFromServer = [];
+
+  function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+  }
+
+  function buildData() {
+    var numOrdenItems = 0;
+    var totalMonturas,
+      totallunas,
+      totalAccesorios = 0;
+    var subTotal = 0;
+
+    // Monturas
+    if (list_monturas.length > 0) {
+      for (var i = 0; i < ist_monturas.length; i++) {
+        numOrdenItems += 1;
+        totalMonturas =
+          list_monturas[i].precio_montura_v * list_monturas[i].cant_vendida;
+        subTotal += totalMonturas;
+        externalDataRetrievedFromServer.push({
+          num_orden: numOrdenItems,
+          detalle:
+            list_monturas[i].marca +
+            " Cód. int.: " +
+            list_monturas[i].codigo +
+            " Color: " +
+            list_monturas[i].color,
+          precio: list_monturas[i].precio_montura_v,
+          cantidad: list_monturas[i].cant_vendida,
+          total: totalMonturas,
+        }); // Añade
+      }
+    }
+
+    // Lunas
+    if (list_lunas.length > 0) {
+      for (var i = 0; i < list_lunas.length; i++) {
+        numOrdenItems += 1;
+        totallunas = list_lunas[i].precio_luna_v * list_lunas[i].cant_vendida;
+        subTotal += totallunas;
+        externalDataRetrievedFromServer.push({
+          num_orden: numOrdenItems,
+          detalle: list_lunas[i].material,
+          precio: list_lunas[i].precio_luna_v,
+          cantidad: list_lunas[i].cant_vendida,
+          total: totallunas,
+        }); // Añade
+      }
+    }
+
+    // Accesorios
+    if (list_accesorios.length > 0) {
+      for (var i = 0; i < list_accesorios.length; i++) {
+        numOrdenItems += 1;
+        totalAccesorios =
+          list_accesorios[i].precio_accesorio_v *
+          list_accesorios[i].cant_vendida;
+        subTotal += totalAccesorios;
+        externalDataRetrievedFromServer.push({
+          num_orden: numOrdenItems,
+          detalle: list_accesorios[i].nombre_accesorio,
+          precio: list_accesorios[i].precio_accesorio_v,
+          cantidad: list_accesorios[i].cant_vendida,
+          total: totalAccesorios,
+        }); // Añade
+      }
+    }
+    return subTotal;
+  }
+
+  function buildTableBody(data, columns, subtotal) {
+    var body = [];
+
+    body.push([
+      {
+        text: "No.",
+        style: "title",
+        alignment: "center",
+        fillColor: "#d8e3fc",
+        margin: [0, 3, 0, 3],
+      },
+      {
+        text: "Detalle",
+        style: "title",
+        alignment: "center",
+        fillColor: "#d8e3fc",
+        margin: [0, 3, 0, 3],
+      },
+      {
+        text: "P. Unit.",
+        style: "title",
+        alignment: "center",
+        fillColor: "#d8e3fc",
+        margin: [0, 3, 0, 3],
+      },
+      {
+        text: "Cant.",
+        style: "title",
+        alignment: "center",
+        fillColor: "#d8e3fc",
+        margin: [0, 3, 0, 3],
+      },
+      {
+        text: "Importe",
+        style: "title",
+        alignment: "center",
+        fillColor: "#d8e3fc",
+        margin: [0, 3, 0, 3],
+      },
+    ]);
+
+    data.forEach(function (row) {
+      var dataRow = [];
+
+      columns.forEach(function (column) {
+        if (column === "num_orden") {
+          dataRow.push({
+            text: row[column].toString(),
+            style: "text",
+            alignment: "center",
+            margin: [0, 2, 0, 2],
+          });
+        } else if (column === "detalle") {
+          dataRow.push({
+            text: row[column].toString(),
+            style: "text",
+            alignment: "left",
+            margin: [0, 2, 0, 2],
+          });
+        } else {
+          dataRow.push({
+            text: row[column].toString(),
+            style: "text",
+            alignment: "right",
+            margin: [0, 2, 0, 2],
+          });
+        }
+      });
+
+      body.push(dataRow);
+    });
+
+    /* var totalIGV = round(subtotal * peruIGV, 2);
+    var total = round(subtotal + totalIGV, 1);  */
+
+    var total = round(subtotal, 1);
+
+    /* body.push([{ text: ' ', rowSpan: 3, colSpan: 2}, { }, {text: 'Sub. Total:', style: 'tableHeader', alignment: 'right', colSpan: 2 }, { }, { text: simboloNuevoSol + subtotal, style: 'contenido', alignment: 'right' }]);
+    body.push([{ }, { }, { text: 'IGV (18%) :', style: 'tableHeader', alignment: 'right', colSpan: 2}, { }, { text: simboloNuevoSol + totalIGV, style: 'contenido', alignment: 'right' }]); */
+    /* body.push([{ text: '', borderColor: ['#FFFFFF', , , '#FFFFFF'], colSpan: 3 }, {  }, {  }, { text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: simboloNuevoSol + total, style: 'contenido', alignment: 'right' }]); */
+    body.push([
+      { text: "", border: [false, false, false, false], colSpan: 2 },
+      {},
+      {
+        text: "Total:",
+        style: "title",
+        alignment: "right",
+        colSpan: 2,
+        margin: [0, 2, 0, 2],
+      },
+      {},
+      {
+        text: simboloNuevoSol + total,
+        style: "title",
+        alignment: "right",
+        margin: [0, 2, 0, 2],
+      },
+    ]);
+
+    return body;
+  }
+
+  function table(data, columns) {
+    var subtotal = buildData();
+    return {
+      style: "tableBasic",
+      color: "#444",
+      table: {
+        widths: [25, "*", 45, 35, 55],
+        headerRows: 1,
+        body: buildTableBody(data, columns, subtotal),
+      },
+    };
+  }
+
   try {
     var fonts = {
       Roboto: {
@@ -617,32 +872,518 @@ export const getPDF = async (req, res) => {
 
     var docDefinition = {
       pageSize: "A4",
-      pageOrientation: "landscape",
       pageMargins: [40, 60, 40, 60],
       content: [
+        // LOGO y DATOS DE LA EMPRESA
         {
-          // style: "tableMargin",
+          style: "tableBasic",
           table: {
-            widths: ["*", "*"],
+            widths: [340, "*"],
             body: [
-              /* [{ image: await getBase64ImageFromURL('/assets/images/logo-dark.png'), width: 150 }, { text: 'Nº de Boleta: ' + numeroBoleta, style: 'tableHeader', rowSpan: 4, alignment: 'right' }], */
               [
-                {
-                  image: "data:image/png;base64," + (await prueba(urlImgSede)),
-                  width: 150,
-                },
-                // {
-                //   text: "",
-                //   style: "tableHeader",
-                //   rowSpan: 3,
-                //   alignment: "right",
-                // },
+                [
+                  {
+                    table: {
+                      widths: ["*"],
+                      body: [
+                        [
+                          {
+                            image:
+                              "data:image/png;base64," +
+                              (await prueba(urlImgSede)),
+                            width: 150,
+                          },
+                        ],
+                        [
+                          {
+                            text: "De " + propietarioEmpresa,
+                            alignment: "center",
+                          },
+                        ],
+                      ],
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    },
+                  },
+                ],
+                [
+                  {
+                    table: {
+                      widths: ["*"],
+                      body: [
+                        [
+                          {
+                            text: "R.U.C. " + rucEmpresa,
+                            style: "title",
+                            alignment: "center",
+                            margin: [0, 6, 0, 6],
+                          },
+                        ],
+                        [
+                          {
+                            text: "BOLETA DE VENTA",
+                            style: "title2",
+                            alignment: "center",
+                            fillColor: "#2D4497",
+                            fillOpacity: 0.8,
+                            margin: [0, 6, 0, 6],
+                          },
+                        ],
+                        [
+                          {
+                            text: "001- Nº " + numeroBoleta,
+                            style: "title",
+                            color: "red",
+                            alignment: "center",
+                            margin: [0, 6, 0, 6],
+                          },
+                        ],
+                      ],
+                    },
+                  },
+                ],
               ],
             ],
           },
-          // layout: "noBorders",
+          layout: {
+            defaultBorder: false,
+          },
+        },
+
+        {
+          style: "tableBasic",
+          table: {
+            widths: ["*", "*"],
+            body: [
+              [
+                {
+                  text: direccionEmpresa,
+                  style: "header",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+                {
+                  text: "Cel: " + felefonoEmpresa,
+                  style: "header",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+              ],
+            ],
+          },
+          layout: {
+            defaultBorder: false,
+          },
+        },
+
+        // DATOS DEL CLIENTE
+        {
+          style: "tableBasic",
+          table: {
+            widths: [340, "*"],
+            body: [
+              [
+                {
+                  text: "Señor(a): " + nombre_cliente,
+                  style: "title",
+                  alignment: "left",
+                  Span: 1,
+                },
+                {},
+              ],
+              [
+                {
+                  text: "Dirección: " + direccionCliente,
+                  style: "text",
+                  alignment: "left",
+                },
+                {
+                  text: "DNI: " + dniCliente,
+                  style: "text",
+                  alignment: "left",
+                },
+              ],
+            ],
+          },
+          layout: {
+            vLineWidth: function (i, node) {
+              return i === 0 || i === node.table.widths.length ? 1 : 0;
+            },
+          },
+        },
+
+        // RESUMEN DEL PEDIDO
+        {
+          style: "tableBasic",
+          table: {
+            widths: [150],
+            heights: [15],
+            body: [
+              [
+                {
+                  text: "RESUMEN DEL PEDIDO: ",
+                  style: "title2",
+                  alignment: "left",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+              ],
+            ],
+          },
+          layout: {
+            defaultBorder: false,
+            paddingLeft: function (i, node) {
+              return 10;
+            },
+          },
+        },
+
+        table(externalDataRetrievedFromServer, [
+          "num_orden",
+          "detalle",
+          "precio",
+          "cantidad",
+          "total",
+        ]),
+
+        // DETALLE DE LA MEDIDA
+        {
+          style: "tableBasic",
+          table: {
+            widths: [150],
+            heights: [15],
+            body: [
+              [
+                {
+                  text: "DETALLE DE LA MEDIDA: ",
+                  style: "title2",
+                  alignment: "left",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+              ],
+            ],
+          },
+          layout: {
+            defaultBorder: false,
+            paddingLeft: function (i, node) {
+              return 10;
+            },
+          },
+        },
+
+        {
+          style: "tableBasic",
+          table: {
+            widths: ["*", "*", "*", "*", "*", "*"],
+            heights: [15, 15, 15],
+            headerRows: 2,
+            body: [
+              [
+                {
+                  text: "REF.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 2, 0, 2],
+                },
+                {
+                  text: "ESF.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 2, 0, 2],
+                },
+                {
+                  text: "CIL.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 2, 0, 2],
+                },
+                {
+                  text: "EJE.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 2, 0, 2],
+                },
+                {
+                  text: "AV.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 2, 0, 2],
+                },
+                {
+                  text: "DIP.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 2, 0, 2],
+                },
+              ],
+              [
+                {
+                  text: "O.D.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: od_esf_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: od_cil_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: od_eje_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: "",
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: dip_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+              ],
+              [
+                {
+                  text: "O.I.",
+                  style: "title",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: oi_esf_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: oi_cil_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: oi_eje_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: "",
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: dip_Cliente,
+                  style: "text",
+                  alignment: "center",
+                  margin: [0, 1, 0, 1],
+                },
+              ],
+            ],
+          },
+          layout: {
+            fillColor: function (rowIndex) {
+              return rowIndex === 0 ? "#d8e3fc" : null;
+            },
+          },
+        },
+
+        // VISION DE CERCA
+        {
+          style: "tableBasic",
+          table: {
+            widths: [150, "*", 150],
+            heights: [15],
+            body: [
+              [
+                {
+                  text: "VISIÓN DE CERCA: ",
+                  alignment: "left",
+                  style: "title2",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+                [
+                  {
+                    table: {
+                      widths: ["auto", "*"],
+                      body: [
+                        [
+                          {
+                            text: "ADD.",
+                            style: "title",
+                            alignment: "center",
+                            fillColor: "#d8e3fc",
+                          },
+                          {
+                            text: add_Cliente,
+                            style: "text",
+                            alignment: "center",
+                          },
+                        ],
+                      ],
+                    },
+                  },
+                ],
+                {},
+              ],
+            ],
+          },
+          layout: {
+            defaultBorder: false,
+            paddingLeft: function (i, node) {
+              return 10;
+            },
+          },
+        },
+
+        // FECHA DE ENTREGA
+        {
+          style: "tableBasic",
+          table: {
+            widths: [140, "*", 50, "auto"],
+            body: [
+              [
+                {
+                  text: "FECHA DE ENTREGA: ",
+                  style: "title2",
+                  alignment: "left",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+                {
+                  text: fecha_entrega,
+                  style: "text",
+                  alignment: "left",
+                  margin: [0, 1, 0, 1],
+                },
+                {
+                  text: "HORA: ",
+                  style: "title2",
+                  alignment: "left",
+                  fillColor: "#2D4497",
+                  fillOpacity: 0.8,
+                },
+                {
+                  text: hora_entrega,
+                  style: "text",
+                  alignment: "left",
+                  margin: [0, 1, 0, 1],
+                },
+              ],
+            ],
+          },
+          layout: {
+            defaultBorder: false,
+            paddingLeft: function (i, node) {
+              return 10;
+            },
+          },
+        },
+
+        // NOTAS
+        {
+          style: "tableBasic",
+          table: {
+            widths: [350, "*"],
+            body: [
+              [
+                {
+                  text: "NOTA: ",
+                  color: "#2D4497",
+                  style: "subtitle",
+                  alignment: "left",
+                },
+                {},
+              ],
+              [
+                {
+                  text: primeraNota,
+                  color: "#2D4497",
+                  style: "small",
+                  alignment: "left",
+                },
+                {},
+              ],
+              [
+                {
+                  text: segundaNota,
+                  color: "#2D4497",
+                  style: "small",
+                  alignment: "left",
+                },
+                {},
+              ],
+            ],
+          },
+          layout: {
+            defaultBorder: false,
+          },
         },
       ],
+
+      styles: {
+        header: {
+          fontSize: 15,
+          bold: true,
+          color: "white",
+          alignment: "center",
+          margin: [0, 0, 0, 0],
+        },
+
+        title: {
+          fontSize: 13,
+          bold: true,
+          color: "#2D4497",
+          margin: [0, 0, 0, 0],
+        },
+
+        title2: {
+          fontSize: 13,
+          bold: true,
+          color: "white",
+          margin: [0, 0, 0, 0],
+        },
+
+        subtitle: {
+          fontSize: 12,
+          bold: true,
+          color: "#2D4497",
+          margin: [0, 0, 0, 0],
+        },
+
+        text: {
+          fontSize: 11,
+          color: "#2D4497",
+          margin: [0, 0, 0, 0],
+        },
+
+        small: {
+          fontSize: 9,
+          color: "#2D4497",
+          margin: [0, 0, 0, 0],
+        },
+
+        tableBasic: {
+          color: "#2D4497",
+          margin: [0, 5, 0, 5],
+        },
+      },
     };
     var pdfDoc = pdfMake.createPdf(docDefinition);
     pdfDoc.getBase64(async (base64) => {
