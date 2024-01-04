@@ -56,10 +56,9 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   unsubscribeVentasById
 );
-//router.get('/getAllVentasByDate',getAllVentasByDate);
 router.post(
   "/getPDF",
-  //  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   getPDF
 );
 

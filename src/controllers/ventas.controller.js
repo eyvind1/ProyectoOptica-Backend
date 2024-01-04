@@ -604,9 +604,8 @@ export const unsubscribeVentasById = async (req, res) => {
   }
 };
 
-// Genera PDF y envio al front
+// Genero PDF y envio al front
 export const getPDF = async (req, res) => {
-  console.log(req.body);
   let {
     urlImgSede,
     nombre_cliente,

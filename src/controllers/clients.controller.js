@@ -265,3 +265,10 @@ export const createNewClient = async (req, res) => {
     });
   }
 };
+
+//Generar pdf Receta y enviar al front
+export const getRecetaPDF = async (req, res) => {
+  let { cliente, sede } = req.body;
+  console.log(cliente, sede);
+  res.json(cliente);
+};
