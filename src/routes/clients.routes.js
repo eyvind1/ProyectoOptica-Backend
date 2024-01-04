@@ -50,7 +50,7 @@ router.put(
 );
 router.post(
   "/getRecetaPDF",
-  passport.authenticate("jwt", { session: false }),
+  //   passport.authenticate("jwt", { session: false }),
   getRecetaPDF
 );
 export default router;
