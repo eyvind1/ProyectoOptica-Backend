@@ -620,15 +620,17 @@ export const getPDF = async (req, res) => {
     dni, // Dni cliente
   } = req.body;
 
+  console.log(req.body);
+
   var simboloNuevoSol = "S/. ";
   var propietarioEmpresa = "Raúl J. Condori Ramos";
-  var rucEmpresa = "123456789191";
+  var rucEmpresa = ruc ? ruc : " ";
   var numeroBoleta = "0000418";
-  var direccionEmpresa = "Calle Leticia 104, Carmen Alto, Cayma";
-  var felefonoEmpresa = "98 98 98";
+  var direccionEmpresa = direccion ? direccion : " ";
+  var felefonoEmpresa = telefono ? telefono : " ";
 
-  var dniCliente = "12345678";
-  // var direccionCliente = "Calle Leticia 104, Carmen Alto, Cayma";
+  var dniCliente = dni ? dni : " ";
+  var direccionCliente2 = direccionCliente ? direccionCliente : " ";
 
   var od_esf_Cliente =
     medidas[0].od_esferico > 0
@@ -997,7 +999,7 @@ export const getPDF = async (req, res) => {
               ],
               [
                 {
-                  text: "Dirección: " + direccionCliente,
+                  text: "Dirección: " + direccionCliente2,
                   style: "text",
                   alignment: "left",
                 },
