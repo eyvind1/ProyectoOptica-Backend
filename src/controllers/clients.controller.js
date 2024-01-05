@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { codeForTables } from "../utils/codigosTablas.js";
 import { validarDni } from "../helpers/helperFunctions.js";
 import { castIsoDateToDate } from "../helpers/helperFunctions.js";
+import pdfMake from "pdfmake/build/pdfmake.js";
 
 const TABLE_NAME_CLIENTE = "Clientes";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
@@ -269,6 +270,17 @@ export const createNewClient = async (req, res) => {
 //Generar pdf Receta y enviar al front
 export const getRecetaPDF = async (req, res) => {
   let { cliente, sede } = req.body;
-  console.log(cliente);
+  //Cliente y sede imprimelos adentro contiene atributos, cliente.nombre, etc ...
+
+  try {
+    var docDefinition = {}; //Chino rellenar el doc definition y queda
+    var pdfDoc = pdfMake.createPdf(docDefinition);
+    pdfDoc.getBase64(async (base64) => {
+      res.json(base64);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(cliente, sede);
   res.json(cliente);
 };

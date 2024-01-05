@@ -7,9 +7,7 @@ import { castIsoDateToDate } from "../helpers/helperFunctions.js";
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import fs from "fs";
 import PdfPrinter from "pdfmake";
-import { Blob } from "buffer";
 import { prueba } from "./googleDriveApi.controller.js";
 
 const TABLE_NAME_VENTAS = "Ventas";
@@ -614,9 +612,9 @@ export const getPDF = async (req, res) => {
     list_monturas,
     list_lunas,
     list_accesorios,
-    ruc,
-    direccionCliente,
-    telefonoCliente,
+    ruc, // RUC
+    direccionCliente, //Direccion Cliente
+    telefonoCliente, // Telefono cliente
     telefono, // Telefono empresa
     direccion, // Direccion empresa
     dni, // Dni cliente
