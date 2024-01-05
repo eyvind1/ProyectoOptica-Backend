@@ -607,13 +607,19 @@ export const unsubscribeVentasById = async (req, res) => {
 // Genero PDF y envio al front
 export const getPDF = async (req, res) => {
   let {
-    urlImgSede,
+    logoURL,
     nombre_cliente,
     medidas,
     fecha_creacion_venta,
     list_monturas,
     list_lunas,
     list_accesorios,
+    ruc,
+    direccionCliente,
+    telefonoCliente,
+    telefono, // Telefono empresa
+    direccion, // Direccion empresa
+    dni, // Dni cliente
   } = req.body;
 
   var simboloNuevoSol = "S/. ";
@@ -624,7 +630,7 @@ export const getPDF = async (req, res) => {
   var felefonoEmpresa = "98 98 98";
 
   var dniCliente = "12345678";
-  var direccionCliente = "Calle Leticia 104, Carmen Alto, Cayma";
+  // var direccionCliente = "Calle Leticia 104, Carmen Alto, Cayma";
 
   var od_esf_Cliente =
     medidas[0].od_esferico > 0
@@ -889,7 +895,7 @@ export const getPDF = async (req, res) => {
                           {
                             image:
                               "data:image/png;base64," +
-                              (await prueba(urlImgSede)),
+                              (await prueba(logoURL)),
                             width: 150,
                           },
                         ],

@@ -268,7 +268,7 @@ export const createNewClient = async (req, res) => {
 
 //Generar pdf Receta y enviar al front
 export const getRecetaPDF = async (req, res) => {
-  let { cliente } = req.body;
+  let { cliente, sede } = req.body;
   console.log(cliente);
   res.json(cliente);
 };
