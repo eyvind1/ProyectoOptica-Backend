@@ -696,7 +696,7 @@ export const getPDF = async (req, res) => {
 
     // Monturas
     if (list_monturas.length > 0) {
-      for (var i = 0; i < ist_monturas.length; i++) {
+      for (var i = 0; i < list_monturas.length; i++) {
         numOrdenItems += 1;
         totalMonturas =
           list_monturas[i].precio_montura_v * list_monturas[i].cant_vendida;
