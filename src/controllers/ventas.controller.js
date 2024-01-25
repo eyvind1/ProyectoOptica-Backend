@@ -896,7 +896,7 @@ export const getPDF = async (req, res) => {
                             image:
                               "data:image/png;base64," +
                               (await prueba(logoURL)),
-                            width: 150,
+                            width: 270,
                           },
                         ],
                         [
