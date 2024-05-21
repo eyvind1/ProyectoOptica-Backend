@@ -1,17 +1,17 @@
-import AWS from "../db.js";
-import { v4 } from "uuid";
+import AWS from '../db.js';
+import { v4 } from 'uuid';
 
-import { codeForTables } from "../utils/codigosTablas.js";
-import { castIsoDateToDate } from "../helpers/helperFunctions.js";
+import { codeForTables } from '../utils/codigosTablas.js';
+import { castIsoDateToDate } from '../helpers/helperFunctions.js';
 
-import pdfMake from "pdfmake/build/pdfmake.js";
-import pdfFonts from "pdfmake/build/vfs_fonts.js";
+import pdfMake from 'pdfmake/build/pdfmake.js';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import PdfPrinter from "pdfmake";
-import { prueba } from "./googleDriveApi.controller.js";
+import PdfPrinter from 'pdfmake';
+import { prueba } from './googleDriveApi.controller.js';
 
-const TABLE_NAME_VENTAS = "Ventas";
-const TABLE_NAME_CAJA = "Caja";
+const TABLE_NAME_VENTAS = 'Ventas';
+const TABLE_NAME_CAJA = 'Caja';
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 /* Funciones que se utilizan en el archivo */
@@ -72,7 +72,7 @@ async function aumentarStockProductos(
   list_lunas,
   list_accesorios
 ) {
-  const tableName = ["Monturas", "Lunas", "Accesorios"];
+  const tableName = ['Monturas', 'Lunas', 'Accesorios'];
 
   if (list_monturas.length > 0) {
     list_monturas.map(async (row, i) => {
@@ -83,16 +83,16 @@ async function aumentarStockProductos(
           Key: {
             id_producto: row.id_producto,
           },
-          UpdateExpression: "SET cantidad = cantidad + :cant_vendida",
+          UpdateExpression: 'SET cantidad = cantidad + :cant_vendida',
           ExpressionAttributeValues: {
-            ":cant_vendida": row.cant_vendida,
+            ':cant_vendida': row.cant_vendida,
           },
         };
         const montura = await dynamoClient.update(params).promise();
         return montura;
       } catch (error) {
         return res.status(500).json({
-          message: "Algo anda mal",
+          message: 'Algo anda mal',
         });
       }
     });
@@ -106,16 +106,16 @@ async function aumentarStockProductos(
           Key: {
             id_producto: row.id_producto,
           },
-          UpdateExpression: "SET cantidad = cantidad + :cant_vendida",
+          UpdateExpression: 'SET cantidad = cantidad + :cant_vendida',
           ExpressionAttributeValues: {
-            ":cant_vendida": row.cant_vendida,
+            ':cant_vendida': row.cant_vendida,
           },
         };
         const luna = await dynamoClient.update(params).promise();
         return luna;
       } catch (error) {
         return res.status(500).json({
-          message: "Algo anda mal",
+          message: 'Algo anda mal',
         });
       }
     });
@@ -129,16 +129,16 @@ async function aumentarStockProductos(
           Key: {
             id_producto: row.id_producto,
           },
-          UpdateExpression: "SET cantidad = cantidad + :cant_vendida",
+          UpdateExpression: 'SET cantidad = cantidad + :cant_vendida',
           ExpressionAttributeValues: {
-            ":cant_vendida": row.cant_vendida,
+            ':cant_vendida': row.cant_vendida,
           },
         };
         const accesorio = await dynamoClient.update(params).promise();
         return accesorio;
       } catch (error) {
         return res.status(500).json({
-          message: "Algo anda mal",
+          message: 'Algo anda mal',
         });
       }
     });
@@ -150,7 +150,7 @@ async function restarStockProductos(
   list_lunas,
   list_accesorios
 ) {
-  const tableName = ["Monturas", "Lunas", "Accesorios"];
+  const tableName = ['Monturas', 'Lunas', 'Accesorios'];
 
   if (list_monturas.length > 0) {
     list_monturas.map(async (row, i) => {
@@ -161,16 +161,16 @@ async function restarStockProductos(
           Key: {
             id_producto: row.id_producto,
           },
-          UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
+          UpdateExpression: 'SET cantidad = cantidad - :cant_vendida',
           ExpressionAttributeValues: {
-            ":cant_vendida": row.cant_vendida,
+            ':cant_vendida': row.cant_vendida,
           },
         };
         const montura = await dynamoClient.update(params).promise();
         return montura;
       } catch (error) {
         return res.status(500).json({
-          message: "Algo anda mal",
+          message: 'Algo anda mal',
         });
       }
     });
@@ -184,16 +184,16 @@ async function restarStockProductos(
           Key: {
             id_producto: row.id_producto,
           },
-          UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
+          UpdateExpression: 'SET cantidad = cantidad - :cant_vendida',
           ExpressionAttributeValues: {
-            ":cant_vendida": row.cant_vendida,
+            ':cant_vendida': row.cant_vendida,
           },
         };
         const luna = await dynamoClient.update(params).promise();
         return luna;
       } catch (error) {
         return res.status(500).json({
-          message: "Algo anda mal",
+          message: 'Algo anda mal',
         });
       }
     });
@@ -207,16 +207,16 @@ async function restarStockProductos(
           Key: {
             id_producto: row.id_producto,
           },
-          UpdateExpression: "SET cantidad = cantidad - :cant_vendida",
+          UpdateExpression: 'SET cantidad = cantidad - :cant_vendida',
           ExpressionAttributeValues: {
-            ":cant_vendida": row.cant_vendida,
+            ':cant_vendida': row.cant_vendida,
           },
         };
         const accesorio = await dynamoClient.update(params).promise();
         return accesorio;
       } catch (error) {
         return res.status(500).json({
-          message: "Algo anda mal",
+          message: 'Algo anda mal',
         });
       }
     });
@@ -279,7 +279,7 @@ export const createNewVenta = async (req, res) => {
     );
     /* Agregamos la venta como un ingreso mas */
     let monto = 0;
-    if (tipo_venta[0].forma_pago === "credito") {
+    if (tipo_venta[0].forma_pago === 'credito') {
       monto = tipo_venta[0].cantidad_recibida;
     } else {
       monto = tipo_venta[0].precio_total;
@@ -289,7 +289,7 @@ export const createNewVenta = async (req, res) => {
       id_sede: id_sede,
       metodo_pago: tipo_venta[0].metodo_pago,
       monto: monto,
-      descripcion: "Ingreso por Venta",
+      descripcion: 'Ingreso por Venta',
       id_encargado: id_vendedor,
       nombre_encargado: nombre_vendedor,
       habilitado: true,
@@ -320,10 +320,10 @@ export const updatePagoCuotasVentaById = async (req, res) => {
         id_ventas: id_venta,
       },
       UpdateExpression: `SET tipo_venta = :tipo_venta`,
-      ConditionExpression: "id_ventas = :id_venta",
+      ConditionExpression: 'id_ventas = :id_venta',
       ExpressionAttributeValues: {
-        ":id_venta": id_venta,
-        ":tipo_venta": tipo_venta,
+        ':id_venta': id_venta,
+        ':tipo_venta': tipo_venta,
       },
     };
     const venta = await dynamoClient.update(paramsVenta).promise();
@@ -333,7 +333,7 @@ export const updatePagoCuotasVentaById = async (req, res) => {
       id_sede: id_sede,
       metodo_pago: tipo_venta[0].metodo_pago,
       monto: tipo_venta[0].cantidad_recibida,
-      descripcion: "Ingreso por Pago de cuota",
+      descripcion: 'Ingreso por Pago de cuota',
       encargado: id_vendedor,
       nombre_encargado: nombre_vendedor,
       habilitado: true,
@@ -357,14 +357,14 @@ export const getAllVentasBySede = async (req, res) => {
     const params = {
       TableName: TABLE_NAME_VENTAS,
       FilterExpression:
-        "#idsede = :valueSede and #habilitado = :valueHabilitado ",
+        '#idsede = :valueSede and #habilitado = :valueHabilitado ',
       ExpressionAttributeValues: {
-        ":valueSede": id_sede,
-        ":valueHabilitado": true,
+        ':valueSede': id_sede,
+        ':valueHabilitado': true,
       },
       ExpressionAttributeNames: {
-        "#idsede": "id_sede",
-        "#habilitado": "habilitado",
+        '#idsede': 'id_sede',
+        '#habilitado': 'habilitado',
       },
     };
     const scanResults = [];
@@ -373,7 +373,7 @@ export const getAllVentasBySede = async (req, res) => {
       items = await dynamoClient.scan(params).promise();
       items.Items.forEach((item) => scanResults.push(item));
       params.ExclusiveStartKey = items.LastEvaluatedKey;
-    } while (typeof items.LastEvaluatedKey !== "undefined");
+    } while (typeof items.LastEvaluatedKey !== 'undefined');
     const rpta = await sortArrayJsonByDate(scanResults);
     return res.json(rpta);
   } catch (error) {
@@ -390,14 +390,14 @@ export const getAllVentasEliminadasBySede = async (req, res) => {
     const params = {
       TableName: TABLE_NAME_VENTAS,
       FilterExpression:
-        "#idsede = :valueSede and #habilitado = :valueHabilitado ",
+        '#idsede = :valueSede and #habilitado = :valueHabilitado ',
       ExpressionAttributeValues: {
-        ":valueSede": id_sede,
-        ":valueHabilitado": false,
+        ':valueSede': id_sede,
+        ':valueHabilitado': false,
       },
       ExpressionAttributeNames: {
-        "#idsede": "id_sede",
-        "#habilitado": "habilitado",
+        '#idsede': 'id_sede',
+        '#habilitado': 'habilitado',
       },
     };
     const scanResults = [];
@@ -406,7 +406,7 @@ export const getAllVentasEliminadasBySede = async (req, res) => {
       items = await dynamoClient.scan(params).promise();
       items.Items.forEach((item) => scanResults.push(item));
       params.ExclusiveStartKey = items.LastEvaluatedKey;
-    } while (typeof items.LastEvaluatedKey !== "undefined");
+    } while (typeof items.LastEvaluatedKey !== 'undefined');
     const rpta = await sortArrayJsonByDate(scanResults);
     return res.json(rpta);
   } catch (error) {
@@ -421,12 +421,12 @@ export const getAllVentas = async (req, res) => {
   try {
     const params = {
       TableName: TABLE_NAME_VENTAS,
-      FilterExpression: "#habilitado = :valueHabilitado",
+      FilterExpression: '#habilitado = :valueHabilitado',
       ExpressionAttributeValues: {
-        ":valueHabilitado": true,
+        ':valueHabilitado': true,
       },
       ExpressionAttributeNames: {
-        "#habilitado": "habilitado",
+        '#habilitado': 'habilitado',
       },
     };
     const scanResults = [];
@@ -435,7 +435,7 @@ export const getAllVentas = async (req, res) => {
       items = await dynamoClient.scan(params).promise();
       items.Items.forEach((item) => scanResults.push(item));
       params.ExclusiveStartKey = items.LastEvaluatedKey;
-    } while (typeof items.LastEvaluatedKey !== "undefined");
+    } while (typeof items.LastEvaluatedKey !== 'undefined');
     const rpta = await sortArrayJsonByDate(scanResults);
     res.json(rpta);
   } catch (error) {
@@ -450,12 +450,12 @@ export const getAllVentasBySeller = async (req, res) => {
     let id_vendedor = req.params.idvendedor;
     const params = {
       TableName: TABLE_NAME_VENTAS,
-      FilterExpression: "#idVendedor = :valueIdVendedor",
+      FilterExpression: '#idVendedor = :valueIdVendedor',
       ExpressionAttributeValues: {
-        ":valueIdVendedor": id_vendedor,
+        ':valueIdVendedor': id_vendedor,
       },
       ExpressionAttributeNames: {
-        "#idVendedor": "id_vendedor",
+        '#idVendedor': 'id_vendedor',
       },
     };
     const scanResults = [];
@@ -464,7 +464,7 @@ export const getAllVentasBySeller = async (req, res) => {
       items = await dynamoClient.scan(params).promise();
       items.Items.forEach((item) => scanResults.push(item));
       params.ExclusiveStartKey = items.LastEvaluatedKey;
-    } while (typeof items.LastEvaluatedKey !== "undefined");
+    } while (typeof items.LastEvaluatedKey !== 'undefined');
     const rpta = await sortArrayJsonByDate(scanResults);
     res.json(rpta);
   } catch (error) {
@@ -486,17 +486,17 @@ export const getAllVentasByDate = async (req, res) => {
       TableName: TABLE_NAME_VENTAS,
       //FilterExpression : "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2",
       FilterExpression:
-        "#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2 and #id_sede = :id_sede",
+        '#habilitado = :valueHabilitado and #fecha_venta  between :val1 and :val2 and #id_sede = :id_sede',
       ExpressionAttributeValues: {
-        ":valueHabilitado": true,
-        ":val1": fechaIni,
-        ":val2": fechaFin,
-        ":id_sede": id_sede,
+        ':valueHabilitado': true,
+        ':val1': fechaIni,
+        ':val2': fechaFin,
+        ':id_sede': id_sede,
       },
       ExpressionAttributeNames: {
-        "#fecha_venta": "fecha_creacion_venta",
-        "#habilitado": "habilitado",
-        "#id_sede": "id_sede",
+        '#fecha_venta': 'fecha_creacion_venta',
+        '#habilitado': 'habilitado',
+        '#id_sede': 'id_sede',
       },
     };
     const scanResults = [];
@@ -505,7 +505,7 @@ export const getAllVentasByDate = async (req, res) => {
       items = await dynamoClient.scan(params).promise();
       items.Items.forEach((item) => scanResults.push(item));
       params.ExclusiveStartKey = items.LastEvaluatedKey;
-    } while (typeof items.LastEvaluatedKey !== "undefined");
+    } while (typeof items.LastEvaluatedKey !== 'undefined');
     const rpta = await sortArrayJsonByDate(scanResults);
     return res.json(rpta);
   } catch (error) {
@@ -524,9 +524,9 @@ const validateVenta = async (idVenta) => {
   try {
     const paramsVenta = {
       TableName: TABLE_NAME_VENTAS,
-      KeyConditionExpression: "id_ventas = :id_venta",
+      KeyConditionExpression: 'id_ventas = :id_venta',
       ExpressionAttributeValues: {
-        ":id_venta": id_venta,
+        ':id_venta': id_venta,
       },
     };
     const venta = await dynamoClient.query(paramsVenta).promise();
@@ -561,16 +561,16 @@ export const unsubscribeVentasById = async (req, res) => {
         Key: {
           id_ventas: id_venta,
         },
-        UpdateExpression: "SET habilitado = :habilitado",
+        UpdateExpression: 'SET habilitado = :habilitado',
         ExpressionAttributeValues: {
-          ":habilitado": false,
+          ':habilitado': false,
         },
       };
       const venta = await dynamoClient.update(paramsVenta).promise();
       //Obtengo el tipo de venta desde la venta
       const tipo_venta = existeVenta[0].tipo_venta[0];
       let monto = 0;
-      if (tipo_venta.forma_pago === "credito") {
+      if (tipo_venta.forma_pago === 'credito') {
         monto = tipo_venta.cantidad_recibida;
       } else {
         monto = tipo_venta.precio_total;
@@ -581,7 +581,7 @@ export const unsubscribeVentasById = async (req, res) => {
         id_sede: existeVenta[0].id_sede,
         metodo_pago: tipo_venta.metodo_pago,
         monto: monto,
-        descripcion: "Egreso por baja de una venta",
+        descripcion: 'Egreso por baja de una venta',
         id_encargado: existeVenta[0].id_vendedor,
         nombre_encargado: existeVenta[0].nombre_vendedor,
         habilitado: true,
@@ -592,12 +592,12 @@ export const unsubscribeVentasById = async (req, res) => {
       return res.json(venta);
     } catch (error) {
       return res.status(500).json({
-        message: "Algo anda mal",
+        message: 'Algo anda mal',
       });
     }
   } else {
     return res.status(500).json({
-      message: "La venta no existe",
+      message: 'La venta no existe',
     });
   }
 };
@@ -620,65 +620,63 @@ export const getPDF = async (req, res) => {
     dni, // Dni cliente
   } = req.body;
 
-  console.log(req.body);
+  var simboloNuevoSol = 'S/. ';
+  var propietarioEmpresa = 'Raúl J. Condori Ramos';
+  var rucEmpresa = ruc ? ruc : ' ';
+  var numeroBoleta = '0000418';
+  var direccionEmpresa = direccion ? direccion : ' ';
+  var felefonoEmpresa = telefono ? telefono : ' ';
 
-  var simboloNuevoSol = "S/. ";
-  var propietarioEmpresa = "Raúl J. Condori Ramos";
-  var rucEmpresa = ruc ? ruc : " ";
-  var numeroBoleta = "0000418";
-  var direccionEmpresa = direccion ? direccion : " ";
-  var felefonoEmpresa = telefono ? telefono : " ";
-
-  var dniCliente = dni ? dni : " ";
-  var direccionCliente2 = direccionCliente ? direccionCliente : " ";
+  var dniCliente = dni ? dni : ' ';
+  var direccionCliente2 = direccionCliente ? direccionCliente : ' ';
 
   var od_esf_Cliente =
     medidas[0].od_esferico > 0
-      ? "+" + medidas[0].od_esferico.toFixed(2)
+      ? '+' + medidas[0].od_esferico.toFixed(2)
       : medidas[0].od_esferico.toFixed(2);
   var od_cil_Cliente =
     medidas[0].od_cilindrico > 0
-      ? "+" + medidas[0].od_cilindrico.toFixed(2)
+      ? '+' + medidas[0].od_cilindrico.toFixed(2)
       : medidas[0].od_cilindrico.toFixed(2);
   var od_eje_Cliente = medidas[0].od_eje;
   var oi_esf_Cliente =
     medidas[0].oi_esferico > 0
-      ? "+" + medidas[0].oi_esferico.toFixed(2)
+      ? '+' + medidas[0].oi_esferico.toFixed(2)
       : medidas[0].oi_esferico.toFixed(2);
   var oi_cil_Cliente =
     medidas[0].oi_cilindrico > 0
-      ? "+" + medidas[0].oi_cilindrico.toFixed(2)
+      ? '+' + medidas[0].oi_cilindrico.toFixed(2)
       : medidas[0].oi_cilindrico.toFixed(2);
   var oi_eje_Cliente = medidas[0].oi_eje;
   var dip_Cliente = medidas[0].dip;
   var add_Cliente =
     medidas[0].add > 0
-      ? "+" + medidas[0].add.toFixed(2)
+      ? '+' + medidas[0].add.toFixed(2)
       : medidas[0].add.toFixed(2);
 
   var fecha_entrega = new Date(fecha_creacion_venta).toLocaleDateString(
-    "es-CL",
+    'es-CL',
     {
-      weekday: "long", // narrow, short
-      year: "numeric", // 2-digit
-      month: "long", // numeric, 2-digit, narrow, long
-      day: "numeric", // 2-digit
+      weekday: 'long', // narrow, short
+      year: 'numeric', // 2-digit
+      month: 'long', // numeric, 2-digit, narrow, long
+      day: 'numeric', // 2-digit
     }
   );
   var hora_entrega = new Date(fecha_creacion_venta).toLocaleTimeString(
-    "es-CL",
+    'es-CL',
     {
-      timeZone: "America/Bogota",
+      timeZone: 'America/Bogota',
       hour12: true, // false
-      hour: "numeric", // 2-digit
-      minute: "2-digit", // numeric
-      second: "2-digit", // numeric
+      hour: 'numeric', // 2-digit
+      minute: '2-digit', // numeric
+      second: '2-digit', // numeric
     }
   );
 
-  var primeraNota = "Todo trabajo se efectuara con un adelanto del 50%.";
+  var primeraNota = 'Todo trabajo se efectuara con un adelanto del 50%.';
   var segundaNota =
-    "La empresa no se responsabiliza de los pedidos no recogidos después de un mes.";
+    'La empresa no se responsabiliza de los pedidos no recogidos después de un mes.';
 
   var externalDataRetrievedFromServer = [];
 
@@ -705,9 +703,9 @@ export const getPDF = async (req, res) => {
           num_orden: numOrdenItems,
           detalle:
             list_monturas[i].marca +
-            " Cód. int.: " +
+            ' Cód. int.: ' +
             list_monturas[i].codigo +
-            " Color: " +
+            ' Color: ' +
             list_monturas[i].color,
           precio: list_monturas[i].precio_montura_v,
           cantidad: list_monturas[i].cant_vendida,
@@ -757,38 +755,38 @@ export const getPDF = async (req, res) => {
 
     body.push([
       {
-        text: "No.",
-        style: "title",
-        alignment: "center",
-        fillColor: "#d8e3fc",
+        text: 'No.',
+        style: 'title',
+        alignment: 'center',
+        fillColor: '#d8e3fc',
         margin: [0, 3, 0, 3],
       },
       {
-        text: "Detalle",
-        style: "title",
-        alignment: "center",
-        fillColor: "#d8e3fc",
+        text: 'Detalle',
+        style: 'title',
+        alignment: 'center',
+        fillColor: '#d8e3fc',
         margin: [0, 3, 0, 3],
       },
       {
-        text: "P. Unit.",
-        style: "title",
-        alignment: "center",
-        fillColor: "#d8e3fc",
+        text: 'P. Unit.',
+        style: 'title',
+        alignment: 'center',
+        fillColor: '#d8e3fc',
         margin: [0, 3, 0, 3],
       },
       {
-        text: "Cant.",
-        style: "title",
-        alignment: "center",
-        fillColor: "#d8e3fc",
+        text: 'Cant.',
+        style: 'title',
+        alignment: 'center',
+        fillColor: '#d8e3fc',
         margin: [0, 3, 0, 3],
       },
       {
-        text: "Importe",
-        style: "title",
-        alignment: "center",
-        fillColor: "#d8e3fc",
+        text: 'Importe',
+        style: 'title',
+        alignment: 'center',
+        fillColor: '#d8e3fc',
         margin: [0, 3, 0, 3],
       },
     ]);
@@ -797,25 +795,25 @@ export const getPDF = async (req, res) => {
       var dataRow = [];
 
       columns.forEach(function (column) {
-        if (column === "num_orden") {
+        if (column === 'num_orden') {
           dataRow.push({
             text: row[column].toString(),
-            style: "text",
-            alignment: "center",
+            style: 'text',
+            alignment: 'center',
             margin: [0, 2, 0, 2],
           });
-        } else if (column === "detalle") {
+        } else if (column === 'detalle') {
           dataRow.push({
             text: row[column].toString(),
-            style: "text",
-            alignment: "left",
+            style: 'text',
+            alignment: 'left',
             margin: [0, 2, 0, 2],
           });
         } else {
           dataRow.push({
             text: row[column].toString(),
-            style: "text",
-            alignment: "right",
+            style: 'text',
+            alignment: 'right',
             margin: [0, 2, 0, 2],
           });
         }
@@ -833,20 +831,20 @@ export const getPDF = async (req, res) => {
     body.push([{ }, { }, { text: 'IGV (18%) :', style: 'tableHeader', alignment: 'right', colSpan: 2}, { }, { text: simboloNuevoSol + totalIGV, style: 'contenido', alignment: 'right' }]); */
     /* body.push([{ text: '', borderColor: ['#FFFFFF', , , '#FFFFFF'], colSpan: 3 }, {  }, {  }, { text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: simboloNuevoSol + total, style: 'contenido', alignment: 'right' }]); */
     body.push([
-      { text: "", border: [false, false, false, false], colSpan: 2 },
+      { text: '', border: [false, false, false, false], colSpan: 2 },
       {},
       {
-        text: "Total:",
-        style: "title",
-        alignment: "right",
+        text: 'Total:',
+        style: 'title',
+        alignment: 'right',
         colSpan: 2,
         margin: [0, 2, 0, 2],
       },
       {},
       {
         text: simboloNuevoSol + total,
-        style: "title",
-        alignment: "right",
+        style: 'title',
+        alignment: 'right',
         margin: [0, 2, 0, 2],
       },
     ]);
@@ -857,10 +855,10 @@ export const getPDF = async (req, res) => {
   function table(data, columns) {
     var subtotal = buildData();
     return {
-      style: "tableBasic",
-      color: "#444",
+      style: 'tableBasic',
+      color: '#444',
       table: {
-        widths: [25, "*", 45, 35, 55],
+        widths: [25, '*', 45, 35, 55],
         headerRows: 1,
         body: buildTableBody(data, columns, subtotal),
       },
@@ -870,39 +868,39 @@ export const getPDF = async (req, res) => {
   try {
     var fonts = {
       Roboto: {
-        normal: "src/controllers/Roboto-Regular.ttf",
+        normal: 'src/controllers/Roboto-Regular.ttf',
       },
     };
     var printer = new PdfPrinter(fonts);
 
     var docDefinition = {
-      pageSize: "A4",
+      pageSize: 'A4',
       pageMargins: [40, 60, 40, 60],
       content: [
         // LOGO y DATOS DE LA EMPRESA
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: [340, "*"],
+            widths: [340, '*'],
             body: [
               [
                 [
                   {
                     table: {
-                      widths: ["*"],
+                      widths: ['*'],
                       body: [
                         [
                           {
                             image:
-                              "data:image/png;base64," +
+                              'data:image/png;base64,' +
                               (await prueba(logoURL)),
                             width: 270,
                           },
                         ],
                         [
                           {
-                            text: "De " + propietarioEmpresa,
-                            alignment: "center",
+                            text: 'De ' + propietarioEmpresa,
+                            alignment: 'center',
                           },
                         ],
                       ],
@@ -915,32 +913,32 @@ export const getPDF = async (req, res) => {
                 [
                   {
                     table: {
-                      widths: ["*"],
+                      widths: ['*'],
                       body: [
                         [
                           {
-                            text: "R.U.C. " + rucEmpresa,
-                            style: "title",
-                            alignment: "center",
+                            text: 'R.U.C. ' + rucEmpresa,
+                            style: 'title',
+                            alignment: 'center',
                             margin: [0, 6, 0, 6],
                           },
                         ],
                         [
                           {
-                            text: "BOLETA DE VENTA",
-                            style: "title2",
-                            alignment: "center",
-                            fillColor: "#2D4497",
+                            text: 'BOLETA DE VENTA',
+                            style: 'title2',
+                            alignment: 'center',
+                            fillColor: '#2D4497',
                             fillOpacity: 0.8,
                             margin: [0, 6, 0, 6],
                           },
                         ],
                         [
                           {
-                            text: "001- Nº " + numeroBoleta,
-                            style: "title",
-                            color: "red",
-                            alignment: "center",
+                            text: '001- Nº ' + numeroBoleta,
+                            style: 'title',
+                            color: 'red',
+                            alignment: 'center',
                             margin: [0, 6, 0, 6],
                           },
                         ],
@@ -957,21 +955,21 @@ export const getPDF = async (req, res) => {
         },
 
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: ["*", "*"],
+            widths: ['*', '*'],
             body: [
               [
                 {
                   text: direccionEmpresa,
-                  style: "header",
-                  fillColor: "#2D4497",
+                  style: 'header',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
                 {
-                  text: "Cel: " + felefonoEmpresa,
-                  style: "header",
-                  fillColor: "#2D4497",
+                  text: 'Cel: ' + felefonoEmpresa,
+                  style: 'header',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
               ],
@@ -984,29 +982,29 @@ export const getPDF = async (req, res) => {
 
         // DATOS DEL CLIENTE
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: [340, "*"],
+            widths: [340, '*'],
             body: [
               [
                 {
-                  text: "Señor(a): " + nombre_cliente,
-                  style: "title",
-                  alignment: "left",
+                  text: 'Señor(a): ' + nombre_cliente,
+                  style: 'title',
+                  alignment: 'left',
                   Span: 1,
                 },
                 {},
               ],
               [
                 {
-                  text: "Dirección: " + direccionCliente2,
-                  style: "text",
-                  alignment: "left",
+                  text: 'Dirección: ' + direccionCliente2,
+                  style: 'text',
+                  alignment: 'left',
                 },
                 {
-                  text: "DNI: " + dniCliente,
-                  style: "text",
-                  alignment: "left",
+                  text: 'DNI: ' + dniCliente,
+                  style: 'text',
+                  alignment: 'left',
                 },
               ],
             ],
@@ -1020,17 +1018,17 @@ export const getPDF = async (req, res) => {
 
         // RESUMEN DEL PEDIDO
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
             widths: [150],
             heights: [15],
             body: [
               [
                 {
-                  text: "RESUMEN DEL PEDIDO: ",
-                  style: "title2",
-                  alignment: "left",
-                  fillColor: "#2D4497",
+                  text: 'RESUMEN DEL PEDIDO: ',
+                  style: 'title2',
+                  alignment: 'left',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
               ],
@@ -1045,26 +1043,26 @@ export const getPDF = async (req, res) => {
         },
 
         table(externalDataRetrievedFromServer, [
-          "num_orden",
-          "detalle",
-          "precio",
-          "cantidad",
-          "total",
+          'num_orden',
+          'detalle',
+          'precio',
+          'cantidad',
+          'total',
         ]),
 
         // DETALLE DE LA MEDIDA
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
             widths: [150],
             heights: [15],
             body: [
               [
                 {
-                  text: "DETALLE DE LA MEDIDA: ",
-                  style: "title2",
-                  alignment: "left",
-                  fillColor: "#2D4497",
+                  text: 'DETALLE DE LA MEDIDA: ',
+                  style: 'title2',
+                  alignment: 'left',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
               ],
@@ -1079,123 +1077,123 @@ export const getPDF = async (req, res) => {
         },
 
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: ["*", "*", "*", "*", "*", "*"],
+            widths: ['*', '*', '*', '*', '*', '*'],
             heights: [15, 15, 15],
             headerRows: 2,
             body: [
               [
                 {
-                  text: "REF.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'REF.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 2, 0, 2],
                 },
                 {
-                  text: "ESF.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'ESF.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 2, 0, 2],
                 },
                 {
-                  text: "CIL.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'CIL.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 2, 0, 2],
                 },
                 {
-                  text: "EJE.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'EJE.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 2, 0, 2],
                 },
                 {
-                  text: "AV.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'AV.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 2, 0, 2],
                 },
                 {
-                  text: "DIP.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'DIP.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 2, 0, 2],
                 },
               ],
               [
                 {
-                  text: "O.D.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'O.D.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: od_esf_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: od_cil_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: od_eje_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
-                  text: "",
-                  style: "text",
-                  alignment: "center",
+                  text: '',
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: dip_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
               ],
               [
                 {
-                  text: "O.I.",
-                  style: "title",
-                  alignment: "center",
+                  text: 'O.I.',
+                  style: 'title',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: oi_esf_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: oi_cil_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: oi_eje_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
-                  text: "",
-                  style: "text",
-                  alignment: "center",
+                  text: '',
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
                 {
                   text: dip_Cliente,
-                  style: "text",
-                  alignment: "center",
+                  style: 'text',
+                  alignment: 'center',
                   margin: [0, 1, 0, 1],
                 },
               ],
@@ -1203,42 +1201,42 @@ export const getPDF = async (req, res) => {
           },
           layout: {
             fillColor: function (rowIndex) {
-              return rowIndex === 0 ? "#d8e3fc" : null;
+              return rowIndex === 0 ? '#d8e3fc' : null;
             },
           },
         },
 
         // VISION DE CERCA
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: [150, "*", 150],
+            widths: [150, '*', 150],
             heights: [15],
             body: [
               [
                 {
-                  text: "VISIÓN DE CERCA: ",
-                  alignment: "left",
-                  style: "title2",
-                  fillColor: "#2D4497",
+                  text: 'VISIÓN DE CERCA: ',
+                  alignment: 'left',
+                  style: 'title2',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
                 [
                   {
                     table: {
-                      widths: ["auto", "*"],
+                      widths: ['auto', '*'],
                       body: [
                         [
                           {
-                            text: "ADD.",
-                            style: "title",
-                            alignment: "center",
-                            fillColor: "#d8e3fc",
+                            text: 'ADD.',
+                            style: 'title',
+                            alignment: 'center',
+                            fillColor: '#d8e3fc',
                           },
                           {
                             text: add_Cliente,
-                            style: "text",
-                            alignment: "center",
+                            style: 'text',
+                            alignment: 'center',
                           },
                         ],
                       ],
@@ -1259,35 +1257,35 @@ export const getPDF = async (req, res) => {
 
         // FECHA DE ENTREGA
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: [140, "*", 50, "auto"],
+            widths: [140, '*', 50, 'auto'],
             body: [
               [
                 {
-                  text: "FECHA DE ENTREGA: ",
-                  style: "title2",
-                  alignment: "left",
-                  fillColor: "#2D4497",
+                  text: 'FECHA DE ENTREGA: ',
+                  style: 'title2',
+                  alignment: 'left',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
                 {
                   text: fecha_entrega,
-                  style: "text",
-                  alignment: "left",
+                  style: 'text',
+                  alignment: 'left',
                   margin: [0, 1, 0, 1],
                 },
                 {
-                  text: "HORA: ",
-                  style: "title2",
-                  alignment: "left",
-                  fillColor: "#2D4497",
+                  text: 'HORA: ',
+                  style: 'title2',
+                  alignment: 'left',
+                  fillColor: '#2D4497',
                   fillOpacity: 0.8,
                 },
                 {
                   text: hora_entrega,
-                  style: "text",
-                  alignment: "left",
+                  style: 'text',
+                  alignment: 'left',
                   margin: [0, 1, 0, 1],
                 },
               ],
@@ -1303,34 +1301,34 @@ export const getPDF = async (req, res) => {
 
         // NOTAS
         {
-          style: "tableBasic",
+          style: 'tableBasic',
           table: {
-            widths: [350, "*"],
+            widths: [350, '*'],
             body: [
               [
                 {
-                  text: "NOTA: ",
-                  color: "#2D4497",
-                  style: "subtitle",
-                  alignment: "left",
+                  text: 'NOTA: ',
+                  color: '#2D4497',
+                  style: 'subtitle',
+                  alignment: 'left',
                 },
                 {},
               ],
               [
                 {
                   text: primeraNota,
-                  color: "#2D4497",
-                  style: "small",
-                  alignment: "left",
+                  color: '#2D4497',
+                  style: 'small',
+                  alignment: 'left',
                 },
                 {},
               ],
               [
                 {
                   text: segundaNota,
-                  color: "#2D4497",
-                  style: "small",
-                  alignment: "left",
+                  color: '#2D4497',
+                  style: 'small',
+                  alignment: 'left',
                 },
                 {},
               ],
@@ -1346,46 +1344,46 @@ export const getPDF = async (req, res) => {
         header: {
           fontSize: 15,
           bold: true,
-          color: "white",
-          alignment: "center",
+          color: 'white',
+          alignment: 'center',
           margin: [0, 0, 0, 0],
         },
 
         title: {
           fontSize: 13,
           bold: true,
-          color: "#2D4497",
+          color: '#2D4497',
           margin: [0, 0, 0, 0],
         },
 
         title2: {
           fontSize: 13,
           bold: true,
-          color: "white",
+          color: 'white',
           margin: [0, 0, 0, 0],
         },
 
         subtitle: {
           fontSize: 12,
           bold: true,
-          color: "#2D4497",
+          color: '#2D4497',
           margin: [0, 0, 0, 0],
         },
 
         text: {
           fontSize: 11,
-          color: "#2D4497",
+          color: '#2D4497',
           margin: [0, 0, 0, 0],
         },
 
         small: {
           fontSize: 9,
-          color: "#2D4497",
+          color: '#2D4497',
           margin: [0, 0, 0, 0],
         },
 
         tableBasic: {
-          color: "#2D4497",
+          color: '#2D4497',
           margin: [0, 5, 0, 5],
         },
       },

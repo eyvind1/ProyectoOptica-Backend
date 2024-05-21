@@ -37,7 +37,6 @@ export const editContraseniaUserById = async (req, res) => {
       message: 'El usuario no existe',
     });
   }
-  console.log(user.Items[0].contrasenia, password);
   //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
   const validarPassword = await desencriptarPassword(
     user.Items[0].contrasenia,

@@ -1,8 +1,7 @@
-
 /* Creando un middleware, es decir las rutas primero pasan este filtro */
-export const isUserAuthenticated = (req,res,next) => {
-    console.log(req.isAuthenticated())
-    /*if (req.isAuthenticated()) {
+export const isUserAuthenticated = (req, res, next) => {
+  console.log(req.isAuthenticated());
+  /*if (req.isAuthenticated()) {
         return next();
     } else {
         //req.send('error no autenticado')
@@ -11,5 +10,4 @@ export const isUserAuthenticated = (req,res,next) => {
             message:'No has iniciado sesion'
         })
     }*/
-
-}
+};
