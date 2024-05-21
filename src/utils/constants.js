@@ -6,5 +6,5 @@ export const DEFAULT_LOGO_URL =
 export const ADMIN_ROLE = 'Admin';
 
 //Time to expire TOKEN
-export const TIME_EXPIRE_ADMIN = '2m';
+export const TIME_EXPIRE_ADMIN = '48h';
 export const TIME_EXPIRE_OTHERS = '3h';
