@@ -101,9 +101,9 @@ export const prueba = async (url) => {
     })
     .then(async (response) => {
       // Success 🎉
-      console.log('ÉXITO URL LOGO');
-      let returnedB64 = await Buffer.from(image.data).toString('base64');
-      return ' ';
+      console.log('ÉXITO URL LOGO: ', response, response.data);
+      let returnedB64 = await Buffer.from(response.data).toString('base64');
+      return returnedB64;
     })
     .catch(function (error) {
       console.log('Error TRY CATCH URL LOGO: ' + error.message);
