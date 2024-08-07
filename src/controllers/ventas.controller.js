@@ -889,14 +889,14 @@ export const getPDF = async (req, res) => {
                     table: {
                       widths: ['*'],
                       body: [
-                        [
-                          {
-                            image:
-                              'data:image/png;base64,' +
-                              (await prueba(logoURL)),
-                            width: 270,
-                          },
-                        ],
+                        // [
+                        //   {
+                        //     image:
+                        //       'data:image/png;base64,' +
+                        //       (await prueba(logoURL)),
+                        //     width: 270,
+                        //   },
+                        // ],
                         [
                           {
                             text: 'De ' + propietarioEmpresa,
