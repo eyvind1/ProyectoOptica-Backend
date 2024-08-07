@@ -99,10 +99,10 @@ export const prueba = async (url) => {
     .get(url, {
       responseType: 'arraybuffer',
     })
-    .then((response) => {
+    .then(async (response) => {
       // Success 🎉
       console.log('ÉXITO URL LOGO');
-      let returnedB64 = Buffer.from(image.data).toString('base64');
+      let returnedB64 = await Buffer.from(image.data).toString('base64');
       return ' ';
     })
     .catch(function (error) {

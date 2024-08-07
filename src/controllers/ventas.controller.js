@@ -872,7 +872,7 @@ export const getPDF = async (req, res) => {
       },
     };
     var printer = new PdfPrinter(fonts);
-
+    console.log(logoURL, ' LOGO URL ');
     var docDefinition = {
       pageSize: 'A4',
       pageMargins: [40, 60, 40, 60],
@@ -889,14 +889,14 @@ export const getPDF = async (req, res) => {
                     table: {
                       widths: ['*'],
                       body: [
-                        // [
-                        //   {
-                        //     image:
-                        //       'data:image/png;base64,' +
-                        //       (await prueba(logoURL)),
-                        //     width: 270,
-                        //   },
-                        // ],
+                        [
+                          {
+                            image:
+                              'data:image/png;base64,' +
+                              (await prueba(logoURL)),
+                            width: 270,
+                          },
+                        ],
                         [
                           {
                             text: 'De ' + propietarioEmpresa,
