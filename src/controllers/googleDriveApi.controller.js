@@ -103,10 +103,10 @@ export const prueba = async (url) => {
       // Success 🎉
       console.log('ÉXITO URL LOGO');
       let returnedB64 = Buffer.from(image.data).toString('base64');
-      return returnedB64;
+      return ' ';
     })
     .catch(function (error) {
       console.log('Error TRY CATCH URL LOGO: ' + error.message);
-      return '';
+      return ' ';
     });
 };
