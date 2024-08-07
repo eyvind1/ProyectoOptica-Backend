@@ -116,24 +116,3 @@ export const prueba = async (url) => {
     return ' ';
   }
 };
-
-// export const prueba = async (url) => {
-//   let image = await axios
-//     .get(url, {
-//       responseType: 'arraybuffer',
-//     })
-//     .then(async (response) => {
-//       // Success 🎉
-//       console.log('ÉXITO URL LOGO: ', response.data);
-//       try {
-//         let returnedB64 = await Buffer.from(response.data).toString('base64');
-//         return returnedB64;
-//       } catch (error) {
-//         return '';
-//       }
-//     })
-//     .catch(function (error) {
-//       console.log('Error TRY CATCH URL LOGO: ' + error.message);
-//       return ' ';
-//     });
-// };
