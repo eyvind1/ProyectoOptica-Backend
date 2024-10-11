@@ -94,6 +94,28 @@ export const uploadFile = async (req, res) => {
   res.json({ logoURL, logoDOWNLOAD }); //Response From google Drive
 };
 
+// export const prueba = async (url) => {
+//   try {
+//     const response = await axios.get(url, {
+//       responseType: 'arraybuffer',
+//     });
+
+//     console.log('ÉXITO URL LOGO: ', response.data);
+
+//     try {
+//       const returnedB64 = Buffer.from(response.data, 'binary').toString(
+//         'base64'
+//       );
+//       return returnedB64;
+//     } catch (error) {
+//       console.error('Error al convertir la imagen a base64:', error.message);
+//       return '';
+//     }
+//   } catch (error) {
+//     console.error('Error al obtener la imagen:', error.message);
+//     return ' ';
+//   }
+// };
 export const prueba = async (url) => {
   try {
     const response = await axios.get(url, {
@@ -102,17 +124,15 @@ export const prueba = async (url) => {
 
     console.log('ÉXITO URL LOGO: ', response.data);
 
-    try {
-      const returnedB64 = Buffer.from(response.data, 'binary').toString(
-        'base64'
-      );
-      return returnedB64;
-    } catch (error) {
-      console.error('Error al convertir la imagen a base64:', error.message);
-      return '';
-    }
+    // Convert the response data to base64
+    const returnedB64 = Buffer.from(response.data, 'binary').toString('base64');
+    return returnedB64;
   } catch (error) {
-    console.error('Error al obtener la imagen:', error.message);
-    return ' ';
+    console.error(
+      error.response
+        ? 'Error al obtener la imagen: ' + error.message
+        : 'Error al convertir la imagen a base64: ' + error.message
+    );
+    return '';
   }
 };
