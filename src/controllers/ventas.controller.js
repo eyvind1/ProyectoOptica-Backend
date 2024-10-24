@@ -620,6 +620,38 @@ export const getPDF = async (req, res) => {
     dni, // Dni cliente
   } = req.body;
 
+  console.log(
+    'IMPRIMIENDO LOS VALORES QUE DEBEN LLEGAR ENL LA FUNCION GetPdf: '
+  );
+  console.log(
+    'Logo URL:',
+    logoURL,
+    'Nombre Cliente:',
+    nombre_cliente,
+    'Medidas:',
+    medidas,
+    'Fecha Creación Venta:',
+    fecha_creacion_venta,
+    'Monturas:',
+    list_monturas,
+    'Lunas:',
+    list_lunas,
+    'Accesorios:',
+    list_accesorios,
+    'RUC:',
+    ruc,
+    'Dirección Cliente:',
+    direccionCliente,
+    'Teléfono Cliente:',
+    telefonoCliente,
+    'Teléfono Empresa:',
+    telefono,
+    'Dirección Empresa:',
+    direccion,
+    'DNI:',
+    dni
+  );
+
   var simboloNuevoSol = 'S/. ';
   var propietarioEmpresa = 'Raúl J. Condori Ramos';
   var rucEmpresa = ruc ? ruc : ' ';
