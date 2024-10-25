@@ -661,30 +661,34 @@ export const getPDF = async (req, res) => {
 
   var dniCliente = dni ? dni : ' ';
   var direccionCliente2 = direccionCliente ? direccionCliente : ' ';
-
-  var od_esf_Cliente =
-    medidas[0].od_esferico > 0
-      ? '+' + medidas[0].od_esferico.toFixed(2)
-      : medidas[0].od_esferico.toFixed(2);
-  var od_cil_Cliente =
-    medidas[0].od_cilindrico > 0
-      ? '+' + medidas[0].od_cilindrico.toFixed(2)
-      : medidas[0].od_cilindrico.toFixed(2);
-  var od_eje_Cliente = medidas[0].od_eje;
-  var oi_esf_Cliente =
-    medidas[0].oi_esferico > 0
-      ? '+' + medidas[0].oi_esferico.toFixed(2)
-      : medidas[0].oi_esferico.toFixed(2);
-  var oi_cil_Cliente =
-    medidas[0].oi_cilindrico > 0
-      ? '+' + medidas[0].oi_cilindrico.toFixed(2)
-      : medidas[0].oi_cilindrico.toFixed(2);
-  var oi_eje_Cliente = medidas[0].oi_eje;
-  var dip_Cliente = medidas[0].dip;
-  var add_Cliente =
-    medidas[0].add > 0
-      ? '+' + medidas[0].add.toFixed(2)
-      : medidas[0].add.toFixed(2);
+  //validando si medidas existe
+  if (medidas && medidas.length > 0) {
+    var od_esf_Cliente =
+      medidas[0].od_esferico > 0
+        ? '+' + medidas[0].od_esferico.toFixed(2)
+        : medidas[0].od_esferico.toFixed(2);
+    var od_cil_Cliente =
+      medidas[0].od_cilindrico > 0
+        ? '+' + medidas[0].od_cilindrico.toFixed(2)
+        : medidas[0].od_cilindrico.toFixed(2);
+    var od_eje_Cliente = medidas[0].od_eje;
+    var oi_esf_Cliente =
+      medidas[0].oi_esferico > 0
+        ? '+' + medidas[0].oi_esferico.toFixed(2)
+        : medidas[0].oi_esferico.toFixed(2);
+    var oi_cil_Cliente =
+      medidas[0].oi_cilindrico > 0
+        ? '+' + medidas[0].oi_cilindrico.toFixed(2)
+        : medidas[0].oi_cilindrico.toFixed(2);
+    var oi_eje_Cliente = medidas[0].oi_eje;
+    var dip_Cliente = medidas[0].dip;
+    var add_Cliente =
+      medidas[0].add > 0
+        ? '+' + medidas[0].add.toFixed(2)
+        : medidas[0].add.toFixed(2);
+  } else {
+    console.log("El array 'medidas' está vacío o no definido.");
+  }
 
   var fecha_entrega = new Date(fecha_creacion_venta).toLocaleDateString(
     'es-CL',
