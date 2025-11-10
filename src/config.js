@@ -4,15 +4,8 @@ import {config} from 'dotenv'
 config();
 //process es un objeto global de node, env almacena todas las variables de mi pc    
 
-//Credenciales importantes de DynamoDB
-
 //export const region= process.env.AWS_DEFAULT_REGION;
 export const region          = 'us-east-1';
-//export const accessKeyId= process.env.AWS_ACCESS_KEY_Id;
-export const accessKeyId     = 'AKIA2GIKMUORJ64OU75F';
-
-//export const secretAccessKey= process.env.AWS_SECRET_ACCESS_KEY;
-export const secretAccessKey ='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';
 // Defino el puerto local o sino el 4000 para que corra localmente 
 export const PORT            = process.env.PORT ||  '5000';
 
