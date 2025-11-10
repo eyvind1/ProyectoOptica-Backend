@@ -88,7 +88,6 @@ async function findUserByEmail(usuario) {
   }
 }
 export const signIn = async (req, res) => {
-  console.log('Entrando a signin');
   const { email, password } = req.body;
   //Valido usuario y contrasenia
   const user = await findUserByEmail(email);
@@ -96,13 +95,13 @@ export const signIn = async (req, res) => {
     return res.status(401).send('El usuario no existe');
   }
   //Si paso el filtro del email, recien verifico el password porque usare los datos que retorna la BD
-  // const validarPassword = await desencriptarPassword(
-  //   user.Items[0].contrasenia,
-  //   password
-  // );
-  // if (validarPassword === false) {
-  //   return res.status(401).send('La contraseña no coincide');
-  // }
+  const validarPassword = await desencriptarPassword(
+    user.Items[0].contrasenia,
+    password
+  );
+  if (validarPassword === false) {
+    return res.status(401).send('La contraseña no coincide');
+  }
 
   //Expire Token
   const expiresIn =
