@@ -191,6 +191,7 @@ export const editUserById = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   const TABLE_NAME_USUARIO = "Usuarios";
   try {
+    console.log('Entrando a conseguir usueruaios')
     /* Obtengo el json con todos los usuarios */
     const params = {
       TableName: TABLE_NAME_USUARIO,

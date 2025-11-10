@@ -11,7 +11,7 @@ const router = Router();
 
 //Defino nombres de las rutas, 
 router.post('/createNewUser',passport.authenticate('jwt',{session:false}),createNewUser);
-router.get('/getAllUsers',passport.authenticate('jwt',{session:false}),getAllUsers);
+router.get('/getAllUsers', getAllUsers);
 router.put('/editUserById/:idUsuario',passport.authenticate('jwt',{session:false}),editUserById);
 router.put('/darBajaUsuarioById/:idUsuario',passport.authenticate('jwt',{session:false}),darBajaUsuarioById);
 
