@@ -89,6 +89,7 @@ async function findUserByEmail(usuario) {
 }
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
+  console.log('Entrando a sign in')
   //Valido usuario y contrasenia
   const user = await findUserByEmail(email);
   if (user.Items.length === 0) {
